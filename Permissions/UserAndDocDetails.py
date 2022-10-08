@@ -1,18 +1,18 @@
-from sqlalchemy import create_engine
+from sqlalchemy import create_connect
 from sqlalchemy.sql import text
 import UserAndGroupPermissions as UG
-engine = create_engine("mysql://root:Vedasree97@localhost:3306/userDB")
-engine.connect()
+engine = create_connect("mysql://root:Vedasree97@localhost:3306/userDB")
+connect=engine.connect()
 def getUserId(user_email):
     sql = text("""SELECT UserId FROM UserAuthentication WHERE UserEmail=:UEmail""")
     record = {"UEmail": user_email}
-    userid = engine.execute(sql, **record)
+    userid = connect.execute(sql, **record)
     return userid
 
 def getDocId(userid,docname):
     sql = text("""SELECT DocId FROM Documents WHERE UserId=:UId and DocName=:DName""")
     record = {"UId":userid,"DName":docname}
-    docid = engine.execute(sql, **record)
+    docid = connect.execute(sql, **record)
     return docid
 
 def setPermissions(shareEmail,userid,docname):

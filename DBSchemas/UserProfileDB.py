@@ -78,10 +78,11 @@ def defineTables():
 # Creates a connection to the Database
 def createTables():
     # Get all details of the DB from the environment variables
-    db_conn = os.environ.get('MYSQL_CONNECTION')
+    db_conn = "latexdb.czl9dubxqhpg.us-east-1.rds.amazonaws.com"
+    db_port = "3306"
     db_database = os.environ.get('MYSQL_DB')
-    db_user = os.environ.get('MYSQL_USER')
-    db_pass = os.environ.get('MYSQL_PASS')
+    db_user = "latexedb"
+    db_pass = "latexdb@12345"
 
     try:
         cnx = mysql.connector.connect(
