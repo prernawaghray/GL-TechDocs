@@ -35,10 +35,14 @@
     <p class="container-fluid">&copy; TechDocs</a></p>
   </footer>
 
-  <script>
+{% endblock %}
+
+{% block layoutJS %}
+   <script>
     function redirectToLogin(){
      window.location = "{{url_for('login')}}";
     }
  </script>
- 
+  {% block pageJS %}{% endblock%}
+
 {% endblock %}
