@@ -24,6 +24,7 @@ Techdocs fronted uses a number of open source projects
 - [Bootstrap] : great UI boilerplate for modern web apps
 - [Python Flask]  : For URL Based Routing & Rendering HTML Templates
 - [jQuery] - UI/UX Actions/Events on HTML Documents
+- [LatexJS] - JS Library to preview latex document
 
 ## Installation
 
@@ -66,4 +67,5 @@ MIT
    [Bootstrap]: <https://getbootstrap.com>
    [jQuery]: <http://jquery.com>
    [Python Flask]: <https://flask.palletsprojects.com/en/2.2.x/>
+   [LatexJS]: <https://latex.js.org/>
    
