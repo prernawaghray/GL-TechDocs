@@ -26,10 +26,10 @@ class PaymentAccount(Base):
     n_Misc1         = Column(Integer)
     n_Misc2         = Column(Integer)
         
-    Index("idx_PA_User", UserId)
+    #Index("idx_PA_User", UserId)
 
-    def __init__(self, UserId):
-        self.UserId = UserId
+    # Constructors to insert data 
+    #def __init__(self, UserId):
 
 #############################
 class UserPayment(Base):
@@ -49,10 +49,10 @@ class UserPayment(Base):
     n_Misc1         = Column(Integer)
     n_Misc2         = Column(Integer)
         
-    Index("idx_UP_UserDate", UserId, PaidDate)
+    #Index("idx_UP_UserDate", UserId, PaidDate)
 
-    def __init__(self, UserId):
-        self.UserId = UserId
+    # Constructors to insert data 
+    #def __init__(self, UserId):
 
 #############################
 class UserSubscription(Base):
@@ -70,7 +70,7 @@ class UserSubscription(Base):
     n_Misc1         = Column(Integer)
     n_Misc2         = Column(Integer)
         
-    Index("idx_US_User", UserId)
+    #Index("idx_US_User", UserId)
 
-    def __init__(self, UserId):
-        self.UserId = UserId
+    # Constructors to insert data 
+    #def __init__(self, UserId):

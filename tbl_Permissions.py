@@ -18,9 +18,7 @@ class Permission(Base):
     n_Misc1         = Column(Integer)
     n_Misc2         = Column(Integer)
     
-    Index("idx_Perm_ByUserDoc", UserId, DocId)
+    #Index("idx_Perm_ByUserDoc", UserId, DocId)
 
-    def __init__(self, DocId, UserId, UserPermissions):
-        self.DocId = DocId
-        self.UserId = UserId
-        self.UserPermissions = UserPermissions
+    # Constructors to insert data 
+    #def __init__(self, UserId):
