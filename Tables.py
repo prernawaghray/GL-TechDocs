@@ -13,10 +13,13 @@
 ## Shravan       20221005   Initial version
 #----------------------------------------------------------------------------------
 
+#ToDo: Defining FK constraints later after the code for Users schema is uploaded 
+
 # Import all libraries
 import os
 import mysql.connector
 from mysql.connector import connect, errorcode
+import yaml
 
 ##
 # Method to store definitions of all the necessary tables into an array
@@ -28,7 +31,7 @@ def defineTables():
     "Create Table if not exists `Documents` ("
     "   DocId           int not null AUTO_INCREMENT,"
     "   DocName         varchar(256),"
-    "   UserId          int,"
+    "   UserId          varchar(256),"
     "   FilePath        text,"
     "   CreatedDate     datetime,"
     "   ModifiedDate    datetime,"
@@ -51,38 +54,19 @@ def defineTables():
     # Col Permission, possible values are (R)ead, (W)rite, (S)hare
     tbl_array['Permissions'] = (
     "Create Table if not exists `Permissions` ("
-    "   PermissionId    int not null AUTO_INCREMENT,"
-    "   DocId           int,"
-    "   UserId          int,"
-    "   Permission      varchar(25),"
-    "   Version         int,"
-    "   s_Misc1         varchar(1024),"
-    "   s_Misc2         varchar(1024),"
-    "   n_Misc1         int,"
-    "   n_Misc2         int,"
+    "   PermissionId        int not null AUTO_INCREMENT,"
+    "   DocId               int,"
+    "   UserId              varchar(256),"
+    "   UserPermissions     varchar(25),"
+    "   GroupPermissions    varchar(25),"
+    "   OtherPermissions    varchar(25),"
+    "   Version             int,"
+    "   s_Misc1             varchar(1024),"
+    "   s_Misc2             varchar(1024),"
+    "   n_Misc1             int,"
+    "   n_Misc2             int,"
     "   PRIMARY KEY (PermissionId),"
     "   INDEX idx_Perm_ByUserDoc (UserId, DocId)"
-    ")"
-    )
-    
-    # Table - DocHistory
-    # Stores the history of all edits of all documents of all users
-    tbl_array['DocHistory'] = (
-    "Create Table if not exists `DocHistory` ("
-    "   RecordId        int not null AUTO_INCREMENT,"
-    "   DocId           int,"
-    "   DocName         varchar(256),"
-    "   UserId          int,"
-    "   Timestamp       datetime,"
-    "   FilePath        text,"
-    "   DocVersion      varchar(256),"
-    "   Version         int,"
-    "   s_Misc1         varchar(1024),"
-    "   s_Misc2         varchar(1024),"
-    "   n_Misc1         int,"
-    "   n_Misc2         int,"
-    "   PRIMARY KEY (RecordId),"
-    "   INDEX idx_dochist_ByUserDoc (UserId, DocId)"
     ")"
     )
     
@@ -92,7 +76,7 @@ def defineTables():
     tbl_array['PaymentAccounts'] = (
     "Create Table if not exists `PaymentAccounts` ("
     "   RecordId        int not null AUTO_INCREMENT,"
-    "   UserId          int,"   
+    "   UserId          varchar(256),"   
     "   IsDefault       bool,"
     "   AccType         varchar(50),"
     "   AccName         varchar(256),"
@@ -117,7 +101,7 @@ def defineTables():
     tbl_array['UserPayments'] = (
     "Create Table if not exists `UserPayments` ("
     "   RecordId        int not null AUTO_INCREMENT,"
-    "   UserId          int,"
+    "   UserId          varchar(256),"
     "   PaidDate        datetime,"
     "   Amount          decimal(65,30),"
     "   PayAccountId    int,"
@@ -142,7 +126,7 @@ def defineTables():
     tbl_array['UserSubscriptions'] = (
     "Create Table if not exists `UserSubscriptions` ("
     "   RecordId        int not null AUTO_INCREMENT,"
-    "   UserId          int,"
+    "   UserId          varchar(256),"
     "   Type            char(5),"
     "   TypeDesc        varchar(128),"
     "   Status          Char(1),"
@@ -160,11 +144,21 @@ def defineTables():
 # Method to run the table definitions defined in the earlier call in a loop
 # Creates a connection to the Database and then executes the create query
 def createTables():
+    
     # Get all details of the DB from the environment variables
-    db_conn     = os.environ.get('MYSQL_CONNECTION')
-    db_database = os.environ.get('MYSQL_DB')
-    db_user     = os.environ.get('MYSQL_USER')
-    db_pass     = os.environ.get('MYSQL_PASS')
+    #db_conn     = os.environ.get('MYSQL_CONNECTION')
+    #db_database = os.environ.get('MYSQL_DB')
+    #db_user     = os.environ.get('MYSQL_USER')
+    #db_pass     = os.environ.get('MYSQL_PASS')
+    
+    # Get details from configuration file
+    with open('database_config.yml') as stream:
+        configs = yaml.safe_load(stream)
+    
+    db_conn     = configs['MYSQL_CONNECTION']
+    db_database = configs['MYSQL_DB']
+    db_user     = configs['MYSQL_USER']
+    db_pass     = configs['MYSQL_PASS']
 
     try:
         cnx = mysql.connector.connect(
