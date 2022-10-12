@@ -10,6 +10,16 @@ def login_required(function):
     return wrapper
 
 
+def login_required(f):
+    
+    def wrap(*args, **kwargs):
+        if  session.get('user') :
+            return f(*args, **kwargs)
+        else:
+            return redirect(url_for('login'))
+
+    return wrap
+
 @app.route('/')
 def home():
    return render_template('home-page/home.html')
