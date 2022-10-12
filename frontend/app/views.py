@@ -4,6 +4,10 @@ from app import app, oauth
 
 
 '''Login Authorization Wrapper'''
+def login_required(function): 
+    def wrapper(*args, **kwargs):
+        return function(*args, **kwargs) if session.get('user') else abort(401)
+    return wrapper
 
 
 def login_required(f):
