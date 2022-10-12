@@ -1,10 +1,16 @@
+'''
+    This file is for creating the user profile tables in the Database
+    Created UserAuthentication, Occupation, FieldOfWork, PurposeOfUsage, LinkedAccount and UserProfile
+    Tables in user_details schema.
+'''
+
 # Import all libraries
 import os
 import mysql.connector
 from mysql.connector import connect, errorcode
 
 # Method to store definitions of all the necessary tables into an array
-def defineTables():
+def define_tables():
     # Table - UserAuthentication
     tbl_array['UserAuthentication'] = (
         "Create Table if not exists `UserAuthentication` ("
@@ -21,7 +27,7 @@ def defineTables():
         "Create Table if not exists `Occupation` ("
         "   OccupationId    int not null AUTO_INCREMENT,"
         "   OccupationName  varchar(256),"
-        "   PRIMARY KEY (OccupationId)"
+        "   PRIMARY KEY (OccupationName)"
         ")"
     )
 
@@ -30,7 +36,7 @@ def defineTables():
         "Create Table if not exists `FieldOfWork` ("
         "   FieldId    int not null AUTO_INCREMENT,"
         "   FieldWork  varchar(50),"
-        "   PRIMARY KEY (FieldId)"
+        "   PRIMARY KEY (FieldWork)"
         ")"
     )
 
@@ -39,7 +45,7 @@ def defineTables():
         "Create Table if not exists `PurposeOfUsage` ("
         "   PurposeId  int not null AUTO_INCREMENT,"
         "   Purpose    varchar(100),"
-        "   PRIMARY KEY (PurposeId)"
+        "   PRIMARY KEY (Purpose)"
         ")"
     )
 
@@ -52,14 +58,15 @@ def defineTables():
         "   Address         varchar(256),"
         "   SignUpDate      datetime,"
         "   lastActive      datetime,"
-        "   OccupationId    int,"
-        "   FieldId         int,"
-        "   PurposeId       int,"
+        "   OccupationName  varchar(256),"
+        "   FieldWork       varchar(256),"
+        "   Purpose         varchar(256),"
         "   AlternateEmail  varchar(256)"
         "   PRIMARY KEY (UserId),"
         "   FOREIGN KEY (UserID) REFERENCES UserAuthentication(UserId),"
-        "   FOREIGN KEY (FieldId) REFERENCES FieldOfWork(FieldId),"
-        "   FOREIGN KEy (PurposeId) REFERENCES PurposeOfUsage(PurposeId)"
+        "   FOREIGN KEY (OccupationName) REFERENCES Occupation(OccupationName),"
+        "   FOREIGN KEY (FieldWork) REFERENCES FieldOfWork(FieldWork),"
+        "   FOREIGN KEy (Purpose) REFERENCES PurposeOfUsage(Purpose)"
         ")"
     )
 
@@ -76,11 +83,11 @@ def defineTables():
     )
 
 # Creates a connection to the Database
-def createTables():
+def create_tables():
     # Get all details of the DB from the environment variables
     db_conn = "latexdb.czl9dubxqhpg.us-east-1.rds.amazonaws.com"
     db_port = "3306"
-    db_database = os.environ.get('MYSQL_DB')
+    db_database = "user_details"
     db_user = "latexedb"
     db_pass = "latexdb@12345"
 
@@ -116,6 +123,6 @@ if __name__ == '__main__':
     # Variable to store all table definitions
     tbl_array = {}
     # Table definitions
-    defineTables()
+    define_tables()
     # Open connection and run table defitions
-    createTables()
+    create_tables()
