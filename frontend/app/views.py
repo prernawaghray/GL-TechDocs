@@ -84,7 +84,7 @@ def dashboard():
 
 @app.route('/profile')
 @login_required
-def userprofile():
+def profile():
    return render_template('profile/profile.html')
 
 def createLoginResponse(s,m):

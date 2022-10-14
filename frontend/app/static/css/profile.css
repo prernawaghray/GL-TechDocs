@@ -1,18 +1,9 @@
-#profile-btn{
-    margin-left:205px;
-    width:200px;
 
 
-}
-#password-btn{
-    margin-left:205px;
-    width:200px;
 
+#profilepage{
+    max-width:380px;
+    margin:auto;
+}
 
-}
-label{
-    width: 200px;
-}
-input{
-    width: 200px;
-}
+  a{text-decoration: none;}

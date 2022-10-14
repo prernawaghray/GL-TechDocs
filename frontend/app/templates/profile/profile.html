@@ -7,60 +7,73 @@
 
 {% block body %}
 <script src="js/profile.js"></script>
-    
-<div id="accordion">
+<div id="profilepage" class="mt-5">  
+<div id="profilepageheader"><h2 style="margin-bottom: 0px;">User Account Settings</h2></div> 
+<div id="accordion" >
   <h3>Update Profile Info</h3>
   <div>
-    <p>
+   
       <form action="" method="post" name="profile" id="profile" enctype="multipart/form-data">
-        <label for="first-name">First Name</label>
-        <input type="text" name="First Name" id="first-name" placeholder="First Name" ><br>
-        <label for="last-name">Last Name</label>
-        <input type="text" name="Last Name" id="last-name" placeholder="Last Name" ><br>
+        <div class="form-floating">
+          <input type="text" class="form-control" name="first-name" id="email-input" placeholder="First Name">
+          <label for="first-name">First Name</label>
+        </div>
+        
+        <div class="form-floating mt-2">
+          <input type="text" class="form-control" name="last-name" id="last-name" placeholder="Last Name"><br>
+          <label for="last-name">Last Name</label>
+        </div>
+        <div class="d-grid gap-2 mt-3">
+          <span id="profile-errorMessage" class="errorMessage"></span>
+          <button type="submit" class="btn btn-primary" name="profile_method" value="profil" id="profile-btn">Update</button>   
+        </div>
        
-        <span id="profile-errorMessage" class="errorMessage"></span><br>
-        <button type="submit" name="profile_method" value="profile" id="profile-btn">Update</button><br>
-    </form>
-    </p>
+       
+      </form>
+    
   </div>
   <h3>Change Password</h3>
   <div>
-    <p>
-      <form action="" method="post" name="password" id="password" enctype="multipart/form-data">
+    <form action="" method="post" name="password" id="password" enctype="multipart/form-data">
+      <div class="form-floating">
+        <input type="password" class="form-control" name="current-password" id="current-password" placeholder="Current Password">
         <label for="current-password">Current Password</label>
-        <input type="password" name="Current Password" id="current-password" placeholder="Current Password" ><br>
+      </div>
+      <div class="form-floating mt-2">
+        <input type="password" class="form-control" name="new-password" id="new-password" placeholder="New Password">
         <label for="new-password">New Password</label>
-        <input type="password" name="New Password" id="new-password" placeholder="New Password" ><br>
-        <label for="confirm-new-password">Confirm New Password</label>
-        <input type="password" name="Confirm New Password" id="confirm-new-password" placeholder="Confirm New Password" ><br>
-       
-        <span id="profile-errorMessage" class="errorMessage"></span><br>
-        <button type="submit" name="password_method" value="password" id="password-btn">Change</button><br>
+      </div>
+      <div class="form-floating mt-2">
+        <input type="password" class="form-control" name="confirm-password" id="confirm-password" placeholder="Confirm Password">
+        <label for="confirm-password">Confirm Password</label>
+      </div>
+    
+      <div class="d-grid gap-2 mt-4">
+        <span id="password-errorMessage" class="errorMessage"></span>
+        <button type="submit" class="btn btn-primary" name="password_method" value="password" id="password-btn">Change</button>   
+      </div>
+     
+     
     </form>
-    </p>
+
+     
+    
   </div>
   <h3>Link to Cloud Store</h3>
   <div>
     <p>
-    TBD
+    To be developed
     </p>
     
   </div>
   <h3>Delete account</h3>
   <div>
     <p>
-    Cras dictum. Pellentesque habitant morbi tristique senectus et netus
-    et malesuada fames ac turpis egestas. Vestibulum ante ipsum primis in
-    faucibus orci luctus et ultrices posuere cubilia Curae; Aenean lacinia
-    mauris vel est.
+    To be developed
     </p>
-    <p>
-    Suspendisse eu nisl. Nullam ut libero. Integer dignissim consequat lectus.
-    Class aptent taciti sociosqu ad litora torquent per conubia nostra, per
-    inceptos himenaeos.
-    </p>
+   
   </div>
 </div>
-
+</div>
 
 {% endblock %}
