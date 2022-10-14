@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block layoutCss %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/editor-layout.css') }}">
+  {% block pageCss %}{% endblock%}
+{% endblock %}
+
+{% block layout %}
+      
+<nav class="navbar bg-light">
+  <div class="container-fluid">
+    <a href="{{url('/dashboard')}}" class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none">
+      <img src="{{url_for('static',filename='images/icons/android-chrome-192x192.png')}}" class="header-logo"/>
+      <span class="header-text">TechDocs</span>
+    </a>
+  </div>
+</nav>
+
+{% endblock %}
+
+{% block layoutJS %}
+
+  {% block pageJS %}{% endblock%}
+
+{% endblock %}

@@ -76,6 +76,6 @@ def logout():
 
 
 @app.route('/dashboard')
-@login_required
+# @login_required
 def dashboard():
    return render_template('user-dashboard/dashboard.html')
