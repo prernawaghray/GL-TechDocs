@@ -19,7 +19,6 @@ secret_key = app.config["SECRET_KEY"]
 aws_access_key = app.config['AWS_ACCESS_KEY']
 aws_access_secret_key = app.config['AWS_ACCESS_SECRET']
 extensions = app.config["ALLOWED_EXTENSIONS"]
-
 try:
     connection=db.connect(
         user = username,
@@ -55,9 +54,10 @@ def authentication(f):
             data = jwt.decode(token, secret_key ,algorithms=["HS256"])
             query = ("SELECT user_email FROM user_authentication WHERE user_id=(%s)")
             user_id = data['user_id']
-            if sql_query(query,user_id):
-                return
-            else:
+            cursor = connection.cursor()
+            cursor.execute(query,(user_id,))
+            current_user_email = cursor.fetchall()[0][0]
+            if not current_user_email:
                 return jsonify(message='invalid token')
         except:
             return jsonify(message='something went wrong')
@@ -68,7 +68,7 @@ def authentication(f):
     
 @app.route('/')
 def healthcheck():
-    return jsonify(health='good')
+    return jsonify(health ='good')
     
 def allowed_files(filename):
     return '.' in filename and \
@@ -92,17 +92,8 @@ def upload(user_id):
         if status:
             pass
         else:
+            #return jsonify(message='something went wrong')
             pass
-
-def sql_query(query):
-    try:
-        cursor = connection.cursor()
-        cursor.execute(query,(user_id,))
-        current_user_email = cursor.fetchall()[0][0]
-        if current_user_email:
-            return True
-    except:
-        return False
 
 def check_object(bucket,key):
     path = path.rstrip('/')

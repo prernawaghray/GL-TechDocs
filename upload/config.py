@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 
 basedir = os.path.abspath(os.path.dirname(__file__))
-env = os.path.join(basedir,'.env.local')
+env = os.path.join(basedir,'./.env.local')
 if os.path.exists(env):
     load_dotenv(env)
 
