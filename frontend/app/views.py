@@ -1,24 +1,26 @@
 from flask import render_template, request, url_for,session 
 from flask import make_response, redirect, abort
 from app import app, oauth
+from flask import jsonify
+
 
 
 '''Login Authorization Wrapper'''
-def login_required(function): 
-    def wrapper(*args, **kwargs):
-        return function(*args, **kwargs) if session.get('user') else abort(401)
-    return wrapper
+#def login_required(function): 
+#    def wrapper(*args, **kwargs):
+#        return function(*args, **kwargs) if session.get('user') else abort(401)
+#    return wrapper
 
 
 def login_required(f):
     
-    def wrap(*args, **kwargs):
-        if  session.get('user') :
-            return f(*args, **kwargs)
-        else:
-            return redirect(url_for('login'))
-
-    return wrap
+   def wrap(*args, **kwargs):
+      if  session.get('user') :
+         return f(*args, **kwargs)
+      else:
+         return redirect(url_for('login'))
+   wrap.__name__ = f.__name__
+   return wrap
 
 @app.route('/')
 def home():
@@ -49,7 +51,7 @@ def login():
       session['user'] = {'email':request.form['email']}
       return redirect('/dashboard')
    else:
-      return make_response({'email_status':0}, 401)
+      return make_response({'email_status':1}, 401)
 
 
    
@@ -79,3 +81,34 @@ def logout():
 # @login_required
 def dashboard():
    return render_template('user-dashboard/dashboard.html')
+
+@app.route('/profile')
+@login_required
+def userprofile():
+   return render_template('profile/profile.html')
+
+def createLoginResponse(s,m):
+   return jsonify(status=s,message=m)
+
+def checkValidUserPassword(email,password):
+   if email == 'admin@techdocs.com' and password == 'admin123':
+      return True
+   else:
+      return False
+
+@app.route('/api/login',methods=['POST'])
+def login_api_placeholder():
+   try:
+      email = request.form['email']
+      password = request.form['password']
+
+      if checkValidUserPassword(email,password):
+            
+         session['user'] = {'email':request.form['email']}
+         return createLoginResponse(True,"Logged in")
+      else:
+         return createLoginResponse(False,"Invalid User Id or Password")
+   except BaseException as err:
+      return createLoginResponse(False,f"Unexpected {err=}, {type(err)=}")
+   
+

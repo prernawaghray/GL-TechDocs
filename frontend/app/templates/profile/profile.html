@@ -1,0 +1,66 @@
+{% extends "dashboard-layout.html" %}
+
+{% block pageCss%}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+{% endblock %}
+
+
+{% block body %}
+<script src="js/profile.js"></script>
+    
+<div id="accordion">
+  <h3>Update Profile Info</h3>
+  <div>
+    <p>
+      <form action="" method="post" name="profile" id="profile" enctype="multipart/form-data">
+        <label for="first-name">First Name</label>
+        <input type="text" name="First Name" id="first-name" placeholder="First Name" ><br>
+        <label for="last-name">Last Name</label>
+        <input type="text" name="Last Name" id="last-name" placeholder="Last Name" ><br>
+       
+        <span id="profile-errorMessage" class="errorMessage"></span><br>
+        <button type="submit" name="profile_method" value="profile" id="profile-btn">Update</button><br>
+    </form>
+    </p>
+  </div>
+  <h3>Change Password</h3>
+  <div>
+    <p>
+      <form action="" method="post" name="password" id="password" enctype="multipart/form-data">
+        <label for="current-password">Current Password</label>
+        <input type="password" name="Current Password" id="current-password" placeholder="Current Password" ><br>
+        <label for="new-password">New Password</label>
+        <input type="password" name="New Password" id="new-password" placeholder="New Password" ><br>
+        <label for="confirm-new-password">Confirm New Password</label>
+        <input type="password" name="Confirm New Password" id="confirm-new-password" placeholder="Confirm New Password" ><br>
+       
+        <span id="profile-errorMessage" class="errorMessage"></span><br>
+        <button type="submit" name="password_method" value="password" id="password-btn">Change</button><br>
+    </form>
+    </p>
+  </div>
+  <h3>Link to Cloud Store</h3>
+  <div>
+    <p>
+    TBD
+    </p>
+    
+  </div>
+  <h3>Delete account</h3>
+  <div>
+    <p>
+    Cras dictum. Pellentesque habitant morbi tristique senectus et netus
+    et malesuada fames ac turpis egestas. Vestibulum ante ipsum primis in
+    faucibus orci luctus et ultrices posuere cubilia Curae; Aenean lacinia
+    mauris vel est.
+    </p>
+    <p>
+    Suspendisse eu nisl. Nullam ut libero. Integer dignissim consequat lectus.
+    Class aptent taciti sociosqu ad litora torquent per conubia nostra, per
+    inceptos himenaeos.
+    </p>
+  </div>
+</div>
+
+
+{% endblock %}
