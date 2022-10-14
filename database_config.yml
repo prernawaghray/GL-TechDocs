@@ -7,3 +7,5 @@ MYSQL_CONNECTION: "localhost"
 MYSQL_DB: "glcaptest"
 MYSQL_USER: "root"
 MYSQL_PASS: "dbaRoot#123"
+
+LOGGING_FILEPATH: "/Users/apple/Documents/GreatLearning/Captsone/testdata/filemanager.log"

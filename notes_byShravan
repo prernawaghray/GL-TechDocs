@@ -21,7 +21,12 @@ config.py: configuration file for file manager program
 
 
 ToDo:
-1. Have to define FK on Users table when that definition is available
-2. Need to call version method to get the version number generated for each document
-2. Have to define configurations better and one each for different environment
+1. Abstract class for constructros and re-use
+2. Have to reorg - into folders, common configurations, & docker file
+3. Have to define FK on Users table when that definition is available
+4. Calls to be made
+    a) User permissions
+    b) Version maker 
+5. Swagger documentation
+6. Common logger 
 
