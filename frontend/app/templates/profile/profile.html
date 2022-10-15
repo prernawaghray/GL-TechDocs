@@ -13,9 +13,9 @@
   <h3>Update Profile Info</h3>
   <div>
    
-      <form action="" method="post" name="profile" id="profile" enctype="multipart/form-data">
+      <form action="" method="post" name="profile" id="profileForm" enctype="multipart/form-data">
         <div class="form-floating">
-          <input type="text" class="form-control" name="first-name" id="email-input" placeholder="First Name">
+          <input type="text" class="form-control" name="first-name" id="first-name" placeholder="First Name">
           <label for="first-name">First Name</label>
         </div>
         
@@ -24,7 +24,7 @@
           <label for="last-name">Last Name</label>
         </div>
         <div class="d-grid gap-2 mt-3">
-          <span id="profile-errorMessage" class="errorMessage"></span>
+          <div id="profile-errorMessage" class="errorMessage"></div>
           <button type="submit" class="btn btn-primary" name="profile_method" value="profil" id="profile-btn">Update</button>   
         </div>
        

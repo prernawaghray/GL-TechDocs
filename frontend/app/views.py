@@ -51,7 +51,7 @@ def login():
       session['user'] = {'email':request.form['email']}
       return redirect('/dashboard')
    else:
-      return make_response({'email_status':1}, 401)
+      return make_response({'email_status':0}, 401)
 
 
    
@@ -87,28 +87,7 @@ def dashboard():
 def profile():
    return render_template('profile/profile.html')
 
-def createLoginResponse(s,m):
-   return jsonify(status=s,message=m)
-
-def checkValidUserPassword(email,password):
-   if email == 'admin@techdocs.com' and password == 'admin123':
-      return True
-   else:
-      return False
-
-@app.route('/api/login',methods=['POST'])
-def login_api_placeholder():
-   try:
-      email = request.form['email']
-      password = request.form['password']
-
-      if checkValidUserPassword(email,password):
-            
-         session['user'] = {'email':request.form['email']}
-         return createLoginResponse(True,"Logged in")
-      else:
-         return createLoginResponse(False,"Invalid User Id or Password")
-   except BaseException as err:
-      return createLoginResponse(False,f"Unexpected {err=}, {type(err)=}")
-   
-
+@app.route('/saveUserToken',methods=['POST'])
+def saveToken():
+   session['user'] = request.form['authToken']
+   return  make_response({'status':True}, 200)
