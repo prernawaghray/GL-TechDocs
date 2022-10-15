@@ -1,0 +1,19 @@
+# Environment
+FLASK_ENV: "DEVELOPMENT"
+
+# Application configurations
+SERVER_IP: "127.0.0.1:5000"
+
+# Databases configurations
+DB_URL: "mysql+mysqlconnector://root:dbaRoot#123@localhost:3306/glcaptest"
+DB_CONN: "localhost"
+DB_NAME: "glcaptest"
+DB_USER: "root"
+DB_PASS: "dbaRoot#123"
+
+# Other folder path
+DIR_ROOT: "/Users/apple/Documents/GreatLearning/Captsone/"
+DIR_DATA: "testdata"
+DIR_LOG: "log/filemanager.log"
+
+

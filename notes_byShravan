@@ -21,12 +21,13 @@ config.py: configuration file for file manager program
 
 
 ToDo:
-1. Abstract class for constructros and re-use
-2. Have to reorg - into folders, common configurations, & docker file
-3. Have to define FK on Users table when that definition is available
-4. Calls to be made
+1. DONE.. Abstract class for constructros and re-use.
+2. Input & output confirmation with UI
+3. Have to reorg - into folders, common configurations, & docker file
+4. Have to define FK on Users table when that definition is available
+5. Calls to be made
     a) User permissions
     b) Version maker 
-5. Swagger documentation
-6. Common logger 
+6. Swagger documentation
+7. DONE.. Common logger 
 

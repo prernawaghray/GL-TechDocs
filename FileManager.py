@@ -1,5 +1,4 @@
 # Libraries
-from calendar import SATURDAY
 import os
 import warnings
 import logging
@@ -13,8 +12,8 @@ import sqlalchemy as db
 from sqlalchemy import create_engine, select, update
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from Base import session_factory
-from tbl_Documents import Document
+from DBConnect import session_factory
+from orm_Tables import Document
 #from Users import User
 #from Services.FileManager.permissions import *
 
@@ -22,16 +21,19 @@ from tbl_Documents import Document
 warnings.filterwarnings("ignore")
 
 # Get logging filepath
-with open('database_config.yml') as stream:
+with open('config.yaml') as stream:
     configs = yaml.safe_load(stream)
 
+# Data foler 
+data_path = configs["DIR_ROOT"] + configs["DIR_DATA"] 
 # Initiate logging 
-logging.basicConfig(filename=configs["LOGGING_FILEPATH"])
+log_path = configs['DIR_ROOT'] + configs['DIR_LOG']
+logging.basicConfig(filename=log_path)
 # Start flask
 app = Flask(__name__)
 
 # Flask configurations
-app.config.from_pyfile('config.py')
+app.config.from_object(configs)
 
 # Class to handle common file related processes
 class FileManage:
@@ -41,7 +43,7 @@ class FileManage:
     @classmethod
     def createNewFile(cls, userid, filename):
         datestr  = datetime.today().strftime('%Y%m%d%H%M%S')
-        dirpath  = app.config['DEST_FOLDER'] + '/' + userid
+        dirpath  = data_path + '/' + userid
         if (filename == ""):
             filename = 'untitled_'+datestr+'.tex'
         filepath = dirpath+'/'+filename
@@ -84,7 +86,7 @@ def file_create():
         # processing request
         file_obj = FileManage()
         file_obj.createNewFile(userid, docname)
-        #ver = api_call_to_get_document_version
+        #TODO: ver = api_call_to_get_document_version
         ver = 1
         
         open(file_obj.v_filepath, 'a').close()
@@ -92,7 +94,7 @@ def file_create():
         # Save it in the database - by using table object
         try:
             session = session_factory()
-            doc_entry = Document(file_obj.v_filename, userid, file_obj.v_filepath, datetime.today(), ver)
+            doc_entry = Document(userid, file_obj.v_filename, file_obj.v_filepath, datetime.today(), ver)
             session.add(doc_entry)
             session.flush()
             docid_out = doc_entry.DocId
@@ -133,17 +135,21 @@ def file_modify():
         doctext   = content['Doctext']
         operation = content['Operation']
         
+        #TODO: call the method to know permission
         # check for user permissions
-        userperm = 'w'#get_user_permissions(userid, docid)
+        userperm = 'w' #get_user_permissions(userid, docid)
         
         try:
             # User has write permission
             if(userperm == 'w'):
                 if (operation == 'update') or (operation == "save"):
+                    #TODO: get version number
                     session = session_factory()
                     sql_stmt = select(Document.DocName, Document.FilePath).where(Document.DocId == docid)
                     sql_result = session.execute(sql_stmt)
                     session.close()
+                    
+                    #TODO: also save into document history table
                 
                     # there is always only 1 row
                     for row in sql_result:
@@ -161,7 +167,7 @@ def file_modify():
                 elif (operation == 'rename'):
                     # extract the file name stripping the extension of the file
                     filename_new = docname.split(".")[0] + '.tex'
-                    filepath_new = app.config['DEST_FOLDER'] + '/' + userid + '/'+ filename_new
+                    filepath_new = data_path + '/' + userid + '/'+ filename_new
                     
                     # update the database record
                     session = session_factory()
