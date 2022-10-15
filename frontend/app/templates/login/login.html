@@ -9,11 +9,12 @@
     }
     a{text-decoration: none;}
   </style>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
 {% endblock %}
 
 
 {% block body %}
-
+<script src="js/login.js"></script>
     
 <div id="login-container" class="mt-5">
       <h2 style="margin-bottom: 0px;">User Login</h2>
@@ -45,6 +46,7 @@
 
         </div>
         <div class="d-grid gap-2 mt-3">
+          <span id="email-login-errorMessage" class="errorMessage"></span><br>
           <button type="submit" class="btn btn-primary" name="login_method" value="email" id="login-btn">Login</button>   
         </div>
        
