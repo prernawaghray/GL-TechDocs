@@ -91,3 +91,9 @@ def profile():
 def saveToken():
    session['user'] = request.form['authToken']
    return  make_response({'status':True}, 200)
+
+@app.route('/clearSession',methods=['POST'])
+@login_required
+def clearSession():
+   [session.pop(key) for key in list(session.keys())]
+   return  make_response({'status':True}, 200)

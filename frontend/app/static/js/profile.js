@@ -53,7 +53,7 @@ function profileUpdate() {
     try {
         $.ajax({
             data: {
-                authToken: localStorage.getItem('userToken'),
+                authToken: getUserToken(),
                 userData:
                 {
                     firstName: $('#first-name').val(),
@@ -130,8 +130,70 @@ function changePassword() {
         console.log(e)
     }
 }
+function clearSession()
+{
+    var AUT = getUserToken();
+    localStorage.clear();
+    $.ajax({
+        data:{
+            authToken:AUT
+        },
+        type:'POST',
+        url:getFrontEndUrl('clearSession'),
+        success:async function(data)
+        {
+            await new Promise(r => setTimeout(r, 2000));
+            window.location.replace('/');
+        },
+        error:async function(data)
+        {
+            await new Promise(r => setTimeout(r, 2000));
+            window.location.replace('/');
+        }
+    }
+
+    );
+}
 function deleteAccount()
 {
+    removeAlert('#delete-errorMessage');
+    try {
+        $.ajax({
+            data: {
+                authToken: localStorage.getItem('userToken'),
+                currentPassword: $('#delete-password').val()
+                
+
+            },
+            type: 'POST',
+            url: getApiUrl('deleteAccount'),
+            success: function (data) {
+                //In case of success the data contains the JSON
+
+                if (data.status == true) {
+                    showAlert('#delete-errorMessage', 'alert-success', "Delete Account!!", "Account Deleted Fully");
+                    clearSession();
+                }
+                else {
+                    showAlert('#delete-errorMessage', 'alert-warning', "Delete Account!!", data.message);
+                    
+                    //showError(data.responseJSON.message,'Profile Update')
+
+                }
+
+
+            },
+            error: function (data) {
+                // in case of error we need to read response from data.responseJSON
+                showAlert('#delete-errorMessage', 'alert-danger', "Delete Account!!", data.responseJSON.message);
+
+            }
+        }
+        );
+    }
+    catch (e) {
+        console.log(e)
+    }
 
 }
 var passwordFormRules =
@@ -141,6 +203,7 @@ var passwordFormRules =
     },
     'new-password': {
         required: true,
+        strong_password:true,
         minlength: 6
     },
     'confirm-password': {
@@ -224,7 +287,9 @@ function validateFormsAndAddHandlers() {
     $("#password").validate({
         rules: passwordFormRules,
         errorClass: "inputValidationError",
-
+        errorPlacement: function(error, element) {
+            element.next("label").after(error);
+        },
         submitHandler: function (form) {
             changePassword();
         },
@@ -234,7 +299,9 @@ function validateFormsAndAddHandlers() {
     $("#profileForm").validate({
         rules: profileUpdateRules,
         errorClass: "inputValidationError",
-
+        errorPlacement: function(error, element) {
+            element.next("label").after(error);
+        },
         submitHandler: function (form) {
             profileUpdate();
         },
@@ -246,7 +313,10 @@ function validateFormsAndAddHandlers() {
     $("#deleteAccount").validate({
         rules: deleteAccountRules,
         errorClass: "inputValidationError",
-
+           
+        errorPlacement: function(error, element) {
+            element.next("label").after(error);
+        },
         submitHandler: function (form) {
             deleteAccount();
         },
