@@ -79,3 +79,9 @@ def logout():
 # @login_required
 def dashboard():
    return render_template('user-dashboard/dashboard.html')
+
+
+@app.route('/latex-editor/new-document')
+# @login_required
+def latexEditor():
+   return render_template('latex-editor/editor.html')
