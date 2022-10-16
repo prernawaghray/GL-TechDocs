@@ -84,7 +84,7 @@ function changePassword() {
     try {
         $.ajax({
             data: {
-                authToken: localStorage.getItem('userToken'),
+                authToken: getUserToken(),
                 currentPassword: $('#current-password').val(),
                 newPassword: $('#new-password').val(),
 
