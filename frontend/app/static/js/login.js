@@ -28,6 +28,7 @@ function saveTokenInSession(AUT)
 
 function loginButtonClicked()
 {
+    removeAlert('#email-login-errorMessage');
     try{
     $.ajax({
         data : {
@@ -47,14 +48,16 @@ function loginButtonClicked()
             }
             else
             {
-                $('#email-login-errorMessage').text(data.responseJSON.message);
+                showAlert('#email-login-errorMessage', 'alert-warning', "Login!!", data.message);
+              
             }
             
             
           },
           error:function(data) {
             // in case of error we need to read response from data.responseJSON
-            $('#email-login-errorMessage').text(data.responseJSON.message);
+            showAlert('#email-login-errorMessage', 'alert-danger', "Login!!", data.responseJSON.message);
+
             
           }
         }

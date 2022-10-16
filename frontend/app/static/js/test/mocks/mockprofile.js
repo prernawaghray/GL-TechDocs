@@ -3,6 +3,7 @@ import { isEqualObjects,baseApiUrl } from "../helpers.js";
 export {mockhandlers};
 var getProfileAPIUrl = baseApiUrl + "getProfile";
 var updateProfileAPIUrl = baseApiUrl + "updateProfile";
+var changePasswordAPIUrl = baseApiUrl + "changePassword";
 var userProfiles=
 {
   '123456':{
@@ -50,6 +51,10 @@ var updateProfileDataFailure = {
   status:false,
   message:"MOCK : Unable to update Data"
 }
+var changePasswordDataFailure = {
+  status:false,
+  message:"MOCK : Unable to update Password"
+}
 function checkValidProfileRequest(data)
 {
   return isEqualObjects( data, user1GetRequest ) || isEqualObjects( data, user2GetRequest );
@@ -88,6 +93,13 @@ var getProfileUser={
     if(data.userData.firstName.length>10) return false;
     return true;
   }
+  function checkValidChangePasswordRequest(data)
+  {
+    if(data.authToken!='123456'&&data.authToken!='789123')
+      return false;
+    if(data.currentPassword.length>10) return false;
+    return true;
+  }
   function updateProfileData(data)
   {
     var token = data.authToken;
@@ -121,12 +133,39 @@ var getProfileUser={
     status:[402,404,500],
     responseText:updateProfileDataFailure
   };
+  var changePassword={
+    url: changePasswordAPIUrl,
+    data: function( data ) {
+        return checkValidChangePasswordRequest(data);
+      },
+    status:200,
+    response:function(settings)
+    {
+      var response = {
+        status:true,
+        message:"OK"
+    
+      };
+      this.responseText=response;
+    }
+  };
+
+  var changePasswordFailure={
+    url: changePasswordAPIUrl,
+    data: function( data ) {
+        return !checkValidChangePasswordRequest(data);
+      },
+    status:[402,404,500],
+    responseText:changePasswordDataFailure
+  };
   
   var mockhandlers=[
     getProfileUser,
     profileDataFailure,
     updateProfileUser,
-    updateProfileUserFailure
+    updateProfileUserFailure,
+    changePassword,
+    changePasswordFailure
     
             ];
   

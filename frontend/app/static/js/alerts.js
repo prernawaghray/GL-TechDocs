@@ -26,3 +26,8 @@ function showAlert(div,type,title,message)
     if ($('#alertBox').length==0)
         $(div).append(newAlert);
 }
+
+function removeAlert(div)
+{
+    $(div+' > #alertBox').remove()
+}
