@@ -3,7 +3,7 @@ import { isEqualObjects,baseApiUrl } from "../helpers.js";
 export {mockhandlers};
 var loginApiUrl = baseApiUrl + "login";
 var successfulAuthToken = "123456"
-var successfulLoginData = { 
+var successfulLoginRequest = { 
     loginType:"email",
     email:'admin@techdocs.com', 
     password : 'admin123',
@@ -13,7 +13,8 @@ var successfulLoginData = {
 var loginResponseSuccess = {
     
     authToken: successfulAuthToken,
-    message:"Logged in successfully"
+    isAdmin:true
+    
 }
 var loginResponseFailure = {
 
@@ -22,7 +23,7 @@ var loginResponseFailure = {
 var mockLoginSuccess={
     url: loginApiUrl,
     data: function( data ) {
-        return isEqualObjects( data, successfulLoginData );
+        return isEqualObjects( data, successfulLoginRequest );
       },
     status:200,
     responseText:loginResponseSuccess
@@ -31,7 +32,7 @@ var mockLoginSuccess={
   var mockLoginFailure={
     url: loginApiUrl,
     data: function( data ) {
-        return !isEqualObjects( data, successfulLoginData );
+        return !isEqualObjects( data, successfulLoginRequest );
       },
     status:401,
     responseText:loginResponseFailure
