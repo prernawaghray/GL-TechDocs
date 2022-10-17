@@ -17,9 +17,10 @@
 
 # Import all libraries
 import os
+import yaml
+import logging
 import mysql.connector
 from mysql.connector import connect, errorcode
-import yaml
 
 ##
 # Method to store definitions of all the necessary tables into an array
@@ -152,13 +153,16 @@ def createTables():
     #db_pass     = os.environ.get('MYSQL_PASS')
     
     # Get details from configuration file
-    with open('database_config.yml') as stream:
+    with open('config.yaml') as stream:
         configs = yaml.safe_load(stream)
     
-    db_conn     = configs['MYSQL_CONNECTION']
-    db_database = configs['MYSQL_DB']
-    db_user     = configs['MYSQL_USER']
-    db_pass     = configs['MYSQL_PASS']
+    db_conn     = configs['DB_CONN']
+    db_database = configs['DB_NAME']
+    db_user     = configs['DB_USER']
+    db_pass     = configs['DB_PASS']
+    log_path    = configs['DIR_ROOT'] + configs['DIR_LOG']
+    # Initiate logging 
+    logging.basicConfig(filename=log_path)
 
     try:
         cnx = mysql.connector.connect(
@@ -168,7 +172,7 @@ def createTables():
             password=db_pass
         )
     except mysql.connector.Error as err:
-        print(err.msg)
+        logging.exception(err)
     else:
         cursor = cnx.cursor()
         
@@ -176,16 +180,18 @@ def createTables():
         tbl_def = tbl_array[tbl_name]
         try:
             print("Running table def: {}: ".format(tbl_name), end='')
+            logging.info("Running table def: {}: ".format(tbl_name), end='')
             #print("\n Table def: ",tbl_def)
             cursor.execute(tbl_def)
         except mysql.connector.Error as err:
             if err.errno == errorcode.ER_TABLE_EXISTS_ERROR:
-                print("Table already exists.")
+                logging.error("Table already exists.")
             else:
-                print(err.msg)
+                logging.exception(err.msg)
         else:
             print("...Passed")
-            
+            logging.info("...Passed")
+ 
     cursor.close()
     cnx.close()
 
