@@ -32,25 +32,20 @@ function loginButtonClicked()
     try{
     $.ajax({
         data : {
+           loginType : "email",
            email : $('#email-input').val(),
            password: $('#password-input').val(),
+           rememberMe : $('#remember-me').prop("checked")?1:0
                },
            type : 'POST',
            url : getApiUrl('login'),
            success: function(data) {
             //In case of success the data contains the JSON
 
-            if(data.status==true)
-            {
+            
                 localStorage.setItem('userToken', data.authToken);
                 saveTokenInSession(data.authToken);
-                
-            }
-            else
-            {
-                showAlert('#email-login-errorMessage', 'alert-warning', "Login!!", data.message);
-              
-            }
+            
             
             
           },
