@@ -7,6 +7,7 @@
 # Import all libraries
 import os
 import mysql.connector
+import yaml
 from mysql.connector import connect, errorcode
 
 # Method to store definitions of all the necessary tables into an array
@@ -85,11 +86,13 @@ def define_tables():
 # Creates a connection to the Database
 def create_tables():
     # Get all details of the DB from the environment variables
-    db_conn = "latexdb.czl9dubxqhpg.us-east-1.rds.amazonaws.com"
-    db_port = "3306"
-    db_database = "user_details"
-    db_user = "latexedb"
-    db_pass = "latexdb@12345"
+    with open('database_config.yml') as stream:
+        configs = yaml.safe_load(stream)
+
+    db_conn = configs['MYSQL_CONNECTION']
+    db_database = configs['MYSQL_DB']
+    db_user = configs['MYSQL_USER']
+    db_pass = configs['MYSQL_PASS']
 
     try:
         cnx = mysql.connector.connect(
