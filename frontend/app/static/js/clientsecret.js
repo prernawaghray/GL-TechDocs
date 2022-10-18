@@ -1,4 +1,4 @@
-var MY_CLIENT_ID = "348787751482-qvmndaqdmk6ad3d6e95lrgkdfiu568se.apps.googleusercontent.com";
+var MY_CLIENT_ID = "";
 function getClientId()
 {
     return MY_CLIENT_ID;
