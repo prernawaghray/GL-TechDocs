@@ -89,7 +89,7 @@ function handleGoogleAuthResponse(token) {
 
   window.onload = function () {
     google.accounts.id.initialize({
-      client_id: getClientSecret(),
+      client_id: getClientId(),
       callback: handleGoogleAuthResponse,
       prompt_parent_id:"googleLogin"
     });
