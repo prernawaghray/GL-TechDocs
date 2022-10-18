@@ -10,6 +10,13 @@ var successfulLoginRequest = {
     rememberMe : 1
 }
 
+var successfulLoginRequestGoogle = { 
+  loginType:"google",
+  email:'sarith.madhu@gmail.com', 
+  password : 'authenticated',
+  rememberMe : 0
+}
+
 var loginResponseSuccess = {
     
     authToken: successfulAuthToken,
@@ -23,7 +30,7 @@ var loginResponseFailure = {
 var mockLoginSuccess={
     url: loginApiUrl,
     data: function( data ) {
-        return isEqualObjects( data, successfulLoginRequest );
+        return isEqualObjects( data, successfulLoginRequest ) || isEqualObjects( data, successfulLoginRequestGoogle );
       },
     status:200,
     responseText:loginResponseSuccess
@@ -32,7 +39,7 @@ var mockLoginSuccess={
   var mockLoginFailure={
     url: loginApiUrl,
     data: function( data ) {
-        return !isEqualObjects( data, successfulLoginRequest );
+        return !(isEqualObjects( data, successfulLoginRequest ) || isEqualObjects( data, successfulLoginRequestGoogle ));
       },
     status:401,
     responseText:loginResponseFailure
