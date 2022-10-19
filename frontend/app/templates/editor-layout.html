@@ -11,9 +11,22 @@
       border: 1px solid red;
       margin-right: 2em;
     }
-    @media (max-width: 767.98px) {
+    
+    .re-flex .item{
+      width: calc(50% - 20px);
+    }
+
+    @media (max-width: 800px) {
       .container-x > aside, .container-x .resize-handle--x{
         display:none;
+      }
+      .re-flex{
+        flex-direction: column-reverse;
+      }
+      .re-flex .item{
+        margin-bottom: 20px;
+        width:100%;
+        height: calc(59% - 100px);
       }
     }
 
@@ -73,8 +86,8 @@
   </aside>
   <div class="resize-handle--x" data-target="aside"></div>
   <main class="container-fluid body-main mt-2 bg-light">
-    <div class="d-flex align-items-stretch flex-wrap" style="height: calc(100% - 63px)">
-      <textarea id="editor-text" class="form-control"   style="width: 50%;" >
+    <div class="d-flex align-items-stretch flex-wrap re-flex" style="height: calc(100% - 63px)">
+      <textarea id="editor-text" class="form-control item">
 \documentclass{article}
 
 \usepackage{comment, multicol}
@@ -103,8 +116,7 @@ In the appendix, the API as well as the format of custom macro definitions in Ja
 \end{document}
         
       </textarea>
-      <div id="html-preview" class="shadow p-3 bg-body rounded" style="width: calc(50% - 20px);
-      margin: 0px 10px;">
+      <div id="html-preview" class="shadow p-3 bg-body rounded item">
 
       </div>
     </div>
