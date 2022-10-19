@@ -1,24 +1,26 @@
 from flask import render_template, request, url_for,session 
 from flask import make_response, redirect, abort
 from app import app, oauth
+from flask import jsonify
+
 
 
 '''Login Authorization Wrapper'''
-def login_required(function): 
-    def wrapper(*args, **kwargs):
-        return function(*args, **kwargs) if session.get('user') else abort(401)
-    return wrapper
+#def login_required(function): 
+#    def wrapper(*args, **kwargs):
+#        return function(*args, **kwargs) if session.get('user') else abort(401)
+#    return wrapper
 
 
 def login_required(f):
     
-    def wrap(*args, **kwargs):
-        if  session.get('user') :
-            return f(*args, **kwargs)
-        else:
-            return redirect(url_for('login'))
-
-    return wrap
+   def wrap(*args, **kwargs):
+      if  session.get('user') :
+         return f(*args, **kwargs)
+      else:
+         return redirect(url_for('login'))
+   wrap.__name__ = f.__name__
+   return wrap
 
 @app.route('/')
 def home():
@@ -80,8 +82,23 @@ def logout():
 def dashboard():
    return render_template('user-dashboard/dashboard.html')
 
-
 @app.route('/latex-editor/new-document')
 # @login_required
 def latexEditor():
    return render_template('latex-editor/editor.html')
+
+@app.route('/profile')
+@login_required
+def profile():
+   return render_template('profile/profile.html')
+
+@app.route('/saveUserToken',methods=['POST'])
+def saveToken():
+   session['user'] = request.form['authToken']
+   return  make_response({'status':True}, 200)
+
+@app.route('/clearSession',methods=['POST'])
+@login_required
+def clearSession():
+   [session.pop(key) for key in list(session.keys())]
+   return  make_response({'status':True}, 200)
