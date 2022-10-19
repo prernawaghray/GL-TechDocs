@@ -11,6 +11,11 @@
       border: 1px solid red;
       margin-right: 2em;
     }
+    @media screen  (max-width: 767.98px) {
+      .container-x > aside, .container-x .resize-handle--x{
+        display:none;
+      }
+    }
   </style>
 
   {% block pageCss %}{% endblock%}
@@ -23,8 +28,9 @@
   <div class="container-fluid">
     
     <a href="/dashboard" class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none">
-      <img src="{{url_for('static',filename='images/icons/android-chrome-192x192.png')}}" class="header-logo"/>
-      <span class="header-text">TechDocs</span>
+      <span class="header-text">
+        <i class="bi bi-house-door-fill"></i>
+      </span>
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
       <span class="navbar-toggler-icon"></span>
@@ -37,13 +43,11 @@
       </div>
       <div class="offcanvas-body">
         <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-          <li class="nav-item"><a href="#" class="nav-link px-2 link-secondary">Home</a></li>
-          <li class="nav-item"><a href="#" class="nav-link px-2 link-dark">Features</a></li>
-          <li class="nav-item"><a href="#" class="nav-link px-2 link-dark">Pricing</a></li>
-          <li class="nav-item"><a href="#" class="nav-link px-2 link-dark">Help</a></li>
+          <li class="nav-item"><a href="#" class="nav-link px-2 link-dark"><i class="bi bi-paperclip"></i> Assets</a></li>
+          <li class="nav-item"><a href="#" class="nav-link px-2 link-dark"><i class="bi bi-clock-history"></i> History</a></li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Account
+              <i class="bi bi-person-circle"></i> Account
             </a>
             <ul class="dropdown-menu">
               <li><a class="dropdown-item" href="#">Account Settings</a></li>
@@ -64,7 +68,7 @@
 
 <div class="container-x">
   <aside>
-    <p style="width:150px;">Assets</p>
+    <p style="width:180px;">Assets</p>
   </aside>
   <div class="resize-handle--x" data-target="aside"></div>
   <main class="container-fluid body-main mt-2 bg-light">
@@ -150,7 +154,7 @@ In the appendix, the API as well as the format of custom macro definitions in Ja
       tracking: false,
       startWidth: null,
       startCursorScreenX: null,
-      handleWidth: 10,
+      handleWidth: 5,
       resizeTarget: null,
       parentElement: null,
       maxWidth: null,
