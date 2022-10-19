@@ -65,9 +65,9 @@ def auth():
 
 
 
-@app.route('/forgot_password')
+@app.route('/forgotpassword')
 def forgot_password():
-   return make_response({'forgot_Password':True}, 302)
+   return render_template('forgotpassword/forgotpassword.html')
 
 
 @app.route('/logout')
