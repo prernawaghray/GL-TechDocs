@@ -5,14 +5,13 @@ $(function () {
 $(document).ready(function () {
     validateFormsAndAddHandlers();
     loadProfileData();
-
-
 });
 
 function updateProfile(data) {
     $('#first-name').val(data.firstName);
     $('#last-name').val(data.lastName);
 }
+
 function loadProfileData() {
     try {
         $.ajax({
@@ -29,25 +28,18 @@ function loadProfileData() {
                 }
                 else {
                     showAlert('#profile-errorMessage', 'alert-warning', "Profile Update!!", data.message);
-
                 }
-
-
             },
             error: function (data) {
                 // in case of error we need to read response from data.responseJSON
                 showAlert('#profile-errorMessage', 'alert-danger', "Profile Update!!", data.responseJSON.message);
-
-
             }
-        }
-        );
+        });
     }
     catch (e) {
         console.log(e)
     }
 }
-
 
 function profileUpdate() {
     try {
@@ -75,16 +67,12 @@ function profileUpdate() {
                     //showError(data.responseJSON.message,'Profile Update')
 
                 }
-
-
             },
             error: function (data) {
                 // in case of error we need to read response from data.responseJSON
                 showAlert('#profile-errorMessage', 'alert-danger', "Profile Update!!", data.responseJSON.message);
-
             }
-        }
-        );
+        });
     }
     catch (e) {
         console.log(e)
@@ -96,7 +84,7 @@ function changePassword() {
     try {
         $.ajax({
             data: {
-                authToken: localStorage.getItem('userToken'),
+                authToken: getUserToken(),
                 currentPassword: $('#current-password').val(),
                 newPassword: $('#new-password').val(),
 
@@ -115,54 +103,44 @@ function changePassword() {
                     //showError(data.responseJSON.message,'Profile Update')
 
                 }
-
-
             },
             error: function (data) {
                 // in case of error we need to read response from data.responseJSON
                 showAlert('#password-errorMessage', 'alert-danger', "Change Password!!", data.responseJSON.message);
-
             }
-        }
-        );
+        });
     }
     catch (e) {
         console.log(e)
     }
 }
-function clearSession()
-{
+function clearSession() {
     var AUT = getUserToken();
     localStorage.clear();
     $.ajax({
-        data:{
-            authToken:AUT
+        data: {
+            authToken: AUT
         },
-        type:'POST',
-        url:getFrontEndUrl('clearSession'),
-        success:async function(data)
-        {
+        type: 'POST',
+        url: getFrontEndUrl('clearSession'),
+        success: async function (data) {
             await new Promise(r => setTimeout(r, 2000));
             window.location.replace('/');
         },
-        error:async function(data)
-        {
+        error: async function (data) {
             await new Promise(r => setTimeout(r, 2000));
             window.location.replace('/');
         }
-    }
-
-    );
+    });
 }
-function deleteAccount()
-{
+function deleteAccount() {
     removeAlert('#delete-errorMessage');
     try {
         $.ajax({
             data: {
                 authToken: localStorage.getItem('userToken'),
                 currentPassword: $('#delete-password').val()
-                
+
 
             },
             type: 'POST',
@@ -176,25 +154,17 @@ function deleteAccount()
                 }
                 else {
                     showAlert('#delete-errorMessage', 'alert-warning', "Delete Account!!", data.message);
-                    
-                    //showError(data.responseJSON.message,'Profile Update')
-
                 }
-
-
             },
             error: function (data) {
                 // in case of error we need to read response from data.responseJSON
                 showAlert('#delete-errorMessage', 'alert-danger', "Delete Account!!", data.responseJSON.message);
-
             }
-        }
-        );
+        });
     }
     catch (e) {
         console.log(e)
     }
-
 }
 var passwordFormRules =
 {
@@ -203,19 +173,17 @@ var passwordFormRules =
     },
     'new-password': {
         required: true,
-        strong_password:true,
+        strong_password: true,
         minlength: 6
     },
     'confirm-password': {
         required: true,
         equalTo: "#new-password"
     }
-
 };
 
 var passwordFormMessages =
 {
-
     'current-password': {
         required: "Cannot be blank"
     },
@@ -226,31 +194,24 @@ var passwordFormMessages =
     'confirm-password': {
         required: "Confirm your new password",
         equalTo: "Should be same as above"
-
     },
 
 };
 
 var profileUpdateRules =
 {
-
     'first-name': {
         require_from_group: [1, ".form-control"]
-
     },
     'last-name': {
         require_from_group: [1, ".form-control"]
-
     }
-
 };
 
 var profileUpdateMessages =
 {
-
     'first-name': {
         require_from_group: "At least one field is needed"
-
     },
     'last-name': {
         require_from_group: "At least one field is needed"
@@ -259,27 +220,21 @@ var profileUpdateMessages =
 
 var deleteAccountRules =
 {
-
     'delete-password': {
-        required:true
-
+        required: true
     },
     'confirm-delete': {
-        required:true
-
+        required: true
     }
-
 };
 
 var deleteAccountMessages =
 {
-
     'delete-password': {
-       required: "Confirm your password"
-
+        required: "Confirm your password"
     },
     'confirm-delete': {
-       required: "Please check the box"
+        required: "Please check the box"
     }
 };
 function validateFormsAndAddHandlers() {
@@ -287,7 +242,7 @@ function validateFormsAndAddHandlers() {
     $("#password").validate({
         rules: passwordFormRules,
         errorClass: "inputValidationError",
-        errorPlacement: function(error, element) {
+        errorPlacement: function (error, element) {
             element.next("label").after(error);
         },
         submitHandler: function (form) {
@@ -299,31 +254,28 @@ function validateFormsAndAddHandlers() {
     $("#profileForm").validate({
         rules: profileUpdateRules,
         errorClass: "inputValidationError",
-        errorPlacement: function(error, element) {
+        errorPlacement: function (error, element) {
             element.next("label").after(error);
         },
         submitHandler: function (form) {
             profileUpdate();
         },
         messages: profileUpdateMessages
-    }
-
-    );
+    });
 
     $("#deleteAccount").validate({
         rules: deleteAccountRules,
         errorClass: "inputValidationError",
-           
-        errorPlacement: function(error, element) {
+
+        errorPlacement: function (error, element) {
             element.next("label").after(error);
         },
         submitHandler: function (form) {
             deleteAccount();
         },
         messages: deleteAccountMessages
-    }
+    });
 
-    );
     $("form").each(function () {
         $(this).validate();
     });
