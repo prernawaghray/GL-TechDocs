@@ -28,29 +28,30 @@ function saveTokenInSession(AUT)
 
 function loginButtonClicked()
 {
+    loginFormData = {
+        loginType : "email",
+        email : $('#email-input').val(),
+        password: $('#password-input').val(),
+        rememberMe : $('#remember-me').prop("checked")?1:0
+            };
+    callLoginApi(loginFormData);
+}
+
+function callLoginApi(loginFormData)
+{
     removeAlert('#email-login-errorMessage');
     try{
     $.ajax({
-        data : {
-           email : $('#email-input').val(),
-           password: $('#password-input').val(),
-               },
+        data : loginFormData,
            type : 'POST',
            url : getApiUrl('login'),
            success: function(data) {
             //In case of success the data contains the JSON
 
-            if(data.status==true)
-            {
+            
                 localStorage.setItem('userToken', data.authToken);
                 saveTokenInSession(data.authToken);
-                
-            }
-            else
-            {
-                showAlert('#email-login-errorMessage', 'alert-warning', "Login!!", data.message);
-              
-            }
+            
             
             
           },
@@ -68,3 +69,31 @@ function loginButtonClicked()
         console.log(e)
     }
 }
+var googleLoginButtonOptions=
+{ theme: 'filled_blue', 
+size: 'large',
+width:380};
+
+function handleGoogleAuthResponse(token) {
+    var response = parseJwt(token.credential);
+    console.log(response); 
+    loginFormData = {
+        loginType : "google",
+        email : response.email,
+        password: "authenticated",
+        rememberMe : 0
+            };
+    callLoginApi(loginFormData);
+    
+  }
+
+  window.onload = function () {
+    google.accounts.id.initialize({
+      client_id: getClientId(),
+      callback: handleGoogleAuthResponse,
+      prompt_parent_id:"googleLogin"
+    });
+   
+    google.accounts.id.renderButton($('#googleLogin')[0],googleLoginButtonOptions);
+    
+  };
