@@ -3,7 +3,9 @@
 {% block layoutCss %}
   <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard-layout.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/editor-layout.css') }}">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+  <link rel="stylesheet" href="https://prismjs.com/themes/prism.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://prismjs.com/plugins/line-numbers/prism-line-numbers.css">
+  <link rel="stylesheet" href="https://live.prismjs.com/prism-live.css">
   <style>
     latex-js {
       display: inline-block;
@@ -12,7 +14,7 @@
       margin-right: 2em;
     }
     
-    .re-flex .item{
+    .re-flex .item, .re-flex div.prism-live, textarea{
       width: calc(50% - 20px);
     }
     .re-flex .item:last-child{
@@ -25,7 +27,7 @@
       .re-flex{
         flex-direction: column-reverse;
       }
-      .re-flex .item{
+      .re-flex .item, .re-flex div.prism-live{
         margin-bottom: 20px;
         width:100%;
         height: calc(59% - 100px);
@@ -43,6 +45,15 @@
       cursor: pointer;
       background-color: rgb(214, 234, 252);
     }
+
+    #editor-text{
+      background-color: transparent;
+      color: transparent;
+    }
+    /* :not(pre) > code[class*="language-"], pre[class*="language-"]{
+      background-color: #444;
+      color: white;
+    } */
   </style>
 
   {% block pageCss %}{% endblock%}
@@ -143,7 +154,7 @@
   <div  style="display: none !important;" class="resize-handle--x" data-target="aside"></div>
   <main class="container-fluid body-main mt-2 bg-light">
     <div class="d-flex align-items-stretch flex-wrap re-flex" style="height: calc(100% - 63px)">
-      <textarea id="editor-text" class="form-control item">
+      <textarea id="editor-text" class="form-control prism-live language-latex">
 \documentclass{article}
 
 \usepackage{comment, multicol}
@@ -186,8 +197,15 @@ In the appendix, the API as well as the format of custom macro definitions in Ja
 {% endblock %}
 
 {% block layoutJS %}
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
-  <script src="{{url_for('static',filename='js/node_modules/latex.js/dist/latex.js')}}"></script>  <script>
+  <script src="https://prismjs.com/prism.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://prismjs.com/plugins/autoloader/prism-autoloader.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://live.prismjs.com/src/prism-live.js"  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://prismjs.com/components/prism-latex.min.js"></script>  
+  <script src="https://prismjs.com/plugins/line-numbers/prism-line-numbers.js"></script>  
+  
+  <script src="{{url_for('static',filename='js/node_modules/latex.js/dist/latex.js')}}"></script>  
+
+  <script>
   
     function refreshContent(){
       var text = $editor.value;
