@@ -115,19 +115,24 @@ In the appendix, the API as well as the format of custom macro definitions in Ja
 {% block layoutJS %}
 <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
   <script src="{{url_for('static',filename='js/node_modules/latex.js/dist/latex.js')}}"></script>  <script>
-    $editor=document.getElementById('editor-text');
-    var generator = new latexjs.HtmlGenerator({ hyphenate: false })
-    document.head.appendChild(generator.stylesAndScripts("https://cdn.jsdelivr.net/npm/latex.js@0.12.4/dist/"))
-    $editor.addEventListener('keyup',function(event){
-      refreshContent();
-    });
-    function refreshContent(){
+  
+    function refreshContent(generator){
       var text = $editor.value;
       generator = latexjs.parse(text, { generator: generator })
       $('#html-preview').html(generator.domFragment());
     }
     $(document).ready(function(){
-      refreshContent();
+      $editor=document.getElementById('editor-text');
+      var generator = new latexjs.HtmlGenerator({ hyphenate: false })
+    
+      document.head.appendChild(generator.stylesAndScripts("https://cdn.jsdelivr.net/npm/latex.js@0.12.4/dist/"))
+      $editor.addEventListener('keyup',function(event){
+        refreshContent(generator);
+      });
+      
+      refreshContent(generator);
+
+      
     });
   </script>
 
