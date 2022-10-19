@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block layoutCss %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard-layout.css') }}">
+  {% block pageCss %}{% endblock%}
+{% endblock %}
+
+{% block layout %}
+
+<nav class="navbar navbar-expand-lg bd-navbar bg-light">
+  <div class="container">
+    
+    <a href="/dashboard" class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none">
+      <img src="{{url_for('static',filename='images/icons/android-chrome-192x192.png')}}" class="header-logo"/>
+      <span class="header-text">TechDocs</span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <!-- MOBILE RESPONSIVE MENU -->
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasNavbarLabel"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body">
+        <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+          <li class="nav-item"><a href="#" class="nav-link px-2 link-secondary">Home</a></li>
+          <li class="nav-item"><a href="#" class="nav-link px-2 link-dark">Features</a></li>
+          <li class="nav-item"><a href="#" class="nav-link px-2 link-dark">Pricing</a></li>
+          <li class="nav-item"><a href="#" class="nav-link px-2 link-dark">Help</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Account
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="{{url_for('profile')}}">Account Settings</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item" href="/logout">Logout</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <div class="offcanvas-footer text-center bg-light">
+        <div>&copy; TechDocs</div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<main class="container-fluid body-main mt-2">
+  {% block body %}{% endblock %}
+</main>
+
+
+
+{% endblock %}
+
+{% block layoutJS %}
+
+  {% block pageJS %}{% endblock%}
+
+{% endblock %}
