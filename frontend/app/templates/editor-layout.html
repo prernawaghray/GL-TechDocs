@@ -11,6 +11,38 @@
       border: 1px solid red;
       margin-right: 2em;
     }
+    
+    .re-flex .item{
+      width: calc(50% - 20px);
+    }
+    .re-flex .item:last-child{
+      margin-left:15px;
+    }
+    @media (max-width: 800px) {
+      .container-x > aside, .container-x .resize-handle--x{
+        display:none;
+      }
+      .re-flex{
+        flex-direction: column-reverse;
+      }
+      .re-flex .item{
+        margin-bottom: 20px;
+        width:100%;
+        height: calc(59% - 100px);
+      }
+      .re-flex .item:last-child{
+        margin-left:0px;
+      }
+    }
+
+    .assets-menu li a{
+      padding:5px;
+      background-color: aliceblue;
+    }
+    .assets-menu li:hover{
+      cursor: pointer;
+      background-color: rgb(214, 234, 252);
+    }
   </style>
 
   {% block pageCss %}{% endblock%}
@@ -23,9 +55,11 @@
   <div class="container-fluid">
     
     <a href="/dashboard" class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none">
-      <img src="{{url_for('static',filename='images/icons/android-chrome-192x192.png')}}" class="header-logo"/>
-      <span class="header-text">TechDocs</span>
+      <span class="header-text">
+        <i class="bi bi-house-door-fill"></i>
+      </span>
     </a>
+    <button class="btn btn-outline"><i class="bi bi-fullscreen" id="f-icon"></i></buttom>
     <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -37,13 +71,11 @@
       </div>
       <div class="offcanvas-body">
         <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-          <li class="nav-item"><a href="#" class="nav-link px-2 link-secondary">Home</a></li>
-          <li class="nav-item"><a href="#" class="nav-link px-2 link-dark">Features</a></li>
-          <li class="nav-item"><a href="#" class="nav-link px-2 link-dark">Pricing</a></li>
-          <li class="nav-item"><a href="#" class="nav-link px-2 link-dark">Help</a></li>
+          <li class="nav-item" ><a data-bs-toggle="offcanvas" href="#offcanvasAssets"  class="nav-link px-2 link-dark"><i class="bi bi-paperclip"></i> Assets</a></li>
+          <li class="nav-item"><a  data-bs-toggle="offcanvas" href="#offcanvasHistory" class="nav-link px-2 link-dark"><i class="bi bi-clock-history"></i> History</a></li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Account
+              <i class="bi bi-person-circle"></i> Account
             </a>
             <ul class="dropdown-menu">
               <li><a class="dropdown-item" href="#">Account Settings</a></li>
@@ -59,17 +91,59 @@
         <div>&copy; TechDocs</div>
       </div>
     </div>
+
+    
+
+
   </div>
+
+  
+
 </nav>
 
+<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasAssets" aria-labelledby="offcanvasExampleLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="offcanvasExampleLabel">Assets</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <div>
+      <ul class="assets-menu list-unstyled">
+        <li><a class="dropdown-item" href="#">Action</a></li>
+        <li><a class="dropdown-item" href="#">Another action</a></li>
+        <li><a class="dropdown-item" href="#">Something else here</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasHistory" aria-labelledby="offcanvasExampleLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="offcanvasExampleLabel">History</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <div>
+      <ul class="assets-menu list-unstyled">
+        <li><a class="dropdown-item" href="#"><b>Name one</b><br/><small>June 6th, 2022</small></a></li>
+        <li><a class="dropdown-item" href="#"><b>Name one</b><br/><small>June 6th, 2022</small></a></li>
+        <li><a class="dropdown-item" href="#"><b>Name one</b><br/><small>June 6th, 2022</small></a></li>
+        <li><a class="dropdown-item" href="#"><b>Name one</b><br/><small>June 6th, 2022</small></a></li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+
+
 <div class="container-x">
-  <aside>
-    <p style="width:150px;">Assets</p>
+  <aside style="display: none !important;">
+    <p style="width:180px;">Assets</p>
   </aside>
-  <div class="resize-handle--x" data-target="aside"></div>
+  <div  style="display: none !important;" class="resize-handle--x" data-target="aside"></div>
   <main class="container-fluid body-main mt-2 bg-light">
-    <div class="d-flex align-items-stretch flex-wrap" style="height: calc(100% - 63px)">
-      <textarea id="editor-text" class="form-control"   style="width: 50%;" >
+    <div class="d-flex align-items-stretch flex-wrap re-flex" style="height: calc(100% - 63px)">
+      <textarea id="editor-text" class="form-control item">
 \documentclass{article}
 
 \usepackage{comment, multicol}
@@ -98,10 +172,9 @@ In the appendix, the API as well as the format of custom macro definitions in Ja
 \end{document}
         
       </textarea>
-      <div id="html-preview" class="shadow p-3 bg-body rounded" style="width: calc(50% - 20px);
-      margin: 0px 10px;">
+      <iframe id="html-preview" sandbox="allow-same-origin allow-scripts" srcdoc="" class="shadow p-3 bg-body rounded item">
 
-      </div>
+      </iframe>
     </div>
   </main>
 </div>
@@ -116,22 +189,28 @@ In the appendix, the API as well as the format of custom macro definitions in Ja
 <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
   <script src="{{url_for('static',filename='js/node_modules/latex.js/dist/latex.js')}}"></script>  <script>
   
-    function refreshContent(generator){
+    function refreshContent(){
       var text = $editor.value;
-      generator = latexjs.parse(text, { generator: generator })
-      $('#html-preview').html(generator.domFragment());
+      var generator = new latexjs.HtmlGenerator({ hyphenate: false });
+      lDoc = latexjs.parse(text, { generator: generator }).htmlDocument('https://cdn.jsdelivr.net/npm/latex.js@0.12.4/dist/');
+      $('#html-preview').attr('srcDoc',lDoc.documentElement.outerHTML);
     }
     $(document).ready(function(){
       $editor=document.getElementById('editor-text');
-      var generator = new latexjs.HtmlGenerator({ hyphenate: false })
+      
     
-      document.head.appendChild(generator.stylesAndScripts("https://cdn.jsdelivr.net/npm/latex.js@0.12.4/dist/"))
+      //document.head.appendChild(generator.stylesAndScripts("https://cdn.jsdelivr.net/npm/latex.js@0.12.4/dist/"))
       $editor.addEventListener('keyup',function(event){
-        refreshContent(generator);
+        refreshContent();
       });
       
-      refreshContent(generator);
+      refreshContent();
 
+      $('#f-icon').click(function(){
+        $('#f-icon').toggleClass('bi-fullscreen');
+        $('#f-icon').toggleClass('bi-fullscreen-exit');
+
+      })
       
     });
   </script>
@@ -150,7 +229,7 @@ In the appendix, the API as well as the format of custom macro definitions in Ja
       tracking: false,
       startWidth: null,
       startCursorScreenX: null,
-      handleWidth: 10,
+      handleWidth: 5,
       resizeTarget: null,
       parentElement: null,
       maxWidth: null,
