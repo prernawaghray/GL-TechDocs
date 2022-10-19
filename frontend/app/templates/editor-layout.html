@@ -1,25 +1,212 @@
 {% extends "base.html" %}
 
 {% block layoutCss %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/editor-layout.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard-layout.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/editor-layout.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+  <style>
+    latex-js {
+      display: inline-block;
+      width: 40%;
+      border: 1px solid red;
+      margin-right: 2em;
+    }
+  </style>
+
   {% block pageCss %}{% endblock%}
 {% endblock %}
 
 {% block layout %}
-      
-<nav class="navbar bg-light">
+
+
+<nav class="navbar navbar-expand-lg bd-navbar bg-light">
   <div class="container-fluid">
-    <a href="{{url('/dashboard')}}" class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none">
+    
+    <a href="/dashboard" class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none">
       <img src="{{url_for('static',filename='images/icons/android-chrome-192x192.png')}}" class="header-logo"/>
       <span class="header-text">TechDocs</span>
     </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <!-- MOBILE RESPONSIVE MENU -->
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasNavbarLabel"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body">
+        <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+          <li class="nav-item"><a href="#" class="nav-link px-2 link-secondary">Home</a></li>
+          <li class="nav-item"><a href="#" class="nav-link px-2 link-dark">Features</a></li>
+          <li class="nav-item"><a href="#" class="nav-link px-2 link-dark">Pricing</a></li>
+          <li class="nav-item"><a href="#" class="nav-link px-2 link-dark">Help</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Account
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#">Account Settings</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item" href="/logout">Logout</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <div class="offcanvas-footer text-center bg-light">
+        <div>&copy; TechDocs</div>
+      </div>
+    </div>
   </div>
 </nav>
+
+<div class="container-x">
+  <aside>
+    <p style="width:150px;">Assets</p>
+  </aside>
+  <div class="resize-handle--x" data-target="aside"></div>
+  <main class="container-fluid body-main mt-2 bg-light">
+    <div class="d-flex align-items-stretch flex-wrap" style="height: calc(100% - 63px)">
+      <textarea id="editor-text" class="form-control"   style="width: 50%;" >
+\documentclass{article}
+
+\usepackage{comment, multicol}
+\usepackage{hyperref}
+
+\usepackage{calc,pict2e,picture}
+\usepackage{textgreek,textcomp,gensymb,stix}
+
+\setcounter{secnumdepth}{2}
+
+\title{\LaTeX.js Showcase}
+\author{made with $\varheartsuit$ by Rajakanna Kalathoti}
+\date{2022}
+
+
+\begin{document}
+
+\maketitle
+
+
+\begin{abstract}
+This document will show most of the features of \LaTeX.js while at the same time being a gentle introduction to \LaTeX.
+In the appendix, the API as well as the format of custom macro definitions in JavaScript will be explained.
+\end{abstract}
+
+\end{document}
+        
+      </textarea>
+      <div id="html-preview" class="shadow p-3 bg-body rounded" style="width: calc(50% - 20px);
+      margin: 0px 10px;">
+
+      </div>
+    </div>
+  </main>
+</div>
+
+
+
+
 
 {% endblock %}
 
 {% block layoutJS %}
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+  <script src="{{url_for('static',filename='js/node_modules/latex.js/dist/latex.js')}}"></script>  <script>
+  
+    function refreshContent(generator){
+      var text = $editor.value;
+      generator = latexjs.parse(text, { generator: generator })
+      $('#html-preview').html(generator.domFragment());
+    }
+    $(document).ready(function(){
+      $editor=document.getElementById('editor-text');
+      var generator = new latexjs.HtmlGenerator({ hyphenate: false })
+    
+      document.head.appendChild(generator.stylesAndScripts("https://cdn.jsdelivr.net/npm/latex.js@0.12.4/dist/"))
+      $editor.addEventListener('keyup',function(event){
+        refreshContent(generator);
+      });
+      
+      refreshContent(generator);
 
+      
+    });
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
+  <script>
+    const selectTarget = (fromElement, selector) => {
+      if (!(fromElement instanceof HTMLElement)) {
+        return null;
+      }
+
+      return fromElement.querySelector(selector);
+    };
+
+    const resizeData = {
+      tracking: false,
+      startWidth: null,
+      startCursorScreenX: null,
+      handleWidth: 10,
+      resizeTarget: null,
+      parentElement: null,
+      maxWidth: null,
+    };
+
+    $(document.body).on('mousedown', '.resize-handle--x', null, (event) => {
+      if (event.button !== 0) {
+        return;
+      }
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      const handleElement = event.currentTarget;
+      
+      if (!handleElement.parentElement) {
+        console.error(new Error("Parent element not found."));
+        return;
+      }
+      
+      // Use the target selector on the handle to get the resize target.
+      const targetSelector = handleElement.getAttribute('data-target');
+      const targetElement = selectTarget(handleElement.parentElement, targetSelector);
+
+      if (!targetElement) {
+        console.error(new Error("Resize target element not found."));
+        return;
+      }
+      
+      resizeData.startWidth = $(targetElement).outerWidth();
+      resizeData.startCursorScreenX = event.screenX;
+      resizeData.resizeTarget = targetElement;
+      resizeData.parentElement = handleElement.parentElement;
+      resizeData.maxWidth = $(handleElement.parentElement).innerWidth() - resizeData.handleWidth;
+      resizeData.tracking = true;
+
+      console.log('tracking started');
+    });
+
+    $(window).on('mousemove', null, null, _.debounce((event) => {
+      if (resizeData.tracking) {
+        const cursorScreenXDelta = event.screenX - resizeData.startCursorScreenX;
+        const newWidth = Math.min(resizeData.startWidth + cursorScreenXDelta, resizeData.maxWidth);
+        
+        $(resizeData.resizeTarget).outerWidth(newWidth);
+      }
+    }, 1));
+
+    $(window).on('mouseup', null, null, (event) => {
+      if (resizeData.tracking) {
+        resizeData.tracking = false;
+
+        console.log('tracking stopped');
+      }
+    });
+  </script>
   {% block pageJS %}{% endblock%}
 
 {% endblock %}
