@@ -69,6 +69,9 @@ def auth():
 def forgot_password():
    return render_template('forgotpassword/forgotpassword.html')
 
+@app.route('/password_reset')
+def reset_password():
+   return render_template('forgotpassword/resetpassword.html')
 
 @app.route('/logout')
 def logout():
