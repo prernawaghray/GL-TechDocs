@@ -90,6 +90,10 @@ def dashboard():
 def latexEditor():
    return render_template('latex-editor/editor.html')
 
+@app.route('/plans')
+def plans():
+   return render_template('plans-and-subscriptions/pricing.html')
+
 @app.route('/profile')
 @login_required
 def profile():
