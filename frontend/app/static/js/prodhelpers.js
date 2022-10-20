@@ -1,4 +1,4 @@
-var rootApiUrl = "http://localhost:56733/api/";
+var rootApiUrl = "http://localhost:6622/api/";
 var rootFrontEndUrl = "http://localhost:56733/";
 function getApiUrl(api)
 {
@@ -36,5 +36,12 @@ function parseJwt (token) {
     return JSON.parse(jsonPayload);
 };
 
+function getResponseMessage(data)
+{
+    if("responseJSON" in data && "message" in data.responseJSON)
+        return data.responseJSON.message;
+    else
+        return data.statusText;
+}
 
 
