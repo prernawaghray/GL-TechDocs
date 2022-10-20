@@ -19,7 +19,7 @@ var successfulLoginRequestGoogle = {
 
 var loginResponseSuccess = {
     
-    authToken: successfulAuthToken,
+    userAuthToken: successfulAuthToken,
     isAdmin:true
     
 }

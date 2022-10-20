@@ -27,7 +27,7 @@ function forgotpassword() {
             },
             error: function (data) {
                 // in case of error we need to read response from data.responseJSON
-                showAlert('#forgot-password-errorMessage', 'alert-danger', "Forgot Password!!", data.responseJSON.message);
+                showAlert('#forgot-password-errorMessage', 'alert-danger', "Forgot Password!!", getResponseMessage(data));
             }
         });
     }

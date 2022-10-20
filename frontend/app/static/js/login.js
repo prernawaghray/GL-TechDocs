@@ -57,7 +57,7 @@ function callLoginApi(loginFormData)
           },
           error:function(data) {
             // in case of error we need to read response from data.responseJSON
-            showAlert('#email-login-errorMessage', 'alert-danger', "Login!!", data.responseJSON.message);
+            showAlert('#email-login-errorMessage', 'alert-danger', "Login!!", getResponseMessage(data));
 
             
           }
