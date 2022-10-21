@@ -9,10 +9,20 @@ body {
     font-size: .875rem;
   }
   
-  .feather {
+.feather {
     width: 16px;
     height: 16px;
   }
+
+input:focus::-webkit-input-placeholder { color: transparent; }
+input:focus:-moz-placeholder { color: transparent; } /* Firefox 18- */
+input:focus::-moz-placeholder { color: transparent; } /* Firefox 19+ */
+input:focus:-ms-input-placeholder { color: transparent; } /* oldIE 😉 */
+
+.disabled{
+  pointer-events: none;
+  color: grey
+}
   
   /*
    * Sidebar
@@ -96,4 +106,18 @@ body {
   .form-control-dark:focus {
     border-color: transparent;
     box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
+  }
+
+  input[type="checkbox" i] {
+    background-color: initial;
+    cursor: default;
+    appearance: auto;
+    box-sizing: border-box;
+    margin: 3px 3px 3px 4px;
+    padding: i;
+    padding-top: initial;
+    padding-right: initial;
+    padding-bottom: initial;
+    padding-left: initial;
+    border: initial;
   }
