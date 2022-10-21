@@ -8,12 +8,24 @@ var userProfiles=
 {
   '123456':{
     firstName:'Sarith',
-    lastName:'Madhu'
+    lastName:'Madhu',
+    address : {
+      streetAddress: "Hyderabad, Tarnaka",
+      state:"Telangana",
+      country:"IN"},
+    occupation: "Researcher",
+    purposeOfUse:"Research"
   },
   '789123':
   {
     firstName: 'Tech',
-    lastName:'Docs'
+    lastName:'Docs',
+    address : {
+      streetAddress: "trivandrum",
+      state:"Kerala",
+      country:"IN"},
+    occupation: "Student",
+    purposeOfUse:"Student"
   }
 };
 function writeProfiles(profiles)
@@ -43,16 +55,13 @@ var user2GetRequest = {
 
 
 var profileDataFailure = {
-    status:false,
     message:"MOCK : Unable to fetch Data"
 }
 
 var updateProfileDataFailure = {
-  status:false,
   message:"MOCK : Unable to update Data"
 }
 var changePasswordDataFailure = {
-  status:false,
   message:"MOCK : Unable to update Password"
 }
 function checkValidProfileRequest(data)
@@ -68,8 +77,11 @@ var getProfileUser={
     response:function(settings)
     {
       var response = {
-        status:true,
-        userData:getProfileData(settings.data.authToken)
+        userData:getProfileData(settings.data.authToken),
+        usageStats:{
+          signUpDate:"12/06/2022",
+          lastActiveDate:"12/10/2022" 
+}        
       };
       this.responseText=response;
     }
@@ -118,8 +130,7 @@ var getProfileUser={
     response:function(settings)
     {
       var response = {
-        status:true,
-        userData:updateProfileData(settings.data)
+        message:"Profile updated"
       };
       this.responseText=response;
     }

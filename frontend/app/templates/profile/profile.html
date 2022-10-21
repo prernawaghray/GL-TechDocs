@@ -2,27 +2,101 @@
 
 {% block pageCss%}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+<link rel="stylesheet" href="//unpkg.com/bootstrap-select@1.14.0-beta3/dist/css/bootstrap-select.min.css" type="text/css" />
+<link rel="stylesheet" href="//unpkg.com/bootstrap-select-country@4.2.0/dist/css/bootstrap-select-country.min.css" type="text/css" />
+<style>
+  .dropdown-menu
+  {
+    width:100px;
+  }
+</style>
 {% endblock %}
 
 
 {% block body %}
+<script src="js/statepicker.js"></script>
 <script src="js/profile.js"></script>
+<script src="//unpkg.com/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
+<script src="//unpkg.com/bootstrap-select-country@4.2.0/dist/js/bootstrap-select-country.min.js"></script>
 <div id="profilepage" class="mt-5">  
 <div id="profilepageheader"><h2 style="margin-bottom: 0px;">User Account Settings</h2></div> 
 <div id="accordion" >
   <h3>Update Profile Info</h3>
   <div>
-   
+      
       <form action="" method="post" name="profile" id="profileForm" enctype="multipart/form-data">
         <div class="form-floating">
-          <input type="text" class="form-control" name="first-name" id="first-name" placeholder="First Name">
+          <input type="text" class="form-control namegroup" name="first-name" id="first-name" placeholder="First Name">
           <label for="first-name">First Name</label>
         </div>
         
         <div class="form-floating mt-2">
-          <input type="text" class="form-control" name="last-name" id="last-name" placeholder="Last Name"><br>
+          <input type="text" class="form-control namegroup" name="last-name" id="last-name" placeholder="Last Name">
           <label for="last-name">Last Name</label>
         </div>
+
+        <div class="form-floating mt-2">
+          <input type="text" class="form-control " name="address" id="address" placeholder="Address">
+          <label for="address">Street Address</label>
+        </div>
+
+        <div class="form-floating ">
+        <select   
+        name="country" 
+        id="country" 
+        size="5"
+        class="selectpicker countrypicker form-control" 
+        data-dropup-auto="false"
+        data-boundary="scrollParent"
+        data-width="false"
+        data-live-search="true"
+        data-live-search-style="startsWith"
+        data-live-search-normalize="true"
+        data-flag="true" ></select>
+        <label for="country">Country</label>
+        </div>
+
+        <div class="form-floating ">
+          <select   
+          name="state" 
+          id="state" 
+          size="5"
+          class="selectpicker form-control"
+          data-dropup-auto="false"
+        data-boundary="scrollParent"
+        data-width="false"
+        data-live-search="true"
+        data-live-search-style="startsWith"
+        data-live-search-normalize="true" 
+          ></select>
+          <label for="state">state</label>
+          </div>
+          <div class="form-floating mt-2">
+            <input type="textarea" class="form-control " name="occupation" id="occupation" placeholder="Address">
+            <label for="occupation">Occupation</label>
+          </div>
+          <div class="form-floating ">
+            <select   
+            name="purpose" 
+            id="purpose" 
+            size="5"
+            class="selectpicker form-control"
+            data-dropup-auto="false"
+          data-boundary="scrollParent"
+          data-width="false"
+          >
+          <option value="Research">Research</option>
+          <option value="Commercial">Commercial</option>
+          <option value="Student">Student</option>
+        </select>
+            <label for="purpose">Purpose of use</label>
+            </div>
+
+        <script>
+          $('.countrypicker').countrypicker();
+        
+        </script>          
+        
         <div class="d-grid gap-2 mt-3">
           <div id="profile-errorMessage" class="errorMessage"></div>
           <button type="submit" class="btn btn-primary" name="profile_method" value="profil" id="profile-btn">Update</button>   

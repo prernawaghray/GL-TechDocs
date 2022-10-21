@@ -8,8 +8,22 @@ $(document).ready(function () {
 });
 
 function updateProfile(data) {
-    $('#first-name').val(data.firstName);
-    $('#last-name').val(data.lastName);
+    userData = data.userData;
+    usageData = data.usageData;
+    $('#first-name').val(userData.firstName);
+    $('#last-name').val(userData.lastName);
+    $('#address').val(userData.address.streetAddress);
+    $('#country').val(userData.address.country);
+    $('#country').selectpicker('refresh');
+    $('#country').trigger('change');
+    
+    $('#state').val(userData.address.state);
+    $('#state').selectpicker('refresh');
+
+    $('#occupation').val(userData.occupation);
+    $('#purpose').val(userData.purposeOfUse);
+    $('#purpose').selectpicker('refresh');
+
 }
 
 function loadProfileData() {
@@ -23,12 +37,9 @@ function loadProfileData() {
             success: function (data) {
                 //In case of success the data contains the JSON
 
-                if (data.status == true) {
-                    updateProfile(data.userData);
-                }
-                else {
-                    showAlert('#profile-errorMessage', 'alert-warning', "Profile Update!!", data.message);
-                }
+
+                    updateProfile(data);
+ 
             },
             error: function (data) {
                 // in case of error we need to read response from data.responseJSON
@@ -58,15 +69,10 @@ function profileUpdate() {
             success: function (data) {
                 //In case of success the data contains the JSON
 
-                if (data.status == true) {
-                    showAlert('#profile-errorMessage', 'alert-success', "Profile Update!!", "Successfully updated");
-                }
-                else {
-                    showAlert('#profile-errorMessage', 'alert-warning', "Profile Update!!", data.message);
 
-                    //showError(getResponseMessage(data),'Profile Update')
+                    showAlert('#profile-errorMessage', 'alert-success', "Profile Update!!", data.message);
 
-                }
+
             },
             error: function (data) {
                 // in case of error we need to read response from data.responseJSON
@@ -94,15 +100,9 @@ function changePassword() {
             success: function (data) {
                 //In case of success the data contains the JSON
 
-                if (data.status == true) {
+                
                     showAlert('#password-errorMessage', 'alert-success', "Change Password!!", "Successfully changed");
-                }
-                else {
-                    showAlert('#password-errorMessage', 'alert-warning', "Change Password!!", data.message);
-
-                    //showError(getResponseMessage(data),'Profile Update')
-
-                }
+               
             },
             error: function (data) {
                 // in case of error we need to read response from data.responseJSON
@@ -201,10 +201,10 @@ var passwordFormMessages =
 var profileUpdateRules =
 {
     'first-name': {
-        require_from_group: [1, ".form-control"]
+        require_from_group: [1, ".namegroup"]
     },
     'last-name': {
-        require_from_group: [1, ".form-control"]
+        require_from_group: [1, ".namegroup"]
     }
 };
 
@@ -281,3 +281,19 @@ function validateFormsAndAddHandlers() {
     });
 
 }
+$(document).ready(function(){
+    $("#country").on("changed.bs.select", 
+        function(e, clickedIndex, newValue, oldValue) {
+        console.log(this.value, clickedIndex, newValue, oldValue);
+        stateOp=getStateOptions(this.value);
+        $("#state").html(stateOp);
+        $("#state").selectpicker('destroy');
+        $("#state").selectpicker('render');
+        $("#state").selectpicker('refresh');
+    });
+
+});
+
+$("select").on('change', function (e) {
+  console.log(e);
+});
