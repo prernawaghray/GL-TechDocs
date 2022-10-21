@@ -65,10 +65,13 @@ def auth():
 
 
 
-@app.route('/forgot_password')
+@app.route('/forgotpassword')
 def forgot_password():
-   return make_response({'forgot_Password':True}, 302)
+   return render_template('forgotpassword/forgotpassword.html')
 
+@app.route('/password_reset')
+def reset_password():
+   return render_template('forgotpassword/resetpassword.html')
 
 @app.route('/logout')
 def logout():
@@ -86,6 +89,10 @@ def dashboard():
 # @login_required
 def latexEditor():
    return render_template('latex-editor/editor.html')
+
+@app.route('/plans')
+def plans():
+   return render_template('plans-and-subscriptions/pricing.html')
 
 @app.route('/profile')
 @login_required

@@ -1,7 +1,7 @@
 
 import { isEqualObjects,baseApiUrl } from "../helpers.js";
 export {mockhandlers};
-var loginApiUrl = baseApiUrl + "login";
+var loginApiUrl = baseApiUrl + "signin";
 var successfulAuthToken = "123456"
 var successfulLoginRequest = { 
     loginType:"email",
@@ -19,7 +19,7 @@ var successfulLoginRequestGoogle = {
 
 var loginResponseSuccess = {
     
-    authToken: successfulAuthToken,
+    userAuthToken: successfulAuthToken,
     isAdmin:true
     
 }
