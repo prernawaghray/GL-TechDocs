@@ -23,32 +23,6 @@ def define_tables():
         ")"
     )
 
-    # Table - Occupation
-    tbl_array['Occupation'] = (
-        "Create Table if not exists `Occupation` ("
-        "   OccupationId    int not null AUTO_INCREMENT,"
-        "   OccupationName  varchar(256),"
-        "   PRIMARY KEY (OccupationName)"
-        ")"
-    )
-
-    # Table - FieldOfWork
-    tbl_array['FieldOfWork'] = (
-        "Create Table if not exists `FieldOfWork` ("
-        "   FieldId    int not null AUTO_INCREMENT,"
-        "   FieldWork  varchar(50),"
-        "   PRIMARY KEY (FieldWork)"
-        ")"
-    )
-
-    # Table - PurposeOfUsage
-    tbl_array['PurposeOfUsage'] = (
-        "Create Table if not exists `PurposeOfUsage` ("
-        "   PurposeId  int not null AUTO_INCREMENT,"
-        "   Purpose    varchar(100),"
-        "   PRIMARY KEY (Purpose)"
-        ")"
-    )
 
     # Table - UserProfile
     tbl_array['UserProfile'] = (
@@ -56,18 +30,16 @@ def define_tables():
         "   UserId          varchar(256),"
         "   FirstName       varchar(100),"
         "   LastName        varchar(256),"
-        "   Address         varchar(256),"
+        "   StreetAddress   varchar(256),"
+        "   State           varchar(256)"
+        "   Country         varchar(100)"
         "   SignUpDate      datetime,"
         "   lastActive      datetime,"
         "   OccupationName  varchar(256),"
         "   FieldWork       varchar(256),"
         "   Purpose         varchar(256),"
-        "   AlternateEmail  varchar(256)"
         "   PRIMARY KEY (UserId),"
-        "   FOREIGN KEY (UserID) REFERENCES UserAuthentication(UserId),"
-        "   FOREIGN KEY (OccupationName) REFERENCES Occupation(OccupationName),"
-        "   FOREIGN KEY (FieldWork) REFERENCES FieldOfWork(FieldWork),"
-        "   FOREIGN KEy (Purpose) REFERENCES PurposeOfUsage(Purpose)"
+        "   FOREIGN KEY (UserID) REFERENCES UserAuthentication(UserId)"
         ")"
     )
 

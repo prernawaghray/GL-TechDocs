@@ -28,8 +28,11 @@ def get_doc_id(user_id, doc_name):
     doc_id = connect.execute(sql, **record)
     return doc_id
 
+def get_permissions(user_id, doc_id):
+    get_user_permissions(user_id, doc_id)
 
-def set_permissions(share_email, user_id, doc_name):
+
+def set_permissions(share_email, user_id, doc_name,permission_type):
     '''
         This function takes share_email,user_id and doc_name as its input arguments.Fetches the
         userId of the sharing person and the DocId which is to be shared using the get_user_id and
@@ -38,7 +41,27 @@ def set_permissions(share_email, user_id, doc_name):
     '''
     share_user_id = get_user_id(share_email)
     doc_id = get_doc_id(user_id, doc_name)
-    set_read_user_permission(share_user_id, doc_id)
+    if 'S' in get_user_permissions(user_id, doc_id):
+        if permission_type is "edit":
+            edit_permissions(share_user_id, doc_id)
+        elif permission_type is "read":
+            set_read_user_permission(share_user_id, doc_id)
+        elif permission_type is "remove":
+            remove_permissions(share_user_id, doc_id)
+
+
+def edit_permissions(user_id, doc_id):
+    set_read_user_permission(user_id, doc_id)
+    set_write_user_permission(user_id, doc_id)
+    set_delete_user_permission(user_id, doc_id)
+
+
+def remove_permissions(user_id, doc_id):
+    unset_read_user_permission(user_id, doc_id)
+    unset_write_user_permission(user_id, doc_id)
+    unset_delete_user_permission(user_id, doc_id)
+    unset_share_user_permission(user_id, doc_id)
+    unset_analytics_user_permission(user_id, doc_id)
 
 # functions to set the permissions
 
@@ -65,7 +88,7 @@ def set_read_user_permission(user_id, doc_id):
     connect.execute(sql_query_3, **param_3)
 
 
-def set_write_use_permission(user_id, doc_id):
+def set_write_user_permission(user_id, doc_id):
     '''
         This function takes user_id and doc_id fields from the Permissions table as its input arguments
         and queries the PermissionId and UserPermissions details. If UserPermissions is not set, then it'll

@@ -17,49 +17,20 @@ class UserAuthentication(Base):
     # def __init__(self, UserId):
 
 
-class Occupation(Base):
-    __tablename__ = "Occupation"
-
-    OccupationId = Column(Integer, autoincrement=True)
-    OccupationName = Column(String(256), primary_key=True)
-
-    # Constructors to insert data
-    # def __init__(self, UserId):
-
-
-class FieldOfWork(Base):
-    __tablename__ = "FieldOfWork"
-
-    FieldId = Column(Integer, autoincrement=True)
-    FieldWork = Column(String(50), primary_key=True)
-
-    # Constructors to insert data
-    # def __init__(self, UserId):
-
-
-class PurposeOfUsage(Base):
-    __tablename__ = "PurposeOfUsage"
-
-    PurposeId = Column(Integer, autoincrement=True)
-    Purpose = Column(String(100), primary_key=True)
-
-    # Constructors to insert data
-    # def __init__(self, UserId):
-
-
 class UserProfile(Base):
     __tablename__ = "UserProfile"
 
     UserId = Column(String(256), ForeignKey(UserAuthentication.UserId), primary_key=True)
     FirstName = Column(String(256))
     LastName = Column(String(256))
-    Address = Column(String(256))
+    StreetAddress = Column(String(256))
+    State = Column(String(256))
+    Country = Column(String(100))
     SignUpDate = Column(DateTime)
     lastActive = Column(DateTime)
-    OccupationName = Column(String(256), ForeignKey(Occupation.OccupationName))
-    FieldWork = Column(String(50), ForeignKey(FieldOfWork.FieldWork))
-    Purpose = Column(String(100), ForeignKey(PurposeOfUsage.PurposeId))
-    AlternateEmail = Column(String(256))
+    OccupationName = Column(String(256))
+    FieldWork = Column(String(256))
+    Purpose = Column(String(256))
 
     # Constructors to insert data
     # def __init__(self, UserId):
