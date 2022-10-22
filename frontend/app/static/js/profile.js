@@ -9,7 +9,7 @@ $(document).ready(function () {
 
 function updateProfile(data) {
     userData = data.userData;
-    usageData = data.usageData;
+    usageStats = data.usageStats;
     $('#first-name').val(userData.firstName);
     $('#last-name').val(userData.lastName);
     $('#address').val(userData.address.streetAddress);
@@ -23,6 +23,9 @@ function updateProfile(data) {
     $('#occupation').val(userData.occupation);
     $('#purpose').val(userData.purposeOfUse);
     $('#purpose').selectpicker('refresh');
+
+    $('#signupdate').text(usageStats.signUpDate);
+    $('#activedate').text(usageStats.lastActiveDate);
 
 }
 
