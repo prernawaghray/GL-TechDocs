@@ -8,7 +8,12 @@ from distutils.log import debug
 from flask import Flask, jsonify, render_template
 import socket
 
+from DocumentVersionManager.DocumentVersionManager import documentVersionManagerBlueprint
+from UserHistoryManager.UserHistoryManager import userHistoryManagerBlueprint
+
 app= Flask(__name__)
+app.register_blueprint(documentVersionManagerBlueprint)
+app.register_blueprint(userHistoryManagerBlueprint)
 
 # This function get the hostname and IP deatils of server, required for microservices
 def fetchDetails():

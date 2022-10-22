@@ -5,28 +5,36 @@ import logging
 import yaml
 import requests
 from datetime import datetime
-from flask import Flask, request, jsonify, json
-from Base import session_factory
+from flask import request, jsonify, json, Blueprint, current_app
+from DBConnect import session_factory
 
-from DocumentHistory import DocumentHistory
+from orm_Tables import Document, DocumentHistory
 from User import User
-from Document import Document
-# from tbl_Documents import Document
 
 # Suppress warnings
 warnings.filterwarnings("ignore")
 
+import sys
+sys.path.append('./')
+
 # Get logging filepath
-with open('config.yaml') as stream:
+with open('./config.yaml') as stream:
     configs = yaml.safe_load(stream)
 
-# Data foler 
+# Data folder 
 data_path = configs["DIR_ROOT"] + configs["DIR_DATA"] 
+
 # Initiate logging 
 log_path = configs['DIR_ROOT'] + configs['DIR_LOG']
+
 logging.basicConfig(filename=log_path)
-# Start flask
-app = Flask(__name__)
+
+documentVersionManagerBlueprint = Blueprint('documentVersionManagerBlueprint', __name__)
+
+@documentVersionManagerBlueprint.route('/documentversionmanagerhealth')
+def filemanagerhealth():
+    print(current_app.config)
+    return jsonify({'health':'good'}) 
 
 # Class to handle common version file related processes
 class VersionManage:
@@ -61,14 +69,14 @@ class VersionManage:
 def get_document_record(document_id):
     try: 
         session = session_factory()
-        document_query = session.query(Document).filter(Document.document_id == document_id).all()
+        document_query = session.query(Document).filter(Document.DocId == document_id).all()
         session.close()
         if len(document_query) > 0:
             return document_query[0]
-        app.logger.info("Document record for document Id - " + str(document_id) + " doesn't exist")
+        current_app.logger.info("Document record for document Id - " + str(document_id) + " doesn't exist")
         return False
     except Exception:
-        app.logger.exception("Failure getting document id!")
+        current_app.logger.exception("Failure getting document id!")
         return False
 
 def get_user_record(user_id):
@@ -78,23 +86,23 @@ def get_user_record(user_id):
         session.close()
         if len(user_query) > 0:
             return user_query[0]
-        app.logger.info("User record for user Id - " + str(user_id) + " doesn't exist")
+        current_app.logger.info("User record for user Id - " + str(user_id) + " doesn't exist")
         return False
     except Exception:
-        app.logger.exception("Failure getting user record!")
+        current_app.logger.exception("Failure getting user record!")
         return False
 
 def get_latest_document_version_record(document_id):
     try: 
         session = session_factory()
-        document_version_query = session.query(DocumentHistory).filter(DocumentHistory.document_id==document_id).order_by(DocumentHistory.version.desc()).first()
+        document_version_query = session.query(DocumentHistory).filter(DocumentHistory.DocId==document_id).order_by(DocumentHistory.Version.desc()).first()
         session.close()
         if document_version_query:
             return document_version_query[0]
-        app.logger.info("Document version for doc Id - " + str(document_id) + " doesn't exist")
+        current_app.logger.info("Document version for doc Id - " + str(document_id) + " doesn't exist")
         return False
     except Exception:
-        app.logger.exception("Failure getting document version!")
+        current_app.logger.exception("Failure getting document version!")
         return False
 
 
@@ -102,7 +110,7 @@ def get_latest_document_version_record(document_id):
 ##############################################################################
 # Home API for document_version_manager
 # Check on DocumentVersionManager service
-@app.route('/version', methods = ['GET', 'POST'])
+@documentVersionManagerBlueprint.route('/version', methods = ['GET', 'POST'])
 def home():
     if(request.method == 'GET'):
         data = "DocumentVersionManager home. Allowed endpoints are /version/create ; /version/get"
@@ -119,10 +127,10 @@ def home():
 # 5. Create an entry into Document version table
 # Output: UserId, DocId, DocName
 
-@app.route('/version/create', methods = ['GET', 'POST'])
+@documentVersionManagerBlueprint.route('/version/create', methods = ['GET', 'POST'])
 def create_document_version():
     
-    app.logger.info("Service version/create initiated")
+    current_app.logger.info("Service version/create initiated")
     data_out = ''
     mess_out = ''
     if(request.method == 'POST'):
@@ -145,9 +153,9 @@ def create_document_version():
                 mess_out = "Document record doesn't exist"
                 return jsonify(message=mess_out, data=data_out)
             else:
-                document_version = document.document_version
-                document_name = document.document_name
-                file_path = document.file_path
+                document_version = document.Version
+                document_name = document.DocName
+                file_path = document.FilePath
             file_version_object = VersionManage()
             file_version_object.createNewVersionFile(user_id, document_name, document_version, file_path)
             document_version_record = DocumentHistory(user, document, datetime.now(), file_version_object.v_file_name, file_version_object.v_file_path, document_version)
@@ -160,9 +168,9 @@ def create_document_version():
         except Exception as e:
             print(e)
             mess_out = 'fail'
-            app.logger.exception("Failure Creating Version!")
+            current_app.logger.exception("Failure Creating Version!")
 
-    app.logger.info("Service version/create ended")
+    current_app.logger.info("Service version/create ended")
     
     #Return the json object to the caller
     return jsonify(message=mess_out, data=data_out)
@@ -173,9 +181,9 @@ def create_document_version():
 # 1. Retrieves the latest document version for the given document id
 # Output:
 # Version
-@app.route('/version/get', methods = ['GET', 'POST'])
+@documentVersionManagerBlueprint.route('/version/get', methods = ['GET', 'POST'])
 def get_latest_document_version():
-    app.logger.info("Service version/get initiated")
+    current_app.logger.info("Service version/get initiated")
     data_out = ''
     mess_out = ''
 
@@ -186,16 +194,16 @@ def get_latest_document_version():
         
         version_record = get_latest_document_version_record(document_id)
         if (not version_record):
-            version =  1
+            version =  0
         else:
-            version =  version_record.version
+            version =  version_record.Version
     
     data_out = json.dumps({'DocumentId':document_id, 'Version':version})
-    app.logger.info("Service version/get ended")
+    current_app.logger.info("Service version/get ended")
     return jsonify(message=mess_out, data=data_out)
 
 #################
 # Main Call
-if __name__ == "__main__":
-    app.run(debug=True)
+# if __name__ == "__main__":
+#     app.run(debug=True)
     
