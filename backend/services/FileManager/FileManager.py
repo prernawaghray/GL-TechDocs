@@ -241,10 +241,26 @@ def file_rename():
 
 @fileManagerBlueprint.route('/file/delete', methods=['GET', 'POST'])
 def file_delete():
+    #docid
+    #userid
+    #update db and delete file
+    #return json
     #TODO api to delete file
     pass
 
 @fileManagerBlueprint.route('/file/view', methods=['GET', 'POST'])
 def file_view():
     #TODO api to view file
+    pass
+
+@fileManagerBlueprint.route('/file/trash', methods = ['GET', 'POST'])
+def file_trash():
+    #docid
+    #userid
+    #update db
+    #return json
+    pass
+
+@fileManagerBlueprint.route('/file/retrive', methods = ['GET','POST'])
+def file_retrive():
     pass

@@ -10,8 +10,8 @@ import socket
 import yaml
 import sys
 sys.path.append('../')
-from Blueprints.FileManager.FileManager import fileManagerBlueprint
-from Blueprints.SampleBlueprint.sampleBlueprint import sampleBlueprint
+from services.FileManager.FileManager import fileManagerBlueprint
+from services.SampleBlueprint.sampleBlueprint import sampleBlueprint
 
 with open('../config.yaml') as stream:
     configs = yaml.safe_load(stream)
