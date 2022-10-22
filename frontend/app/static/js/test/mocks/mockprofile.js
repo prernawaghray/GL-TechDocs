@@ -14,7 +14,7 @@ var userProfiles=
       state:"Telangana",
       country:"IN"},
     occupation: "Researcher",
-    purposeOfUse:"Research"
+    purposeOfUse:""
   },
   '789123':
   {

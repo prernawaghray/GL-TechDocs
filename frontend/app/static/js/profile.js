@@ -289,14 +289,11 @@ $(document).ready(function(){
         function(e, clickedIndex, newValue, oldValue) {
         console.log(this.value, clickedIndex, newValue, oldValue);
         stateOp=getStateOptions(this.value);
-        $("#state").html(stateOp);
         $("#state").selectpicker('destroy');
+        $("#state").html(stateOp);
         $("#state").selectpicker('render');
         $("#state").selectpicker('refresh');
     });
 
 });
 
-$("select").on('change', function (e) {
-  console.log(e);
-});
