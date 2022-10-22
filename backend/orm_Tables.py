@@ -13,8 +13,18 @@ from orm_Common import Common
 class Document(Common):
     __tablename__ = "Documents"
 
+    IsUpload        = Column(String(1))
+    IsTrash         = Column(String(1))
     ModifiedDate    = Column(DateTime)
     ModifiedBy      = Column(String(256))      
+    
+    def __init__(self, UserId, DocName, Filepath, Datetime, Version, IsUpload):
+        self.UserId      = UserId
+        self.DocName     = DocName
+        self.FilePath    = Filepath
+        self.CreatedDate = Datetime
+        self.Version     = Version
+        self.IsUpload    = IsUpload
   
 ############################# 
 class Permission(Common):
@@ -24,6 +34,11 @@ class Permission(Common):
     UserPermissions = Column(String(25))
     GroupPermissions = Column(String(25))
     OtherPermissions = Column(String(25))
+    
+    def __init__(self, DocId, UserId, UserPerm):
+        self.DocId           = DocId
+        self.Userid          = UserId
+        self.UserPermissions = UserPerm
 
 #############################
 class PaymentAccount(Common):
