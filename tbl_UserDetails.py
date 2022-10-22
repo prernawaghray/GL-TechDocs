@@ -26,11 +26,10 @@ class UserProfile(Base):
     StreetAddress = Column(String(256))
     State = Column(String(256))
     Country = Column(String(100))
+    Occupation = Column(String(256))
+    PurposeOfUsage = Column(String(256))
     SignUpDate = Column(DateTime)
     lastActive = Column(DateTime)
-    OccupationName = Column(String(256))
-    FieldWork = Column(String(256))
-    Purpose = Column(String(256))
 
     # Constructors to insert data
     # def __init__(self, UserId):
