@@ -36,5 +36,12 @@ function parseJwt (token) {
     return JSON.parse(jsonPayload);
 };
 
+function getResponseMessage(data)
+{
+    if("responseJSON" in data && "message" in data.responseJSON)
+        return data.responseJSON.message;
+    else
+        return data.statusText;
+}
 
 

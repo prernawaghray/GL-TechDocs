@@ -44,20 +44,20 @@ function callLoginApi(loginFormData)
     $.ajax({
         data : loginFormData,
            type : 'POST',
-           url : getApiUrl('login'),
+           url : getApiUrl('signin'),
            success: function(data) {
             //In case of success the data contains the JSON
 
             
-                localStorage.setItem('userToken', data.authToken);
-                saveTokenInSession(data.authToken);
+                localStorage.setItem('userToken', data.userAuthToken);
+                saveTokenInSession(data.userAuthToken);
             
             
             
           },
           error:function(data) {
             // in case of error we need to read response from data.responseJSON
-            showAlert('#email-login-errorMessage', 'alert-danger', "Login!!", data.responseJSON.message);
+            showAlert('#email-login-errorMessage', 'alert-danger', "Login!!", getResponseMessage(data));
 
             
           }

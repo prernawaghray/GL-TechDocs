@@ -32,7 +32,7 @@ function loadProfileData() {
             },
             error: function (data) {
                 // in case of error we need to read response from data.responseJSON
-                showAlert('#profile-errorMessage', 'alert-danger', "Profile Update!!", data.responseJSON.message);
+                showAlert('#profile-errorMessage', 'alert-danger', "Profile Update!!", getResponseMessage(data));
             }
         });
     }
@@ -64,13 +64,13 @@ function profileUpdate() {
                 else {
                     showAlert('#profile-errorMessage', 'alert-warning', "Profile Update!!", data.message);
 
-                    //showError(data.responseJSON.message,'Profile Update')
+                    //showError(getResponseMessage(data),'Profile Update')
 
                 }
             },
             error: function (data) {
                 // in case of error we need to read response from data.responseJSON
-                showAlert('#profile-errorMessage', 'alert-danger', "Profile Update!!", data.responseJSON.message);
+                showAlert('#profile-errorMessage', 'alert-danger', "Profile Update!!", getResponseMessage(data));
             }
         });
     }
@@ -100,13 +100,13 @@ function changePassword() {
                 else {
                     showAlert('#password-errorMessage', 'alert-warning', "Change Password!!", data.message);
 
-                    //showError(data.responseJSON.message,'Profile Update')
+                    //showError(getResponseMessage(data),'Profile Update')
 
                 }
             },
             error: function (data) {
                 // in case of error we need to read response from data.responseJSON
-                showAlert('#password-errorMessage', 'alert-danger', "Change Password!!", data.responseJSON.message);
+                showAlert('#password-errorMessage', 'alert-danger', "Change Password!!", getResponseMessage(data));
             }
         });
     }
@@ -158,7 +158,7 @@ function deleteAccount() {
             },
             error: function (data) {
                 // in case of error we need to read response from data.responseJSON
-                showAlert('#delete-errorMessage', 'alert-danger', "Delete Account!!", data.responseJSON.message);
+                showAlert('#delete-errorMessage', 'alert-danger', "Delete Account!!", getResponseMessage(data));
             }
         });
     }
