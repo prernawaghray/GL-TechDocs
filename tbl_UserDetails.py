@@ -20,7 +20,7 @@ class UserAuthentication(Base):
 class UserProfile(Base):
     __tablename__ = "UserProfile"
 
-    UserId = Column(String(256), ForeignKey(UserAuthentication.UserId), primary_key=True)
+    UserId = Column(String(256), ForeignKey(UserAuthentication.UserId), primary_key=True,unique=True)
     FirstName = Column(String(100))
     LastName = Column(String(100))
     StreetAddress = Column(String(256))

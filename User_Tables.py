@@ -26,7 +26,7 @@ def define_tables():
     # Table - UserProfile
     tbl_array['UserProfile'] = (
         "Create Table if not exists `UserProfile` ("
-        "   UserId          varchar(256),"
+        "   UserId          varchar(256) UNIQUE,"
         "   FirstName       varchar(100),"
         "   LastName        varchar(100),"
         "   StreetAddress   varchar(256),"
