@@ -23,7 +23,6 @@ def define_tables():
         ")"
     )
 
-
     # Table - UserProfile
     tbl_array['UserProfile'] = (
         "Create Table if not exists `UserProfile` ("
