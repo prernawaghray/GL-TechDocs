@@ -4,7 +4,7 @@ import warnings
 import logging
 import yaml
 import requests
-from functools import singledispatchmethod
+#from functools import singledispatchmethod
 from datetime import datetime
 from xml.dom.xmlbuilder import DocumentLS 
 from flask import Flask, render_template, url_for, redirect, session, flash, request, jsonify, json
@@ -14,6 +14,8 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from DBConnect import session_factory
 from orm_Tables import Document
+from flask import Blueprint
+from flask import current_app
 #from Users import User
 #from Services.FileManager.permissions import *
 
@@ -21,7 +23,7 @@ from orm_Tables import Document
 warnings.filterwarnings("ignore")
 
 # Get logging filepath
-with open('config.yaml') as stream:
+with open('../config.yaml') as stream:
     configs = yaml.safe_load(stream)
 
 # Data foler 
@@ -29,11 +31,15 @@ data_path = configs["DIR_ROOT"] + configs["DIR_DATA"]
 # Initiate logging 
 log_path = configs['DIR_ROOT'] + configs['DIR_LOG']
 logging.basicConfig(filename=log_path)
-# Start flask
-app = Flask(__name__)
 
+# Start flask
 # Flask configurations
-app.config.from_object(configs)
+fileManagerBlueprint = Blueprint('fileManagerBlueprint', __name__)
+
+@fileManagerBlueprint.route('/filemanagerhealth')
+def filemanagerhealth():
+    print(current_app.config)
+    return jsonify({'health':'good'}) 
 
 # Class to handle common file related processes
 class FileManage:
@@ -51,11 +57,25 @@ class FileManage:
             os.makedirs(dirpath)
         cls.v_filename = filename
         cls.v_filepath = filepath
+    
+    @classmethod
+    def uploadFile(cls, userid, filename, docdata):
+        datestr  = datetime.today().strftime('%Y%m%d%H%M%S')
+        dirpath  = data_path + '/' + userid
+        filepath = dirpath+'/'+filename
+        if not os.path.exists(dirpath):
+            os.makedirs(dirpath)
+        file_obj = open(filepath, "w")
+        file_obj.write(docdata)
+        file_obj.close() 
+        
+        cls.v_filename = filename
+        cls.v_filepath = filepath
 
 ##############################################################################
 # Home API for filemanager
 # Check on FileManager service
-@app.route('/file', methods = ['GET', 'POST'])
+@fileManagerBlueprint.route('/file', methods = ['GET', 'POST'])
 def home():
     if(request.method == 'GET'):
         data = "FileManager home. Allowed endpoints are /file/create ; /file/modify ; /file/delete"
@@ -69,7 +89,7 @@ def home():
 # 3. Copies this file name to the above folder
 # 4. Create an entry into Documents table
 # Output: UserId, DocId, DocName, Filename, body
-@app.route('/file/create', methods = ['GET', 'POST'])
+@fileManagerBlueprint.route('/file/create', methods = ['GET', 'POST'])
 def file_create():
     userid   = ''
     docid    = ''
@@ -77,24 +97,32 @@ def file_create():
     data_out = ''
     mess_out = ''
     
-    app.logger.info("Service file/create initiated")
+    current_app.logger.info("Service file/create initiated")
     if(request.method == 'POST'):
         # request data
         content  = request.get_json(silent=True)
         userid   = content['UserId']
         docname  = content['DocName']
+        isupload = content['IsUpload']
+        docdata  = content['DocData']
         # processing request
         file_obj = FileManage()
-        file_obj.createNewFile(userid, docname)
         #TODO: ver = api_call_to_get_document_version
         ver = 1
+        
+        if not isupload:
+            file_obj.createNewFile(userid, docname)
+        
+        else:
+            file_obj.uploadFile(userid, docname, docdata)
+            
         
         open(file_obj.v_filepath, 'a').close()
         
         # Save it in the database - by using table object
         try:
             session = session_factory()
-            doc_entry = Document(userid, file_obj.v_filename, file_obj.v_filepath, datetime.today(), ver)
+            doc_entry = Document(userid, file_obj.v_filename, file_obj.v_filepath, datetime.today(), ver, isupload)
             session.add(doc_entry)
             session.flush()
             docid_out = doc_entry.DocId
@@ -105,8 +133,8 @@ def file_create():
             mess_out = 'success'
         except Exception:
             mess_out = 'fail'
-            app.logger.exception("Failure Creating File!")
-    app.logger.info("Service file/create ended")
+            current_app.logger.exception("Failure Creating File!")
+    current_app.logger.info("Service file/create ended")
     
     #Return the json object to the caller
     return jsonify(message=mess_out, data=data_out)
@@ -120,9 +148,9 @@ def file_create():
 # 3. If save operation: will finally re-write the latest file edited then save the URL
 # Output:
 # UserId, DocId, DocName, DocText
-@app.route('/file/modify', methods = ['GET', 'POST'])
+@fileManagerBlueprint.route('/file/modify', methods = ['GET', 'POST'])
 def file_modify():
-    app.logger.info("Service file/modify initiated")
+    current_app.logger.info("Service file/modify initiated")
     data_out = ''
     mess_out = ''
 
@@ -161,7 +189,7 @@ def file_modify():
                         file_obj.write(doctext)
                         file_obj.close()
                     else:
-                        app.logger.error("File does not exist at the path: ", filepath)
+                        current_app.logger.error("File does not exist at the path: ", filepath)
                     
                     mess_out = 'success'
                 elif (operation == 'rename'):
@@ -195,20 +223,28 @@ def file_modify():
                     
                     mess_out = 'success'
                 else:
-                    app.logger.error("Operation uknown: ", operation)
+                    current_app.logger.error("Operation uknown: ", operation)
             else:
                 raise Exception("Access to modify denied!")
         except Exception:
             mess_out = 'fail'
-            app.logger.exception("Failure Modifying file!")
+            current_app.logger.exception("Failure Modifying file!")
     
     data_out = json.dumps({'UserId':userid, 'DocId':docid, 'DocName':docname, 'DocText':doctext})
-    app.logger.info("Service file/modify ended")
+    current_app.logger.info("Service file/modify ended")
     return jsonify(message=mess_out, data=data_out)
 
-#################
-# Main Call
-if __name__ == "__main__":
-    app.run(debug=True)
-    
+@fileManagerBlueprint.route('/file/rename', methods=['GET', 'POST'])
+def file_rename():
+    #TODO api to rename file
+    pass
 
+@fileManagerBlueprint.route('/file/delete', methods=['GET', 'POST'])
+def file_delete():
+    #TODO api to delete file
+    pass
+
+@fileManagerBlueprint.route('/file/view', methods=['GET', 'POST'])
+def file_view():
+    #TODO api to view file
+    pass

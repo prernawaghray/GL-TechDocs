@@ -7,8 +7,21 @@
 from distutils.log import debug
 from flask import Flask, jsonify, render_template
 import socket
+import yaml
+import sys
+sys.path.append('../')
+from Blueprints.FileManager.FileManager import fileManagerBlueprint
+from Blueprints.SampleBlueprint.sampleBlueprint import sampleBlueprint
+
+with open('../config.yaml') as stream:
+    configs = yaml.safe_load(stream)
 
 app= Flask(__name__)
+app.register_blueprint(fileManagerBlueprint)
+app.register_blueprint(sampleBlueprint)
+
+app.config['ENV'] = configs["FLASK_ENV"]
+app.config['SAMPLE_TESTING'] = "test success"
 
 # This function get the hostname and IP deatils of server, required for microservices
 def fetchDetails():
@@ -35,4 +48,4 @@ def details():
 
 
 if __name__ == '__main__':
-	app.run(host='0.0.0.0',debug= True, port=5000)
+	app.run(host='0.0.0.0',debug=True, port=5000)

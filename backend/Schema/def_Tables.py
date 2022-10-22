@@ -18,6 +18,7 @@
 # Import all libraries
 import os
 import yaml
+import os.path
 import logging
 import mysql.connector
 from mysql.connector import connect, errorcode
@@ -33,6 +34,7 @@ def defineTables():
     "   DocId           int not null AUTO_INCREMENT,"
     "   DocName         varchar(256),"
     "   UserId          varchar(256),"
+    "   IsUpload        boolean,"
     "   FilePath        text,"
     "   CreatedDate     datetime,"
     "   ModifiedDate    datetime,"
@@ -153,7 +155,7 @@ def createTables():
     #db_pass     = os.environ.get('MYSQL_PASS')
     
     # Get details from configuration file
-    with open('config.yaml') as stream:
+    with open(os.path.dirname(__file__)+'/../config.yaml') as stream:
         configs = yaml.safe_load(stream)
     
     db_conn     = configs['DB_CONN']

@@ -1,7 +1,7 @@
 from curses import ALL_MOUSE_EVENTS
 from datetime import datetime
 from decimal import Decimal
-from symbol import not_test
+# from symbol import not_test
 from telnetlib import STATUS
 from sqlalchemy import Column, Integer, String, Text, DateTime, Index, Date, Boolean, DECIMAL
 from sqlalchemy import UniqueConstraint
