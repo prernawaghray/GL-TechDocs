@@ -28,7 +28,7 @@ def define_tables():
         "Create Table if not exists `UserProfile` ("
         "   UserId          varchar(256),"
         "   FirstName       varchar(100),"
-        "   LastName        varchar(256),"
+        "   LastName        varchar(100),"
         "   StreetAddress   varchar(256),"
         "   State           varchar(256)"
         "   Country         varchar(100)"
