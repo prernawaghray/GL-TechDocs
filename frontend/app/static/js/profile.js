@@ -56,17 +56,26 @@ function loadProfileData() {
 }
 
 function profileUpdate() {
+    removeAlert('#profile-errorMessage');
     try {
         $.ajax({
-            data: {
+            contentType:"application/json; charset=utf-8",
+            dataType:"json",
+            data: JSON.stringify({
                 authToken: getUserToken(),
                 userData:
                 {
                     firstName: $('#first-name').val(),
                     lastName: $('#last-name').val(),
+                    address : {
+                        streetAddress: $('#address').val(),
+                        state:$('#state').val(),
+                        country:$('#country').val(),},
+                      occupation: $('#occupation').val(),
+                      purposeOfUse:$('#purpose').val(),
                 }
 
-            },
+            }),
             type: 'POST',
             url: getApiUrl('updateProfile'),
             success: function (data) {
@@ -142,9 +151,8 @@ function deleteAccount() {
         $.ajax({
             data: {
                 authToken: localStorage.getItem('userToken'),
+                loginType:getLoginType(),
                 currentPassword: $('#delete-password').val()
-
-
             },
             type: 'POST',
             url: getApiUrl('deleteAccount'),
@@ -283,6 +291,29 @@ function validateFormsAndAddHandlers() {
         $(this).validate();
     });
 
+    if(getLoginType()=="google")
+    {
+        $('#password :input').prop("disabled",true);
+        showAlert('#password-errorMessage', 'alert-warning', "Google Login!", "Use Google account to change your password");
+        $("#nativedelete").hide();
+        $('#googledelete').show();
+        $('#googledeletetext').show();
+        $('#confirm-delete').prop('disabled',true);
+        $('#delete-btn').hide();
+        google.accounts.id.initialize({
+            client_id: getClientId(),
+            callback: handleGoogleAuthResponse,
+            prompt_parent_id:"googledelete"
+          });
+         
+          google.accounts.id.renderButton($('#googledelete')[0],googleLoginButtonOptions);
+      
+    }
+    else
+    {
+        $('#googledeletetext').remove();
+    }
+
 }
 $(document).ready(function(){
     $("#country").on("changed.bs.select", 
@@ -297,3 +328,25 @@ $(document).ready(function(){
 
 });
 
+
+var googleLoginButtonOptions=
+{ theme: 'filled_blue', 
+size: 'large',
+width:'300px',
+text:"continue_with"};
+
+function handleGoogleAuthResponse(token) {
+    var response = parseJwt(token.credential);
+    if(response.email == parseJwt(getUserToken()).Email)
+    {
+        $('#googledeletetext').remove();
+        $('#delete-password').val('Google Verified');
+        $('#confirm-delete').prop('disabled',false);
+        $('#delete-btn').show();
+        $('#accountVerified').text("Account is verified - proceed to delete");
+    }
+  }
+
+  window.onload = function () {
+       
+  };

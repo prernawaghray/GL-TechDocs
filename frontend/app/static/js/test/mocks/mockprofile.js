@@ -6,7 +6,7 @@ var updateProfileAPIUrl = baseApiUrl + "updateProfile";
 var changePasswordAPIUrl = baseApiUrl + "changePassword";
 var userProfiles=
 {
-  '123456':{
+  'ewogICJhbGciOiAiSFMyNTYiLAogICJ0eXAiOiAiSldUIgp9.ewogICJFbWFpbCI6ICJhZG1pbkB0ZWNoZG9jcy5jb20iLAogICJsb2dpblR5cGUiOiAiZW1haWwiLAogICJpc0FkbWluIjogMQp9':{
     firstName:'Sarith',
     lastName:'Madhu',
     address : {
@@ -47,7 +47,7 @@ function getProfileData(authtoken)
   return userData[authtoken];
 }
 var user1GetRequest = {
-    authToken:'123456'    
+    authToken:'ewogICJhbGciOiAiSFMyNTYiLAogICJ0eXAiOiAiSldUIgp9.ewogICJFbWFpbCI6ICJhZG1pbkB0ZWNoZG9jcy5jb20iLAogICJsb2dpblR5cGUiOiAiZW1haWwiLAogICJpc0FkbWluIjogMQp9'    
 }
 var user2GetRequest = {
   authToken:'789123'    
@@ -100,14 +100,15 @@ var getProfileUser={
 
   function checkValidUpdateRequest(data)
   {
-    if(data.authToken!='123456'&&data.authToken!='789123')
+    if(data.authToken!='ewogICJhbGciOiAiSFMyNTYiLAogICJ0eXAiOiAiSldUIgp9.ewogICJFbWFpbCI6ICJhZG1pbkB0ZWNoZG9jcy5jb20iLAogICJsb2dpblR5cGUiOiAiZW1haWwiLAogICJpc0FkbWluIjogMQp9'&&data.authToken!='789123')
       return false;
     if(data.userData.firstName.length>10) return false;
+    updateProfileData(data);
     return true;
   }
   function checkValidChangePasswordRequest(data)
   {
-    if(data.authToken!='123456'&&data.authToken!='789123')
+    if(data.authToken!='ewogICJhbGciOiAiSFMyNTYiLAogICJ0eXAiOiAiSldUIgp9.ewogICJFbWFpbCI6ICJhZG1pbkB0ZWNoZG9jcy5jb20iLAogICJsb2dpblR5cGUiOiAiZW1haWwiLAogICJpc0FkbWluIjogMQp9'&&data.authToken!='789123')
       return false;
     if(data.currentPassword.length>10) return false;
     return true;
@@ -116,19 +117,20 @@ var getProfileUser={
   {
     var token = data.authToken;
     var userData=getProfiles();
-    userData[token].firstName=data.userData.firstName;
-    userData[token].lastName = data.userData.lastName;
+    userData[token]=data.userData;
+   
     writeProfiles(userData);
 
   }
   var updateProfileUser={
     url: updateProfileAPIUrl,
     data: function( data ) {
-        return checkValidUpdateRequest(data);
+        return checkValidUpdateRequest(JSON.parse(data));
       },
     status:200,
     response:function(settings)
     {
+      
       var response = {
         message:"Profile updated"
       };
