@@ -168,13 +168,54 @@
                 <th scope="col">Last Modified</th>
                 <th scope="col">Actions</th>
               </tr>
+
             </thead>
             <tbody id="tbody">
+              <tr>
+                <td>
+                  <input type="checkbox" id="maincheckbox">
+                </td>
+                
+                <td scope="col">Demo-doc</td>
+                <td scope="col">john</td>
+                <td scope="col">oct-21st 3:15PM</td>
+                <td scope="col"><button type="button" data-docid="2" data-bs-toggle="modal" data-bs-target="#shareModal" class="btn btn-outline-primary"><i class="bi bi-share"></i></button>
+                </td>
+            
 
+              </tr>
             </tbody>
       </div>
       <!-- END OF USER TABLE -->
     </main>
+    <!-- Modal -->
+<div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Share Document</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" name="docId" value="">
+        <div class="form-floating">
+          <input type="email" class="form-control" name="email" id="email-input" placeholder="email" required>
+          <label for="email-input">Email address</label>
+        </div>
+        <select class="form-select form-select-lg mt-3" aria-label="Default select example">
+          <option selected>Permissions</option>
+          <option value="1">Can View</option>
+          <option value="2">Can Edit</option>
+          <option value="3">Revoke Permissions</option>
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Share</button>
+      </div>
+    </div>
+  </div>
+</div>
 </div>
 
 {% endblock %}

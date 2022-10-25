@@ -1,5 +1,5 @@
 alerttemplate=
-'<div class="alert ALERT_TYPE alert-dismissible fade show" role="alert" id="alertBox"> \
+'<div class="alert ALERT_TYPE alert-dismissible fade show" role="alert" id="ALERT_ID"> \
 ALERT_IMAGE\
 <strong>ALERT_TITLE</strong> ALERT_MESSAGE\
 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>\
@@ -19,15 +19,17 @@ var imageMap=
 function showAlert(div,type,title,message)
 {
     var newAlert=alerttemplate;
+    alertId  = div.replace('#','')+"AlertBox";
+    newAlert = newAlert.replace('ALERT_ID',alertId);
     newAlert = newAlert.replace('ALERT_TYPE',type);
     newAlert = newAlert.replace('ALERT_IMAGE',imageMap[type]); 
     newAlert = newAlert.replace('ALERT_TITLE',title); 
     newAlert = newAlert.replace('ALERT_MESSAGE',message); 
-    if ($('#alertBox').length==0)
+    if ($('#'+alertId).length==0)
         $(div).append(newAlert);
 }
 
 function removeAlert(div)
 {
-    $(div+' > #alertBox').remove()
+    $(div+'AlertBox').remove()
 }

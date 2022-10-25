@@ -1,4 +1,6 @@
 var rootApiUrl = "http://localhost:56733/api/";
+//56733
+//6622
 var rootFrontEndUrl = "http://localhost:56733/";
 function getApiUrl(api)
 {
@@ -38,10 +40,19 @@ function parseJwt (token) {
 
 function getResponseMessage(data)
 {
-    if("responseJSON" in data && "message" in data.responseJSON)
+    if("responseJSON" in data && data.responseJSON !=undefined)
+      if("message" in data.responseJSON)
         return data.responseJSON.message;
-    else
+    
         return data.statusText;
 }
 
+function getLoginType()
+{
+    parsedToken=parseJwt(getUserToken());
+    if(parsedToken.loginType!=undefined)
+        return parsedToken.loginType;
+    else
+        return "email";
 
+}
