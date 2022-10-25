@@ -2,7 +2,7 @@
 import { isEqualObjects,baseApiUrl } from "../helpers.js";
 export {mockhandlers};
 var loginApiUrl = baseApiUrl + "signin";
-var successfulAuthToken = "123456"
+var successfulAuthToken = "ewogICJhbGciOiAiSFMyNTYiLAogICJ0eXAiOiAiSldUIgp9.ewogICJFbWFpbCI6ICJhZG1pbkB0ZWNoZG9jcy5jb20iLAogICJsb2dpblR5cGUiOiAiZW1haWwiLAogICJpc0FkbWluIjogMQp9"
 var successfulLoginRequest = { 
     loginType:"email",
     email:'admin@techdocs.com', 
