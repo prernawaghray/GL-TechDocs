@@ -50,10 +50,17 @@
       background-color: transparent;
       color: transparent;
     }
-    /* :not(pre) > code[class*="language-"], pre[class*="language-"]{
-      background-color: #444;
+    
+    code[class*="language-"], pre[class*="language-"] {
+      font-size: 16px;
       color: white;
-    } */
+      text-shadow: none;
+    }
+
+    :not(pre) > code[class*="language-"], pre[class*="language-"] {
+        background: #444;
+    }
+
   </style>
 
   {% block pageCss %}{% endblock%}
