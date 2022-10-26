@@ -96,53 +96,57 @@ def signin():
         loginType = content['loginType']
         username  = content['username']
         password  = content['password']
-        remember  = content['remember']
+        remember  = content['rememberMe']
 
-        if loginType == 'google':
-            session = session_factory()
-            sql_stmt = (select(User.Id, User.isadmin).where (User.username == username))
-            result = session.execute(sql_stmt).first()
-            session.close()
+        if remember == 1:
+            if loginType == 'google':
+                session = session_factory()
+                sql_stmt = (select(User.Id, User.isadmin).where (User.username == username))
+                result = session.execute(sql_stmt).first()
+                session.close()
 
-            if result[0]:
-                key = current_app.config["SECRET"]
-                admin = result[1]
-                data_sent = {"Email": username,
-                             "isAdmin": admin}
-                JWT_Token = jwt.encode(data_sent, key, algorithm="HS256")
-                jsondata = {"userAuthToken":JWT_Token}
-                return make_response(jsonify(jsondata), 200)
-            else:
-                data_sent = {"message":"User not Registered"} 
-                return make_response(jsonify(data_sent),401)
-
-        elif loginType == "email":
-            session = session_factory()
-            sql_stmt = (select(User.Id, User.isadmin, User.password).where (User.username == username))
-            result = session.execute(sql_stmt).first()
-            session.close()
-
-            if result[0]:
-                if bcrypt.check_password_hash(result[2], password):
+                if result[0]:
                     key = current_app.config["SECRET"]
                     admin = result[1]
                     data_sent = {"Email": username,
                                 "isAdmin": admin}
                     JWT_Token = jwt.encode(data_sent, key, algorithm="HS256")
-                    data_sent  =  {"userAuthToken" : JWT_Token,     
-                                    "isAdmin":admin}
-                    return make_response(jsonify(data_sent), 200) 
+                    jsondata = {"userAuthToken":JWT_Token}
+                    return make_response(jsonify(jsondata), 200)
                 else:
-                    data_sent = {"message":"Invalid Password"} 
+                    data_sent = {"message":"User not Registered"} 
+                    return make_response(jsonify(data_sent),401)
+
+            elif loginType == "email":
+                session = session_factory()
+                sql_stmt = (select(User.Id, User.isadmin, User.password).where (User.username == username))
+                result = session.execute(sql_stmt).first()
+                session.close()
+
+                if result[0]:
+                    if bcrypt.check_password_hash(result[2], password):
+                        key = current_app.config["SECRET"]
+                        admin = result[1]
+                        data_sent = {"Email": username,
+                                    "isAdmin": admin}
+                        JWT_Token = jwt.encode(data_sent, key, algorithm="HS256")
+                        data_sent  =  {"userAuthToken" : JWT_Token,     
+                                        "isAdmin":admin}
+                        return make_response(jsonify(data_sent), 200) 
+                    else:
+                        data_sent = {"message":"Invalid Password"} 
+                        return make_response(jsonify(data_sent),401)
+                else:
+                    data_sent = {"message":"User not Registered"} 
                     return make_response(jsonify(data_sent),401)
             else:
                 data_sent = {"message":"User not Registered"} 
                 return make_response(jsonify(data_sent),401)
         else:
-            data_sent = {"message":"User not Registered"} 
-            return make_response(jsonify(data_sent),401)
-
+            pass
+        
     else:
         data_sent = {"message":"Invalid method"} 
-        return make_response(jsonify(data_sent),401)   
+        return make_response(jsonify(data_sent),401)
+
 
