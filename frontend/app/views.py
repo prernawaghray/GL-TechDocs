@@ -94,6 +94,10 @@ def latexEditor():
 def plans():
    return render_template('plans-and-subscriptions/pricing.html')
 
+@app.route('/payments')
+def payments():
+   return render_template('payments-page/payments-page.html')
+
 @app.route('/profile')
 @login_required
 def profile():
