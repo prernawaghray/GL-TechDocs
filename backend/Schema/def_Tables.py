@@ -158,7 +158,7 @@ def defineTables():
 
     tbl_array ['UsersProfile'] = (
     "Create Table if not exists `UsersProfile` ("
-    "   userId          varchar(256),"
+    "   username          varchar(256),"
     "   firstName       varchar(100),"
     "   lastName        varchar(100),"
     "   streetAddress   varchar(256),"
@@ -168,9 +168,9 @@ def defineTables():
     "   purposeOfUsage  varchar(256),"
     "   signUpDate      datetime,"
     "   lastActiveDate  datetime,"
-    "   PRIMARY KEY (userId),"
-    "   FOREIGN KEY (userId) REFERENCES User(Id),"
-    "   INDEX idx_UserProfile (userId)"
+    "   PRIMARY KEY (username),"
+    "   FOREIGN KEY (username) REFERENCES User(username),"
+    "   INDEX idx_UserProfile (username)"
     ")"
 
     )

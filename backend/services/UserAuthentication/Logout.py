@@ -14,7 +14,7 @@ from sqlalchemy.orm import sessionmaker
 from DBConnect import session_factory
 from orm_Tables import User
 from flask_bcrypt import Bcrypt
-from .JWTAuthentication import authentication_json
+from .JWTAuthentication import authentication
 import pytz
 
 userLogout_bp = Blueprint('logout',__name__)
@@ -44,6 +44,5 @@ userLogout_bp = Blueprint('logout',__name__)
 #         return make_response(jsonify({'message':'invalid method'}))
 
 @userLogout_bp.route('/api/signout', methods=["GET", "POST"])
-@authentication_json
 def signout(user_id):
     return jsonify(message=user_id)

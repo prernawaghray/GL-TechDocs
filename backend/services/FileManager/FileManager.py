@@ -16,6 +16,7 @@ from DBConnect import session_factory
 from orm_Tables import Document
 from flask import Blueprint
 from flask import current_app
+from ..UserAuthentication.JWTAuthentication import authentication
 #from Users import User
 #from Services.FileManager.permissions import *
 
@@ -37,9 +38,10 @@ logging.basicConfig(filename=log_path)
 fileManagerBlueprint = Blueprint('fileManagerBlueprint', __name__)
 
 @fileManagerBlueprint.route('/filemanagerhealth')
-def filemanagerhealth():
+@authentication
+def filemanagerhealth(user_id):
     print(current_app.config)
-    return jsonify({'health':'good'}) 
+    return jsonify({'health':'good', 'user':user_id}) 
     
 # Class to handle common file related processes
 class FileManage:

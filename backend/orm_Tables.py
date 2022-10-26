@@ -86,7 +86,7 @@ class User(Base):
 class UserProfile(Base):
     __tablename__ = "UsersProfile"
     
-    userId          = Column(String(256), ForeignKey('User.Id'),primary_key = True,nullable=False, unique=True)
+    username         = Column(String(256), ForeignKey('User.username'),primary_key = True,nullable=False, unique=True)
     firstName       = Column(String(100),nullable=True)
     lastName        = Column(String(100),nullable=True)
     streetAddress   = Column(String(256),nullable=True)
