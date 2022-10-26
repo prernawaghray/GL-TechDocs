@@ -3,7 +3,7 @@ var rootApiUrl = "http://localhost:6622/api/";
 var testing=true;
 //56733
 //6622
-var rootFrontEndUrl = "http://localhost:56733/";
+var rootFrontEndUrl = "/";
 function getApiUrl(api)
 {
     if (testing)
