@@ -143,6 +143,37 @@ def defineTables():
     "   INDEX idx_US_User (UserId)"
     ")"
     )
+
+    tbl_array['User'] = (
+    "Create Table if not exists `User` ("
+    "   Id             varchar(256) not null,"
+    "   username       varchar(256),"
+    "   password       varchar(256),"
+    "   isadmin        boolean,"
+    "   loginType      varchar(256),"
+    "   PRIMARY KEY (id),           "
+    "   INDEX idx_User (id)"
+    ")"
+    )
+
+    tbl_array ['UsersProfile'] = (
+    "Create Table if not exists `UsersProfile` ("
+    "   userId          varchar(256),"
+    "   firstName       varchar(100),"
+    "   lastName        varchar(100),"
+    "   streetAddress   varchar(256),"
+    "   state           varchar(256),"
+    "   country         varchar(256),"
+    "   occupation      varchar(256),"
+    "   purposeOfUsage  varchar(256),"
+    "   signUpDate      datetime,"
+    "   lastActiveDate  datetime,"
+    "   PRIMARY KEY (userId),"
+    "   FOREIGN KEY (userId) REFERENCES User(Id),"
+    "   INDEX idx_UserProfile (userId)"
+    ")"
+
+    )
 ##
 # Method to run the table definitions defined in the earlier call in a loop
 # Creates a connection to the Database and then executes the create query
@@ -155,7 +186,7 @@ def createTables():
     #db_pass     = os.environ.get('MYSQL_PASS')
     
     # Get details from configuration file
-    with open(os.path.dirname(__file__)+'/../config.yaml') as stream:
+    with open(os.path.dirname(__file__)+'../config.yaml') as stream:
         configs = yaml.safe_load(stream)
     
     db_conn     = configs['DB_CONN']

@@ -40,7 +40,7 @@ fileManagerBlueprint = Blueprint('fileManagerBlueprint', __name__)
 def filemanagerhealth():
     print(current_app.config)
     return jsonify({'health':'good'}) 
-
+    
 # Class to handle common file related processes
 class FileManage:
     v_filename =''

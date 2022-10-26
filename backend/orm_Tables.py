@@ -3,11 +3,13 @@ from datetime import datetime
 from decimal import Decimal
 # from symbol import not_test
 from telnetlib import STATUS
-from sqlalchemy import Column, Integer, String, Text, DateTime, Index, Date, Boolean, DECIMAL
+from sqlalchemy import Enum, Column, Integer, String, Text, DateTime, Index, Date, Boolean, DECIMAL, ForeignKey
 from sqlalchemy import UniqueConstraint
 from sqlalchemy.dialects import mysql 
 from DBConnect import Base
 from orm_Common import Common
+import enum
+from sqlalchemy.orm import relationship
 
 #############################
 class Document(Common):
@@ -59,4 +61,50 @@ class UserSubscription(Common):
     TypeDesc        = Column(String(128))
     Status          = Column(String(1))
     ExpiryDate      = Column(DateTime)
+
+#############################
+ 
+class User(Base): 
+    __tablename__ = "User"
+    
+    Id              = Column(String(256), primary_key=True)
+    username        = Column(String(256), nullable=False, unique=True)
+    password        = Column(String(256), nullable=False)
+    isadmin         = Column(Boolean,nullable=False)
+    loginType       = Column(String(256),nullable=False)
+    #user = relationship("UserPofile",backref = "user", CASCADE = 'all, delete-orphan', lazy = 'dynamic' )
+    
+    
+    def __init__(self, Id, username, password, isadmin):
+        self.Id = Id
+        self.username = username
+        self.password = password
+        self.isadmin = isadmin
         
+################################
+
+class UserProfile(Base):
+    __tablename__ = "UsersProfile"
+    
+    userId          = Column(String(256), ForeignKey('User.Id'),primary_key = True,nullable=False, unique=True)
+    firstName       = Column(String(100),nullable=True)
+    lastName        = Column(String(100),nullable=True)
+    streetAddress   = Column(String(256),nullable=True)
+    state           = Column(String(256),nullable=True)
+    country         = Column(String(256),nullable=True)
+    occupation      = Column(String(256),nullable=True)
+    purposeOfUsage  = Column(String(256),nullable=True)
+    signUpDate      = Column(Date,nullable=True) 
+    lastActiveDate  = Column(Date,nullable=True) 
+
+    def __init__(self, userID, firstName,lastName,streerAddress,state,country,occupation,purposeOfUsage,signUpDate,lastActiveDate):
+        self.userID = userID
+        self.firstName = firstName
+        self.lastName = lastName
+        self.streetAddress = streerAddress
+        self.state = state
+        self.country = country
+        self.occupation = occupation
+        self.purposeOfUsage = purposeOfUsage
+        self.signUpDate = signUpDate
+        self.lastActiveDate = lastActiveDate
