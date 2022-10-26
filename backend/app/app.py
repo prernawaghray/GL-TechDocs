@@ -5,8 +5,19 @@
 
 
 from distutils.log import debug
+from flask_bcrypt import Bcrypt
 from flask import Flask, jsonify, render_template
 import socket
+import yaml
+import sys
+sys.path.append('../')
+from services.FileManager.FileManager import fileManagerBlueprint
+from services.SampleBlueprint.sampleBlueprint import sampleBlueprint
+#from services.FileManager_2.FileManager_2 import fileManager_2
+from services.UserAuthentication.Login import userLogin_bp
+from services.UserAuthentication.Logout import userLogout_bp
+with open('../config.yaml') as stream:
+    configs = yaml.safe_load(stream)
 
 from DocumentVersionManager.DocumentVersionManager import documentVersionManagerBlueprint
 from UserHistoryManager.UserHistoryManager import userHistoryManagerBlueprint
@@ -14,6 +25,16 @@ from UserHistoryManager.UserHistoryManager import userHistoryManagerBlueprint
 app= Flask(__name__)
 app.register_blueprint(documentVersionManagerBlueprint)
 app.register_blueprint(userHistoryManagerBlueprint)
+bcrypt = Bcrypt(app)
+app.register_blueprint(fileManagerBlueprint)
+#app.register_blueprint(fileManager_2)
+app.register_blueprint(sampleBlueprint)
+app.register_blueprint(userLogin_bp)
+app.register_blueprint(userLogout_bp)
+
+app.config['ENV'] = configs["FLASK_ENV"]
+app.config['SAMPLE_TESTING'] = "test success"
+app.config["SECRET"]	= "secret"
 
 # This function get the hostname and IP deatils of server, required for microservices
 def fetchDetails():
@@ -40,4 +61,4 @@ def details():
 
 
 if __name__ == '__main__':
-	app.run(host='0.0.0.0',debug= True, port=5000)
+	app.run(host='0.0.0.0',debug=True, port=5000)

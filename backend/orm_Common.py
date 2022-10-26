@@ -1,5 +1,5 @@
 from DBConnect import Base
-from sqlalchemy import Column, Integer, String, Text, DateTime
+from sqlalchemy import Column, Integer, String, Text, DateTime, Boolean
 
  #############################
 class Common(Base):
@@ -8,6 +8,7 @@ class Common(Base):
     DocId           = Column(Integer, primary_key=True, autoincrement=True)
     DocName         = Column(String(256))
     UserId          = Column(String(256))
+    IsUpload        = Column(Boolean)
     FilePath        = Column(Text)
     Version         = Column(Integer)
     CreatedDate     = Column(DateTime)
@@ -17,9 +18,10 @@ class Common(Base):
     n_Misc2         = Column(Integer)
  
     #Constructor methods to insert data into Documents table
-    def __init__(self, UserId, DocName, Filepath, Datetime, Version):
+    def __init__(self, UserId, DocName, Filepath, Datetime, Version, IsUpload):
         self.UserId      = UserId
         self.DocName     = DocName
         self.FilePath    = Filepath
         self.CreatedDate = Datetime
         self.Version     = Version
+        self.IsUpload    = IsUpload
