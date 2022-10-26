@@ -37,6 +37,13 @@ body {
     text-align: center;
 }
 
+.section-intro h4{
+    color:grey;
+    font-size: 20px;
+    font-weight: 500;
+    text-align: center;
+}
+
 :root{
     --color-1:#262d31;
     --color-2: #4076b8;
@@ -49,7 +56,7 @@ align-items: center;
 }
 
 .section-intro .plan-switch{
-    width: 240px;
+    width: 233px;
     background: var(--color-1);
     height: 55px;
     appearance: none;
@@ -77,21 +84,21 @@ align-items: center;
 
 .section-intro .toggle-switch-container .Yearly{
     position: absolute;
-    right: 42px;
-    top:18px;
+    right: 32px;
+    top: 18px;
     pointer-events: none;
 }
 
 .section-intro .plan-switch::before{
     content: "";
     position: absolute;
-    height: 44px;
-    width: 110px;
+    height: 50px;
+    width: 115px;
     border-radius: 24px;
     background: var(--color-2);
     top: 50%;
     transform: translateY(-50%);
-    left: 6px;
+    left: 2px;
     transition: all 0.1s;
 }
 
@@ -229,7 +236,7 @@ align-items: center;
     color: #4e4e4e;
     font-weight: 300;
     font-size: 16px;
-    line-height: 1.8;
+    line-height: 1.0;
 }
 
 .card-pricing_button{
@@ -250,7 +257,8 @@ align-items: center;
 }
 
 .dot{
-    vertical-align:top;
+    font-size: 150%;
+    /* vertical-align: bottom; */
 }
 
 .Features{
@@ -495,9 +503,13 @@ svg:not(:root) {
 .PricingComparisonTitle {
     font-size: 16px;
     position: sticky;
+    /* display: block; */
+    box-sizing: border-box;
     font-weight: 300;
     color: #000;
     line-height: 50px;
+    border-bottom: 1px rgb(180, 180, 180) solid;
+    border-collapse: collapse;
 }
 
 .z-2{
@@ -666,16 +678,19 @@ body {
 }
 
 
-.FeatureInfo {
+.FeatureName {
     border-bottom: 1px dashed #666;
     color: black;
     cursor: pointer;
     padding-bottom: 2px;
 }
 
-.FeatureInfo #data-bs-title{
-    background-color: #000;
+.FeatureInfo {
+    cursor: pointer;
 }
+/* .FeatureName #data-bs-title{
+    background-color: #000;
+} */
 
 .PlanAvailableTxt {
     font-size: 20px;
