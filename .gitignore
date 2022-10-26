@@ -1,0 +1,9 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+frontend/__pycache__
+frontend/app/__pycache__
+# PID Files
+supervisord.pid
+#other files
+frontend/app/static/js/node_modules
