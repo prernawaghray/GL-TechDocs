@@ -111,6 +111,7 @@ input:focus:-ms-input-placeholder { color: transparent; } /* oldIE 😉 */
   input[type="checkbox" i] {
     background-color: initial;
     cursor: default;
+    display: inline-block;
     appearance: auto;
     box-sizing: border-box;
     margin: 3px 3px 3px 4px;
