@@ -30,7 +30,7 @@ class DocumentHistory(Common):
     __tablename__ = "DocumentHistory"
 
     DocId           = Column(Integer, ForeignKey("Documents.DocId"))
-    UserId          = Column(String(256), ForeignKey("user.user_id"))
+    UserId          = Column(String(256), ForeignKey("User.Id"))
     RecordId        = Column(Integer, primary_key=True, autoincrement=True)    
     User            = relationship("User")
     Document        = relationship("Document")
@@ -48,7 +48,7 @@ class UserHistory(Common):
     __tablename__ = "UserHistory"
 
     RecordId        = Column(Integer, primary_key=True, autoincrement=True)   
-    UserId          = Column(String(256), ForeignKey("user.user_id"))
+    UserId          = Column(String(256), ForeignKey("User.Id"))
     User            = relationship("User")
     DocId           = Column(Integer, ForeignKey("Documents.DocId"))
     Document        = relationship("Document")

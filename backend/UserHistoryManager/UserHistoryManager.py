@@ -8,9 +8,9 @@ from datetime import datetime
 from flask import Flask, request, jsonify, json, Blueprint, current_app
 import sqlalchemy as db
 from DBConnect import session_factory
+from ..services.UserAuthentication.JWTAuthentication import authentication
 
-from orm_Tables import UserHistory, ActionEnum, Document
-from User import User
+from orm_Tables import UserHistory, ActionEnum, Document, User
 
 # Suppress warnings
 warnings.filterwarnings("ignore")
@@ -42,36 +42,36 @@ def get_document_record(document_id):
         session.close()
         if len(document_query) > 0:
             return document_query[0]
-        app.logger.info("Document record for document Id - " + str(document_id) + " doesn't exist")
+        current_app.logger.info("Document record for document Id - " + str(document_id) + " doesn't exist")
         return False
     except Exception:
-        app.logger.exception("Failure getting document id!")
+        current_app.logger.exception("Failure getting document id!")
         return False
 
 def get_user_record(user_id):
     try: 
         session = session_factory()
-        user_query = session.query(User).filter(User.user_id == user_id).all()
+        user_query = session.query(User).filter(User.Id == user_id).all()
         session.close()
         if len(user_query) > 0:
             return user_query[0]
-        app.logger.info("User record for user Id - " + str(user_id) + " doesn't exist")
+        current_app.logger.info("User record for user Id - " + str(user_id) + " doesn't exist")
         return False
     except Exception:
-        app.logger.exception("Failure getting user record!")
+        current_app.logger.exception("Failure getting user record!")
         return False
 
 def get_user_record_by_email(email):
     try: 
         session = session_factory()
-        user_query = session.query(User).filter(User.email_id == email).all()
+        user_query = session.query(User).filter(User.username == email).all()
         session.close()
         if len(user_query) > 0:
             return user_query[0]
-        app.logger.info("User record for email Id - " + str(email) + " doesn't exist")
+        current_app.logger.info("User record for email Id - " + str(email) + " doesn't exist")
         return False
     except Exception:
-        app.logger.exception("Failure getting user record!")
+        current_app.logger.exception("Failure getting user record!")
         return False
 
 ##############################################################################
@@ -153,6 +153,7 @@ def create_user_history():
 # Output:
 # UserId, DocId, DocName, DocText
 @userHistoryManagerBlueprint.route('/history/get', methods = ['GET', 'POST'])
+@authentication
 def get_user_history():
     current_app.logger.info("Service history/get initiated")
     data_out = ''
@@ -176,7 +177,7 @@ def get_user_history():
 
         try :
             session = session_factory()
-            user_history_query = session.query(UserHistory).filter(UserHistory.UserId == user_record.user_id).order_by(UserHistory.CreatedDate.desc()).offset(page_number*page_size).limit(page_size).all()
+            user_history_query = session.query(UserHistory).filter(UserHistory.UserId == user_record.Id).order_by(UserHistory.CreatedDate.desc()).offset(page_number*page_size).limit(page_size).all()
             session.close()
             for user_history_record in user_history_query:
                 action = user_history_record.Action

@@ -8,8 +8,7 @@ from datetime import datetime
 from flask import request, jsonify, json, Blueprint, current_app
 from DBConnect import session_factory
 
-from orm_Tables import Document, DocumentHistory
-from User import User
+from orm_Tables import Document, DocumentHistory, User
 
 # Suppress warnings
 warnings.filterwarnings("ignore")
@@ -82,7 +81,7 @@ def get_document_record(document_id):
 def get_user_record(user_id):
     try: 
         session = session_factory()
-        user_query = session.query(User).filter(User.user_id == user_id).all()
+        user_query = session.query(User).filter(User.Id == user_id).all()
         session.close()
         if len(user_query) > 0:
             return user_query[0]
