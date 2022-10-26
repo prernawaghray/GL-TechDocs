@@ -8,10 +8,10 @@
 
 
 {% block body %}   
-<div class="pricing-container">
+		<div class="pricing-container">
 			<div class="section-intro">
-				<h1>Upgrade Your Package</h1>
-				
+				<h1>Pricing & Subscriptions</h1>
+				<h4>Change to your desired plan</h4>
 				<div class="toggle-switch-container">
 					<input type="checkbox" class="plan-switch" />
 					<span class="Monthly">Monthly</span>
@@ -28,20 +28,20 @@
 							<h3 class="card-pricing_price"><span class="rupee">&#8377</span><span class="amount">0</span></h3>
 						</div>
 						<div class="card-pricing_button">
-							<button onclick="window.location.href=''" class="button">Get Started</button>
+							<button onclick= "BasicPlan()" class="button">Get Started</button>
 						</div>
 						<ul class="card-pricing_list">
 							<p class="Features">Standard Features  :</p>
-							<!-- <li><span class="dot">&#9679;</span>  Feature 1</li>
-							<li><span class="dot">&#9679;</span>  Feature 2</li>
-							<li><span class="dot">&#9679;</span>  Feature 3</li>
-							<li><span class="dot">&#9679;</span>  Feature 4</li> -->
-							<li><span class="dot">&#9679;</span>  Convert to PDF</li>
-							<li><span class="dot">&#9679;</span>  Spell Check</li>
-							<li><span class="dot">&#9679;</span>  Grammar check</li>
-							<li><span class="dot">&#9679;</span>  Ad hosting</li>
-							<li><span class="dot">&#9679;</span>  Search completion</li>
-							<li><span class="dot">&#9679;</span>  Helpdesk - chat</li>
+							<!-- <li><span class="dot">&#9758;</span>  Feature 1</li>
+							<li><span class="dot">&#9758;</span>  Feature 2</li>
+							<li><span class="dot">&#9758;</span>  Feature 3</li>
+							<li><span class="dot">&#9758;</span>  Feature 4</li> -->
+							<li><span class="dot">&#9758;</span>  Convert to PDF</li>
+							<li><span class="dot">&#9758;</span>  Spell Check</li>
+							<li><span class="dot">&#9758;</span>  Grammar check</li>
+							<li><span class="dot">&#9758;</span>  Ad hosting</li>
+							<li><span class="dot">&#9758;</span>  Search completion</li>
+							<li><span class="dot">&#9758;</span>  Helpdesk - chat</li>
 						</ul>
 					</div>
 					<div class="plan-card">
@@ -51,21 +51,20 @@
 							<h3 class="card-pricing_price" id="Price"><span class="rupee">&#8377</span><span class="amount">199 /</span><span class="type">mo</span></h3>
 						</div>
 						<div class="card-pricing_button">
-							<button class="button">Purchase Now</button>
+							<button class="button" onclick="PremiumPlan()">Purchase Now</button>
 						</div>
 						<ul class="card-pricing_list">
 							<p class="Features">Premium Features  : </p>
-							<p class="Features-1">Everything in Standard Plan +</p>
-							<li><span class="dot">&#9679;</span>  Plagiarism check</li>
-							<li><span class="dot">&#9679;</span>  Sharing with multiple people (to edit)</li>
-							<li><span class="dot">&#9679;</span>  Extra storage - upgrade</li>
-							<li><span class="dot">&#9679;</span>  Product Analytics - based on user behaviour</li>
-							<li><span class="dot">&#9679;</span>  Word meanings/suggestions</li>
-							<li><span class="dot">&#9679;</span>  Web scraping</li>
-							<li><span class="dot">&#9679;</span>  Image to Word converter</li>
-							<li><span class="dot">&#9679;</span>  Watermarking</li>
+							<p class="Features-1">&#8592; Everything in Standard Plan +</p>
+							<li><span class="dot">&#9758;</span>  Plagiarism check</li>
+							<li><span class="dot">&#9758;</span>  Sharing with multiple people</li>
+							<li><span class="dot">&#9758;</span>  Extra storage - upgrade</li>
+							<li><span class="dot">&#9758;</span>  Product Analytics - based on user behaviour</li>
+							<li><span class="dot">&#9758;</span>  Word meanings/suggestions</li>
+							<li><span class="dot">&#9758;</span>  Web scraping</li>
+							<li><span class="dot">&#9758;</span>  Image to Word converter</li>
+							<li><span class="dot">&#9758;</span>  Watermarking</li>
 						</ul>
-						
 					</div>	
 				</div>
 			</div>
@@ -84,45 +83,49 @@
 			<div class="compare-table">
 				<div class="compare-wrapper" style="line-height: 1; text-align: center; margin-top: 0px; font-size: 20px; font-weight: bold; height: 100px; ">
 					<h2 style="font-size: 30px; font-weight: 700; padding-bottom: 0px; ">Compare plans</h2>
-					<span style="font-size: 16px; font-weight: 300; display: inline-block;">Hover on items for more details</span>
+					<span style="font-size: 16px; font-weight: 300; display: inline-block;">Hover on info icon for more details</span>
 				</div> 
 			</div>
 			<div id="CompareTable" style="display: block;" class="mfcompare-table">
 				<div class="compare-wrapper">
 					<div class="PricingComparison">
-						<div class="P-row_1"> 
-							<div class="row_1 PricingComparisonTitle z-2">
-								<div class="col-md-6 col-sm-4"><div class="PlanFeatureTitle"></div></div>
-								<div class="F-Column col-md-2 col-sm-2"><div style="color: #111012;" class="PricingPlanName Pricing-Highlight_1">Standard Plan
-								</div>
-								<div class="buy-button-1">
-									<button class="button-2">
-										Get Started
-									</button>
-								</div>
+						<div class="row_1 PricingComparisonTitle z-2">
+							<div class="col-md-6 col-sm-4"><div class="PlanFeatureTitle"></div></div>
+							<div class="F-Column col-md-2 col-sm-2"><div style="color: #111012;" class="PricingPlanName Pricing-Highlight_1">Standard Plan
 							</div>
-								<div class="F-Column col-md-2 col-sm-2"><div style="color: #290bd3;" class="PricingPlanName Pricing-Highlight">Premium Plan</div>
-								<div class="buy-button-2">
-									<button class="button-3">
-										Purchase Now
-									</button>
-								</div>
+							<div class="buy-button-1">
+								<button class="button-2" onclick="BasicPlan()">
+									Get Started
+								</button>
 							</div>
-							</div> 
+							</div>
+							<div class="F-Column col-md-2 col-sm-2"><div style="color: #290bd3;" class="PricingPlanName Pricing-Highlight">Premium Plan</div>
+							<div class="buy-button-2">
+								<button class="button-3" onclick="PremiumPlan()">
+									Purchase Now
+								</button>
+							</div>
+							</div>
 						</div>
-					<div class="P-row_1 Category-wrapper">
-						<div class="row_1">
-							<div class="col-md-6 col-sm-4"><div class="Category-title"><span>Features</span></div></div>
-							<div class="F-Column col-md-2 col-sm-2"><div class="Basic-Plan-1"></div></div>
-							<div class="F-Column col-md-2 col-sm-2"><div class="Premium-Plan-1"></div></div>
+						<!-- <div class="P-row_1"> 
+							 
+						</div> -->
+						<div class="P-row_1 Category-wrapper">
+							<div class="row_1">
+								<div class="col-md-6 col-sm-4"><div class="Category-title"><span>Features</span></div></div>
+								<div class="F-Column col-md-2 col-sm-2"><div class="Basic-Plan-1"></div></div>
+								<div class="F-Column col-md-2 col-sm-2"><div class="Premium-Plan-1"></div></div>
+							</div>
 						</div>
-					</div>
 						<div class="P-row_1">
 							<div class="row_1">
 								<div class="col-md-6 col-sm-4">
 									<div class="PlanFeatureTitle">
-									<span class="FeatureInfo" data-bs-toggle="tooltip" title="Tooltip text top" data-placement="top">
+									<span class="FeatureName">
 										Latex support
+									</span>
+									<span class="FeatureInfo" data-bs-toggle="tooltip" title="Latex editing supported" data-placement="top">
+										&#8505;
 									</span>
 									</div>
 								</div>
@@ -132,119 +135,170 @@
 						</div> 
 						<div class="P-row_1">
 							<div class="row_1">
-								<div class="col-md-6 col-sm-4"><div class="PlanFeatureTitle"><span class="FeatureInfo" data-bs-toggle="tooltip" title="Tooltip text top" data-placement="top">Docx support</span></div></div>
+								<div class="col-md-6 col-sm-4">
+									<div class="PlanFeatureTitle">
+										<span class="FeatureName">Docx support</span>
+										<span class="FeatureInfo" data-bs-toggle="tooltip" title="Word document can be generated" data-placement="top">&#8505;</span>
+									</div></div>
 								<div class="F-Column col-md-2 col-sm-2"><div class="Basic-Plan PlanAvailableTxt"><span class="PlanAvailableDot">&#9679;</span></div></div>
 								<div class="F-Column col-md-2 col-sm-2"><div class="Premium-Plan"><span class="PlanAvailableDot">&#9679;</span></div></div>
 							</div>
 						</div>
 						<div class="P-row_1">
 							<div class="row_1">
-								<div class="col-md-6 col-sm-4"><div class="PlanFeatureTitle"><span class="FeatureInfo" data-bs-toggle="tooltip" title="Tooltip text top" data-placement="top">PPTx support</span></div></div>
+								<div class="col-md-6 col-sm-4"><div class="PlanFeatureTitle"><span class="FeatureName">PPTx support</span>
+									<span class="FeatureInfo"  data-bs-toggle="tooltip" title="Powerpoint presentation generation supported" data-placement="top">&#8505;</span>
+								</div></div>
 								<div class="F-Column col-md-2 col-sm-2"><div class="Basic-Plan PlanAvailableTxt"><span class="PlanAvailableDot">&#9679;</span></div></div>
 								<div class="F-Column col-md-2 col-sm-2"><div class="Premium-Plan"><span class="PlanAvailableDot">&#9679;</span></div></div>
 							</div>
 						</div>
 						<div class="P-row_1">
 							<div class="row_1">
-								<div class="col-md-6 col-sm-4"><div class="PlanFeatureTitle"><span class="FeatureInfo" data-bs-toggle="tooltip" title="Tooltip text top" data-placement="top">History of file - version control</span></div></div>
+								<div class="col-md-6 col-sm-4"><div class="PlanFeatureTitle">
+									<span class="FeatureName" >History of file - version control</span>
+									<span class="FeatureInfo" data-bs-toggle="tooltip" title="All changes done can be viewed through history" data-placement="top">&#8505;</span>
+								</div></div>
 								<div class="F-Column col-md-2 col-sm-2"><div class="Basic-Plan PlanAvailableTxt"><span class="PlanAvailableDot">&#9679;</span></div></div>
 								<div class="F-Column col-md-2 col-sm-2"><div class="Premium-Plan"><span class="PlanAvailableDot">&#9679;</span></div></div>
 							</div>
 						</div>
 						<div class="P-row_1">
 							<div class="row_1">
-								<div class="col-md-6 col-sm-4"><div class="PlanFeatureTitle"><span class="FeatureInfo" data-bs-toggle="tooltip" title="Tooltip text top" data-placement="top">Spell Check</span></div></div>
+								<div class="col-md-6 col-sm-4"><div class="PlanFeatureTitle">
+									<span class="FeatureName">Spell Check</span>
+									<span class="FeatureInfo" data-bs-toggle="tooltip" title="Spelling check and correction can be done during editing" data-placement="top">&#8505;</span>
+								</div></div>
 								<div class="F-Column col-md-2 col-sm-2"><div class="Basic-Plan PlanAvailableTxt"><span class="PlanAvailableDot">&#9679;</span></div></div>
 								<div class="F-Column col-md-2 col-sm-2"><div class="Premium-Plan"><span class="PlanAvailableDot">&#9679;</span></div></div>
 							</div>
 						</div>
 						<div class="P-row_1">
 							<div class="row_1">
-								<div class="col-md-6 col-sm-4"><div class="PlanFeatureTitle"><span class="FeatureInfo" data-bs-toggle="tooltip" title="Tooltip text top" data-placement="top">Grammar check</span></div></div>
+								<div class="col-md-6 col-sm-4"><div class="PlanFeatureTitle">
+									<span class="FeatureName" >Grammar check</span>
+									<span class="FeatureInfo" data-bs-toggle="tooltip" title="All grammatical mistakes can be verified and rectified" data-placement="top">&#8505;</span>
+								</div></div>
 								<div class="F-Column col-md-2 col-sm-2"><div class="Basic-Plan PlanAvailableTxt"><span class="PlanAvailableDot">&#9679;</span></div></div>
 								<div class="F-Column col-md-2 col-sm-2"><div class="Premium-Plan"><span class="PlanAvailableDot">&#9679;</span></div></div>
 							</div>
 						</div>
 						<div class="P-row_1">
 							<div class="row_1">
-								<div class="col-md-6 col-sm-4"><div class="PlanFeatureTitle"><span class="FeatureInfo" data-bs-toggle="tooltip" title="Tooltip text top" data-placement="top">Ad hosting</span></div></div>
+								<div class="col-md-6 col-sm-4"><div class="PlanFeatureTitle">
+									<span class="FeatureName" >Ad hosting</span>
+									<span class="FeatureInfo" data-bs-toggle="tooltip" title="Ads hosting service is available" data-placement="top">&#8505;</span>
+								</div></div>
 								<div class="F-Column col-md-2 col-sm-2"><div class="Basic-Plan PlanAvailableTxt"><span class="PlanAvailableDot">&#9679;</span></div></div>
 								<div class="F-Column col-md-2 col-sm-2"><div class="Premium-Plan"><span class="PlanAvailableDot">&#9679;</span></div></div>
 							</div>
 						</div>
 						<div class="P-row_1">
 							<div class="row_1">
-								<div class="col-md-6 col-sm-4"><div class="PlanFeatureTitle"><span class="FeatureInfo" data-bs-toggle="tooltip" title="Tooltip text top" data-placement="top">Sync to Google Drive, Dropbox, GitHub</span></div></div>
+								<div class="col-md-6 col-sm-4"><div class="PlanFeatureTitle">
+									<span class="FeatureName" >Sync to Google Drive, Dropbox, GitHub</span>
+									<span class="FeatureInfo" data-bs-toggle="tooltip" title="All the edited documents can be uploaded to google drive/dropbox/github" data-placement="top">&#8505;</span>
+								</div></div>
 								<div class="F-Column col-md-2 col-sm-2"><div class="Basic-Plan PlanAvailableTxt"><span class="PlanAvailableDot">&#9679;</span></div></div>
 								<div class="F-Column col-md-2 col-sm-2"><div class="Premium-Plan"><span class="PlanAvailableDot">&#9679;</span></div></div>
 							</div>
 						</div>
 						<div class="P-row_1">
 							<div class="row_1">
-								<div class="col-md-6 col-sm-4"><div class="PlanFeatureTitle"><span class="FeatureInfo" data-bs-toggle="tooltip" title="Tooltip text top" data-placement="top">Convert to PDF/HTML/Word/etc</span></div></div>
+								<div class="col-md-6 col-sm-4"><div class="PlanFeatureTitle">
+									<span class="FeatureName">Convert to PDF/HTML/Word/etc</span>
+									<span class="FeatureInfo" data-bs-toggle="tooltip" title="Document download with various extensions supported" data-placement="top">&#8505;</span>
+								</div></div>
 								<div class="F-Column col-md-2 col-sm-2"><div class="Basic-Plan PlanAvailableTxt"><span class="PlanAvailableDot">&#9679;</span></div></div>
 								<div class="F-Column col-md-2 col-sm-2"><div class="Premium-Plan"><span class="PlanAvailableDot">&#9679;</span></div></div>
 							</div>
 						</div>
 						<div class="P-row_1">
 							<div class="row_1">
-								<div class="col-md-6 col-sm-4"><div class="PlanFeatureTitle"><span class="FeatureInfo" data-bs-toggle="tooltip" title="Tooltip text top" data-placement="top">Helpdesk</span></div></div>
+								<div class="col-md-6 col-sm-4"><div class="PlanFeatureTitle">
+									<span class="FeatureName">Helpdesk</span>
+									<span class="FeatureInfo" data-bs-toggle="tooltip" title="Chat service with helpdesk" data-placement="top">&#8505;</span>
+								</div></div>
 								<div class="F-Column col-md-2 col-sm-2"><div class="Basic-Plan PlanAvailableTxt"><span class="PlanAvailableDot">&#9679;</span></div></div>
 								<div class="F-Column col-md-2 col-sm-2"><div class="Premium-Plan"><span class="PlanAvailableDot">&#9679;</span></div></div>
 							</div>
 						</div>
 						<div class="P-row_1">
 							<div class="row_1">
-								<div class="col-md-6 col-sm-4"><div class="PlanFeatureTitle"><span class="FeatureInfo" data-bs-toggle="tooltip" title="Tooltip text top" data-placement="top">Plagiarism check</span></div></div>
+								<div class="col-md-6 col-sm-4"><div class="PlanFeatureTitle">
+									<span class="FeatureName">Plagiarism check</span>
+									<span class="FeatureInfo" data-bs-toggle="tooltip" title="Plagiarism checking service supported" data-placement="top">&#8505;</span>
+								</div></div>
 								<div class="F-Column col-md-2 col-sm-2"><div class="Basic-Plan PlanAvailableTxt">-</div></div>
 								<div class="F-Column col-md-2 col-sm-2"><div class="Premium-Plan"><span class="PlanAvailableDot">&#9679;</span></div></div>
 							</div>
 						</div>
 						<div class="P-row_1">
 							<div class="row_1">
-								<div class="col-md-6 col-sm-4"><div class="PlanFeatureTitle"><span class="FeatureInfo" data-bs-toggle="tooltip" title="Tooltip text top" data-placement="top">Extra storage</span></div></div>
+								<div class="col-md-6 col-sm-4"><div class="PlanFeatureTitle">
+									<span class="FeatureName">Extra storage</span>
+									<span class="FeatureInfo" data-bs-toggle="tooltip" title="Documents storage space upgraded" data-placement="top">&#8505;</span>
+								</div></div>
 								<div class="F-Column col-md-2 col-sm-2"><div class="Basic-Plan PlanAvailableTxt">-</div></div>
 								<div class="F-Column col-md-2 col-sm-2"><div class="Premium-Plan"><span class="PlanAvailableDot">&#9679;</span></div></div>
 							</div>
 						</div>
 						<div class="P-row_1">
 							<div class="row_1">
-								<div class="col-md-6 col-sm-4"><div class="PlanFeatureTitle"><span class="FeatureInfo" data-bs-toggle="tooltip" title="Tooltip text top" data-placement="top">Sharing with multiple people</span></div></div>
+								<div class="col-md-6 col-sm-4"><div class="PlanFeatureTitle">
+									<span class="FeatureName">Sharing with multiple people</span>
+									<span class="FeatureInfo" data-bs-toggle="tooltip" title="Sharing of documents" data-placement="top">&#8505;</span>
+								</div></div>
 								<div class="F-Column col-md-2 col-sm-2"><div class="Basic-Plan PlanAvailableTxt">-</div></div>
 								<div class="F-Column col-md-2 col-sm-2"><div class="Premium-Plan"><span class="PlanAvailableDot">&#9679;</span></div></div>
 							</div>
 						</div>
 						<div class="P-row_1">
 							<div class="row_1">
-								<div class="col-md-6 col-sm-4"><div class="PlanFeatureTitle"><span class="FeatureInfo" data-bs-toggle="tooltip" title="Tooltip text top" data-placement="top">Product Analytics</span></div></div>
+								<div class="col-md-6 col-sm-4"><div class="PlanFeatureTitle">
+									<span class="FeatureName">Product Analytics</span>
+									<span class="FeatureInfo" data-bs-toggle="tooltip" title="Analytics of your document" data-placement="top">&#8505;</span>
+								</div></div>
 								<div class="F-Column col-md-2 col-sm-2"><div class="Basic-Plan PlanAvailableTxt">-</div></div>
 								<div class="F-Column col-md-2 col-sm-2"><div class="Premium-Plan"><span class="PlanAvailableDot">&#9679;</span></div></div>
 							</div>
 						</div>
 						<div class="P-row_1">
 							<div class="row_1">
-								<div class="col-md-6 col-sm-4"><div class="PlanFeatureTitle"><span class="FeatureInfo" data-bs-toggle="tooltip" title="Tooltip text top" data-placement="top">Word meanings/suggestions</span></div></div>
+								<div class="col-md-6 col-sm-4"><div class="PlanFeatureTitle">
+									<span class="FeatureName">Word meanings/suggestions</span>
+									<span class="FeatureInfo" data-bs-toggle="tooltip" title="Word suggestions and meanings can be viewed" data-placement="top">&#8505;</span>
+								</div></div>
 								<div class="F-Column col-md-2 col-sm-2"><div class="Basic-Plan PlanAvailableTxt">-</div></div>
 								<div class="F-Column col-md-2 col-sm-2"><div class="Premium-Plan"><span class="PlanAvailableDot">&#9679;</span></div></div>
 							</div>
 						</div>
 						<div class="P-row_1">
 							<div class="row_1">
-								<div class="col-md-6 col-sm-4"><div class="PlanFeatureTitle"><span class="FeatureInfo" data-bs-toggle="tooltip" title="Tooltip text top" data-placement="top">Web scraping</span></div></div>
+								<div class="col-md-6 col-sm-4"><div class="PlanFeatureTitle">
+									<span class="FeatureName">Web scraping</span>
+									<span class="FeatureInfo" data-bs-toggle="tooltip" title="content and data extraction from a website" data-placement="top">&#8505;</span>
+								</div></div>
 								<div class="F-Column col-md-2 col-sm-2"><div class="Basic-Plan PlanAvailableTxt">-</div></div>
 								<div class="F-Column col-md-2 col-sm-2"><div class="Premium-Plan"><span class="PlanAvailableDot">&#9679;</span></div></div>
 							</div>
 						</div>
 						<div class="P-row_1">
 							<div class="row_1">
-								<div class="col-md-6 col-sm-4"><div class="PlanFeatureTitle"><span class="FeatureInfo" data-bs-toggle="tooltip" title="Tooltip text top" data-placement="top">Image to Word converter</span></div></div>
+								<div class="col-md-6 col-sm-4"><div class="PlanFeatureTitle">
+									<span class="FeatureName">Image to Word converter</span>
+									<span class="FeatureInfo" data-bs-toggle="tooltip" title="Image files can be converted to word document" data-placement="top">&#8505;</span></div></div>
+
 								<div class="F-Column col-md-2 col-sm-2"><div class="Basic-Plan PlanAvailableTxt">-</div></div>
 								<div class="F-Column col-md-2 col-sm-2"><div class="Premium-Plan"><span class="PlanAvailableDot">&#9679;</span></div></div>
 							</div>
 						</div>
 						<div class="P-row_1">
 							<div class="row_1">
-								<div class="col-md-6 col-sm-4"><div class="PlanFeatureTitle"><span class="FeatureInfo" data-bs-toggle="tooltip" title="Tooltip text top" data-placement="top">Watermarking</span></div></div>
+								<div class="col-md-6 col-sm-4"><div class="PlanFeatureTitle">
+									<span class="FeatureName">Watermarking</span>
+									<span class="FeatureInfo" data-bs-toggle="tooltip" title="Custom watermarking can be done" data-placement="top">&#8505;</span>
+								</div></div>
 								<div class="F-Column col-md-2 col-sm-2"><div class="Basic-Plan PlanAvailableTxt">-</div></div>
 								<div class="F-Column col-md-2 col-sm-2"><div class="Premium-Plan"><span class="PlanAvailableDot">&#9679;</span></div></div>
 							</div>
@@ -253,7 +307,7 @@
 				</div>
 			</div>
 		</div>
-		<script src="js/pricing.js"></script>
+		<script src="./Pricing.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.5/dist/umd/popper.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -262,6 +316,14 @@
 			var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
 				  return new bootstrap.Tooltip(tooltipTriggerEl)
 			});
+		</script>
+		<script>
+			function BasicPlan(){
+				window.location.href="{{url_for('login')}}";
+			}
+			function PremiumPlan(){
+				window.location.href="{{url_for('payment')}}";
+			}
 		</script>
 
 {% endblock %}
