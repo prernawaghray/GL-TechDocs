@@ -1,4 +1,15 @@
 import requests
+import sys
+
+#------------------------------
+# Test /file/creat - for upload
+# -----------------------------
+
+req = requests.post('http://127.0.0.1:5000/file/create',
+            json={"UserId":"123456",
+                "DocName":"test.tex","IsUpload":True,"DocData":"ra \n ndomdata"})
+
+print(req.json())
 
 #------------------
 # Test /file/create
