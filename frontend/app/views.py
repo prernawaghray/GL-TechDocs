@@ -8,3 +8,8 @@ def home():
 @app.route('/dashboard')
 def dashboard():
    return render_template('user-dashboard/dashboard.html')
+
+
+@app.route('/registration')
+def registration():
+   return render_template('user-registration/registration.html')
