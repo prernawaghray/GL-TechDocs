@@ -1,9 +1,12 @@
 from sqlalchemy.sql import text
 import sqlalchemy
+from flask import Blueprint
 
 engine = sqlalchemy.create_engine("mysql://username:password@host:3306/userDB")
 connect = engine.connect()
 
+#creating the Permissions Blueprint
+permissions_bp = Blueprint('permissionsBlueprint', __name__)
 
 def get_user_id(user_email):
     '''
@@ -28,7 +31,11 @@ def get_doc_id(user_id, doc_name):
     doc_id = connect.execute(sql, **record)
     return doc_id
 
+@permissions_bp.route('/api/get_permissions', methods=['GET'])
+def get_permissions(user_id, doc_id):
+    pass
 
+@permissions_bp.route('/api/set_permissions', methods=['POST'])
 def set_permissions(share_email, user_id, doc_name):
     '''
         This function takes share_email,user_id and doc_name as its input arguments.Fetches the
