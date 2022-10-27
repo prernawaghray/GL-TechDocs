@@ -17,9 +17,11 @@
 
 # Import all libraries
 import os
+import yaml
+import os.path
+import logging
 import mysql.connector
 from mysql.connector import connect, errorcode
-import yaml
 
 ##
 # Method to store definitions of all the necessary tables into an array
@@ -32,6 +34,7 @@ def defineTables():
     "   DocId           int not null AUTO_INCREMENT,"
     "   DocName         varchar(256),"
     "   UserId          varchar(256),"
+    "   IsUpload        boolean,"
     "   FilePath        text,"
     "   CreatedDate     datetime,"
     "   ModifiedDate    datetime,"
@@ -140,6 +143,37 @@ def defineTables():
     "   INDEX idx_US_User (UserId)"
     ")"
     )
+
+    tbl_array['User'] = (
+    "Create Table if not exists `User` ("
+    "   Id             varchar(256) not null,"
+    "   username       varchar(256),"
+    "   password       varchar(256),"
+    "   isadmin        boolean,"
+    "   loginType      varchar(256),"
+    "   PRIMARY KEY (id),           "
+    "   INDEX idx_User (id)"
+    ")"
+    )
+
+    tbl_array ['UsersProfile'] = (
+    "Create Table if not exists `UsersProfile` ("
+    "   username          varchar(256),"
+    "   firstName       varchar(100),"
+    "   lastName        varchar(100),"
+    "   streetAddress   varchar(256),"
+    "   state           varchar(256),"
+    "   country         varchar(256),"
+    "   occupation      varchar(256),"
+    "   purposeOfUsage  varchar(256),"
+    "   signUpDate      datetime,"
+    "   lastActiveDate  datetime,"
+    "   PRIMARY KEY (username),"
+    "   FOREIGN KEY (username) REFERENCES User(username),"
+    "   INDEX idx_UserProfile (username)"
+    ")"
+
+    )
 ##
 # Method to run the table definitions defined in the earlier call in a loop
 # Creates a connection to the Database and then executes the create query
@@ -152,13 +186,16 @@ def createTables():
     #db_pass     = os.environ.get('MYSQL_PASS')
     
     # Get details from configuration file
-    with open('database_config.yml') as stream:
+    with open(os.path.dirname(__file__)+'../config.yaml') as stream:
         configs = yaml.safe_load(stream)
     
-    db_conn     = configs['MYSQL_CONNECTION']
-    db_database = configs['MYSQL_DB']
-    db_user     = configs['MYSQL_USER']
-    db_pass     = configs['MYSQL_PASS']
+    db_conn     = configs['DB_CONN']
+    db_database = configs['DB_NAME']
+    db_user     = configs['DB_USER']
+    db_pass     = configs['DB_PASS']
+    log_path    = configs['DIR_ROOT'] + configs['DIR_LOG']
+    # Initiate logging 
+    logging.basicConfig(filename=log_path)
 
     try:
         cnx = mysql.connector.connect(
@@ -168,7 +205,7 @@ def createTables():
             password=db_pass
         )
     except mysql.connector.Error as err:
-        print(err.msg)
+        logging.exception(err)
     else:
         cursor = cnx.cursor()
         
@@ -176,16 +213,18 @@ def createTables():
         tbl_def = tbl_array[tbl_name]
         try:
             print("Running table def: {}: ".format(tbl_name), end='')
+            logging.info("Running table def: {}: ".format(tbl_name), end='')
             #print("\n Table def: ",tbl_def)
             cursor.execute(tbl_def)
         except mysql.connector.Error as err:
             if err.errno == errorcode.ER_TABLE_EXISTS_ERROR:
-                print("Table already exists.")
+                logging.error("Table already exists.")
             else:
-                print(err.msg)
+                logging.exception(err.msg)
         else:
             print("...Passed")
-            
+            logging.info("...Passed")
+ 
     cursor.close()
     cnx.close()
 
