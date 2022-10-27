@@ -37,3 +37,7 @@ print(req.json())
 ##For GetProfile
 req = requests.post('http://127.0.0.1:5000/api/getProfile', headers=headers)
 print(req.json())
+
+#####METHOD NOT ALLOWED#######
+req =requests.get("http://127.0.0.1:5000/api/getProfile", headers=headers)
+print(req.json())
