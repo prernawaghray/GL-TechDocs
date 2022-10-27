@@ -30,71 +30,71 @@ def defineTables():
     # Table - Documents
     # Stores all Document info - the latest version only
     tbl_array['Documents'] = (
-    "Create Table if not exists `Documents` ("
-    "   DocId           int not null AUTO_INCREMENT,"
-    "   DocName         varchar(256),"
-    "   UserId          varchar(256),"
-    "   IsUpload        boolean,"
-    "   FilePath        text,"
-    "   CreatedDate     datetime,"
-    "   ModifiedDate    datetime,"
-    "   ModifiedBy      varchar(256),"
-    "   Version         int,"
-    "   s_Misc1         varchar(1024),"
-    "   s_Misc2         varchar(1024),"
-    "   n_Misc1         int,"
-    "   n_Misc2         int,"
-    "   PRIMARY KEY (DocId),"
-    "   UNIQUE (DocId, UserId),"
-    "   INDEX idx_Doc_ByUserDoc      (UserId, DocId),"
-    "   INDEX idx_Doc_ByUserCreated  (UserId, CreatedDate),"
-    "   INDEX idx_Doc_ByUserModified (UserId, ModifiedDate)"
-    ")"
+        "Create Table if not exists `Documents` ("
+        "   DocId           int not null AUTO_INCREMENT,"
+        "   DocName         varchar(256),"
+        "   UserId          varchar(256),"
+        "   IsUpload        boolean,"
+        "   FilePath        text,"
+        "   CreatedDate     datetime,"
+        "   ModifiedDate    datetime,"
+        "   ModifiedBy      varchar(256),"
+        "   Version         int,"
+        "   s_Misc1         varchar(1024),"
+        "   s_Misc2         varchar(1024),"
+        "   n_Misc1         int,"
+        "   n_Misc2         int,"
+        "   PRIMARY KEY (DocId),"
+        "   UNIQUE (DocId, UserId),"
+        "   INDEX idx_Doc_ByUserDoc      (UserId, DocId),"
+        "   INDEX idx_Doc_ByUserCreated  (UserId, CreatedDate),"
+        "   INDEX idx_Doc_ByUserModified (UserId, ModifiedDate)"
+        ")"
     )
     
     # Table - Permissions
     # Store permission of all documents for all users
     # Col Permission, possible values are (R)ead, (W)rite, (S)hare
     tbl_array['Permissions'] = (
-    "Create Table if not exists `Permissions` ("
-    "   PermissionId        int not null AUTO_INCREMENT,"
-    "   DocId               int,"
-    "   UserId              varchar(256),"
-    "   UserPermissions     varchar(25),"
-    "   GroupPermissions    varchar(25),"
-    "   OtherPermissions    varchar(25),"
-    "   Version             int,"
-    "   s_Misc1             varchar(1024),"
-    "   s_Misc2             varchar(1024),"
-    "   n_Misc1             int,"
-    "   n_Misc2             int,"
-    "   PRIMARY KEY (PermissionId),"
-    "   INDEX idx_Perm_ByUserDoc (UserId, DocId)"
-    ")"
+        "Create Table if not exists `Permissions` ("
+        "   PermissionId        int not null AUTO_INCREMENT,"
+        "   DocId               int,"
+        "   UserId              varchar(256),"
+        "   UserPermissions     varchar(25),"
+        "   GroupPermissions    varchar(25),"
+        "   OtherPermissions    varchar(25),"
+        "   Version             int,"
+        "   s_Misc1             varchar(1024),"
+        "   s_Misc2             varchar(1024),"
+        "   n_Misc1             int,"
+        "   n_Misc2             int,"
+        "   PRIMARY KEY (PermissionId),"
+        "   INDEX idx_Perm_ByUserDoc (UserId, DocId)"
+        ")"
     )
     
     # Table - PaymentAccounts
     # Stores the payment methods of all users
     # Col - AccType, possible values are 'creditcard', 'debitcard', 'personal'
     tbl_array['PaymentAccounts'] = (
-    "Create Table if not exists `PaymentAccounts` ("
-    "   RecordId        int not null AUTO_INCREMENT,"
-    "   UserId          varchar(256),"   
-    "   IsDefault       bool,"
-    "   AccType         varchar(50),"
-    "   AccName         varchar(256),"
-    "   AccNumber       int(20),"
-    "   AccCvv          int(4),"
-    "   AccExpiry       date,"
-    "   AccIFSC         varchar(128),"
-    "   Version         int,"
-    "   s_Misc1         varchar(1024),"
-    "   s_Misc2         varchar(1024),"
-    "   n_Misc1         int,"
-    "   n_Misc2         int,"
-    "   PRIMARY KEY (RecordId),"
-    "   INDEX idx_PA_User (UserId)"
-    ")"
+        "Create Table if not exists `PaymentAccounts` ("
+        "   RecordId        int not null AUTO_INCREMENT,"
+        "   UserId          varchar(256),"   
+        "   IsDefault       bool,"
+        "   AccType         varchar(50),"
+        "   AccName         varchar(256),"
+        "   AccNumber       int(20),"
+        "   AccCvv          int(4),"
+        "   AccExpiry       date,"
+        "   AccIFSC         varchar(128),"
+        "   Version         int,"
+        "   s_Misc1         varchar(1024),"
+        "   s_Misc2         varchar(1024),"
+        "   n_Misc1         int,"
+        "   n_Misc2         int,"
+        "   PRIMARY KEY (RecordId),"
+        "   INDEX idx_PA_User (UserId)"
+        ")"
     )
     
     # Table - UserPayments
@@ -102,23 +102,23 @@ def defineTables():
     # Col - PaymentMethod, possible values are 'card', 'netbank', 'UPI'
     # Col - Status, possible values are 'success', 'failed'
     tbl_array['UserPayments'] = (
-    "Create Table if not exists `UserPayments` ("
-    "   RecordId        int not null AUTO_INCREMENT,"
-    "   UserId          varchar(256),"
-    "   PaidDate        datetime,"
-    "   Amount          decimal(65,30),"
-    "   PayAccountId    int,"
-    "   PaymentMethod   varchar(128),"
-    "   Status          varchar(50),"
-    "   Notes           text,"
-    "   Version         int,"
-    "   s_Misc1         varchar(1024),"
-    "   s_Misc2         varchar(1024),"
-    "   n_Misc1         int,"
-    "   n_Misc2         int,"
-    "   PRIMARY KEY (RecordId),"
-    "   INDEX idx_UP_UserDate (UserId, PaidDate)"
-    ")"
+        "Create Table if not exists `UserPayments` ("
+        "   RecordId        int not null AUTO_INCREMENT,"
+        "   UserId          varchar(256),"
+        "   PaidDate        datetime,"
+        "   Amount          decimal(65,30),"
+        "   PayAccountId    int,"
+        "   PaymentMethod   varchar(128),"
+        "   Status          varchar(50),"
+        "   Notes           text,"
+        "   Version         int,"
+        "   s_Misc1         varchar(1024),"
+        "   s_Misc2         varchar(1024),"
+        "   n_Misc1         int,"
+        "   n_Misc2         int,"
+        "   PRIMARY KEY (RecordId),"
+        "   INDEX idx_UP_UserDate (UserId, PaidDate)"
+        ")"
     )
     
     # Table - UserSubscriptions
@@ -127,52 +127,67 @@ def defineTables():
     # Col - TypeDesc, possible values are 'Personal', 'Corporate'
     # Col - Status, possible values are (A)ctive', (I)nactive
     tbl_array['UserSubscriptions'] = (
-    "Create Table if not exists `UserSubscriptions` ("
-    "   RecordId        int not null AUTO_INCREMENT,"
-    "   UserId          varchar(256),"
-    "   Type            char(5),"
-    "   TypeDesc        varchar(128),"
-    "   Status          Char(1),"
-    "   ExpiryDate      datetime,"
-    "   Version         int,"
-    "   s_Misc1         varchar(1024),"
-    "   s_Misc2         varchar(1024),"
-    "   n_Misc1         int,"
-    "   n_Misc2         int,"
-    "   PRIMARY KEY (RecordId),"
-    "   INDEX idx_US_User (UserId)"
-    ")"
+        "Create Table if not exists `UserSubscriptions` ("
+        "   RecordId        int not null AUTO_INCREMENT,"
+        "   UserId          varchar(256),"
+        "   Type            char(5),"
+        "   TypeDesc        varchar(128),"
+        "   Status          Char(1),"
+        "   ExpiryDate      datetime,"
+        "   Version         int,"
+        "   s_Misc1         varchar(1024),"
+        "   s_Misc2         varchar(1024),"
+        "   n_Misc1         int,"
+        "   n_Misc2         int,"
+        "   PRIMARY KEY (RecordId),"
+        "   INDEX idx_US_User (UserId)"
+        ")"
     )
 
-    tbl_array['User'] = (
-    "Create Table if not exists `User` ("
-    "   Id             varchar(256) not null,"
-    "   username       varchar(256),"
-    "   password       varchar(256),"
-    "   isadmin        boolean,"
-    "   loginType      varchar(256),"
-    "   PRIMARY KEY (id),           "
-    "   INDEX idx_User (id)"
-    ")"
+    # Table - UserAuthentication
+    # Store the credentials of the user
+    tbl_array['UserAuthentication'] = (
+        "Create Table if not exists `UserAuthentication` ("
+        "   UserId          varchar(256) UNIQUE,"
+        "   UserEmail       varchar(256) UNIQUE,"
+        "   Password        varchar(256),"
+        "   IsAdmin         boolean DEFAULT false,"
+        "   LoginType       varchar(256),"
+        "   PRIMARY KEY (UserId)"
+        ")"
     )
+    # "   INDEX idx_User (id)"
 
+    # Table - UserProfile
+    # Store the information of about the user
     tbl_array ['UsersProfile'] = (
-    "Create Table if not exists `UsersProfile` ("
-    "   username          varchar(256),"
-    "   firstName       varchar(100),"
-    "   lastName        varchar(100),"
-    "   streetAddress   varchar(256),"
-    "   state           varchar(256),"
-    "   country         varchar(256),"
-    "   occupation      varchar(256),"
-    "   purposeOfUsage  varchar(256),"
-    "   signUpDate      datetime,"
-    "   lastActiveDate  datetime,"
-    "   PRIMARY KEY (username),"
-    "   FOREIGN KEY (username) REFERENCES User(username),"
-    "   INDEX idx_UserProfile (username)"
-    ")"
+        "Create Table if not exists `UserProfile` ("
+        "   UserId          varchar(256) UNIQUE,"
+        "   FirstName       varchar(100),"
+        "   LastName        varchar(100),"
+        "   StreetAddress   varchar(256),"
+        "   State           varchar(256)"
+        "   Country         varchar(100)"
+        "   Occupation      varchar(256),"
+        "   PurposeOfUsage  varchar(256),"
+        "   SignUpDate      datetime,"
+        "   lastActive      datetime,"
+        "   PRIMARY KEY (UserId),"
+        "   FOREIGN KEY (UserId) REFERENCES UserAuthentication(UserId)"
+        ")"
+    )
 
+    # Table - LinkedAccount
+    # Store the details of Accounts to which the user is linked
+    tbl_array['LinkedAccount'] = (
+        "Create Table if not exists `LinkedAccount` ("
+        "   UserId              varchar(256),"
+        "   AccountType         varchar(256),"
+        "   AccountName         varchar(256),"
+        "   AccountPassword     varchar(256),"
+        "   PRIMARY KEY (UserId),"
+        "   FOREIGN KEY (UserID) REFERENCES UserAuthentication(UserId)"
+        ")"
     )
 ##
 # Method to run the table definitions defined in the earlier call in a loop
@@ -231,6 +246,8 @@ def createTables():
 #########################
 # Main Call
 #########################
+
+
 if __name__ == '__main__':
     # Variable to store all table definitions
     tbl_array = {}
