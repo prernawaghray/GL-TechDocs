@@ -45,9 +45,9 @@ class DocumentHistory(Common):
     User            = relationship("User")
     Document        = relationship("Document")
 
-    def __init__(self, user, document, created_date, document_name, file_path, version):
+    def __init__(self, user, docid, created_date, document_name, file_path, version):
         self.User = user
-        self.Document = document
+        self.DocId = docid
         self.CreatedDate = created_date
         self.DocName = document_name
         self.FilePath = file_path
@@ -65,9 +65,9 @@ class UserHistory(Common):
     Action          = Column(Enum(ActionEnum))
 
 
-    def __init__(self, user, document, time_stamp, document_name, action):
+    def __init__(self, user, docid, time_stamp, document_name, action):
         self.User = user
-        self.Document = document
+        self.DocId = docid
         self.CreatedDate = time_stamp
         self.DocName = document_name
         self.Action = action

@@ -19,10 +19,11 @@ from flask import Flask, render_template, url_for, redirect, session, flash, req
 from flask import Blueprint
 from flask import current_app
 #from Users import User
+from ..UserAuthentication.JWTAuthentication import authentication
 from ..DocumentVersionManager import VersionManage
 from ..UserHistoryManager import *
 from ..Permissions import * 
-from ..UserAuthentication.JWTAuthentication import authentication
+
 
 # Suppress warnings
 warnings.filterwarnings("ignore")
@@ -152,14 +153,12 @@ def file_Create(user_id):
             session.flush()
             session.commit()
             # entry into DocumentHistory table
-            #TODO: need this constructor with userid & documentid
             dochist_entry = DocumentHistory(userid, docid_out, datetime.today(), docname, newfilepath, ver)
             session.add(dochist_entry)
             session.flush()
             session.commit()
             # entry into UserHistory table
-            #TODO: action value? & need this constructor with userid & documentid
-            userhist_entry = UserHistory(userid, docid_out, datetime.today(), docname, '')
+            userhist_entry = UserHistory(userid, docid_out, datetime.today(), docname, 'Create')
             session.add(userhist_entry)
             session.flush()
             session.commit()
@@ -280,14 +279,12 @@ def file_Modify(user_id):
             # update the content to this file
             file_obj.writeToFile(newfilepath, doctext)
             # insert new entry into the Document History table
-            #TODO: need this constructor with userid & documentid
             dochist_entry = DocumentHistory(userid, docid, datetime.today(), docname, newfilepath, ver)
             session.add(dochist_entry)
             session.flush()
             session.commit()
             # entry into UserHistory table
-            #TODO: action value? & need this constructor with userid & documentid
-            userhist_entry = UserHistory(userid, docid, datetime.today(), docname, '')
+            userhist_entry = UserHistory(userid, docid, datetime.today(), docname, 'edit')
             session.add(userhist_entry)
             session.flush()
             session.commit()
