@@ -18,38 +18,13 @@ from orm_Tables import User
 authTokenDecode_bp = Blueprint('AuthTokenDecode',__name__)
 
 ## Below is the decorator for the authentication if the JWT token is send in header
-# def authentication(f):
-#     @wraps(f)
-#     def decorated(*args, **kwargs):
-#         token=None
-#         if 'x-access-tokens' in request.headers:
-#             token = request.headers['x-access-tokens']
-#             key = current_app.config["SECRET"]
-#         if not token:
-#             return jsonify(message="token missing")
-#         try:
-#             data= jwt.decode(token, key, algorithms=["HS256"])
-#             session = session_factory()
-#             sql_stmt = (select(User.Id) .where (User.username == data["Email"]))
-#             user_id = session.execute(sql_stmt).first()
-            
-#             if not user_id[0]:
-#                 return jsonify(message="invalid token")
-#         except:
-#             return jsonify(message="error while decoding")
-#         return f(user_id[0], *args, **kwargs)
-#     return decorated
-
-
-##Below is the decorator for the authentication if JWT token in send in json
 def authentication(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         token=None
-        key=current_app.config["SECRET"]
-        content = request.get_json(silent=True)
-        if content["token"]:
-            token = content["token"]
+        if 'authToken' in request.headers:
+            token = request.headers['authToken']
+            key = current_app.config["SECRET"]
         if not token:
             return jsonify(message="token missing")
         try:
@@ -57,11 +32,36 @@ def authentication(f):
             session = session_factory()
             sql_stmt = (select(User.Id) .where (User.username == data["Email"]))
             user_id = session.execute(sql_stmt).first()
-            session.close()
+            
             if not user_id[0]:
                 return jsonify(message="invalid token")
-
         except:
             return jsonify(message="error while decoding")
         return f(user_id[0], *args, **kwargs)
     return decorated
+
+
+##Below is the decorator for the authentication if JWT token in send in json
+# def authentication(f):
+#     @wraps(f)
+#     def decorated(*args, **kwargs):
+#         token=None
+#         key=current_app.config["SECRET"]
+#         content = request.get_json(silent=True)
+#         if content["token"]:
+#             token = content["token"]
+#         if not token:
+#             return jsonify(message="token missing")
+#         try:
+#             data= jwt.decode(token, key, algorithms=["HS256"])
+#             session = session_factory()
+#             sql_stmt = (select(User.Id) .where (User.username == data["Email"]))
+#             user_id = session.execute(sql_stmt).first()
+#             session.close()
+#             if not user_id[0]:
+#                 return jsonify(message="invalid token")
+
+#         except:
+#             return jsonify(message="error while decoding")
+#         return f(user_id[0], *args, **kwargs)
+#     return decorated
