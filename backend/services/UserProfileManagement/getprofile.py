@@ -59,7 +59,7 @@ def getProfile(user_id):
             return make_response(jsonify(data_sent), 404)
     else:
         data_sent = {'message':'Method not allowed'}
-        return make_response(jsonify(data_sent))
+        return make_response(jsonify(data_sent),400)
             
                        
           
