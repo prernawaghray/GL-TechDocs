@@ -44,7 +44,7 @@ def get_user_id(user_email):
         queries the userid for that user_email.
         This function returns the UserId.
     '''
-    sql = text("""SELECT user_id FROM UserAuthentication WHERE UserEmail=:UEMAIL""")
+    sql = text("""SELECT UserId FROM UserAuthentication WHERE UserEmail=:UEMAIL""")
     record = {"UEMAIL": user_email}
     user_id = connect.execute(sql, **record)
     return user_id
@@ -56,7 +56,7 @@ def get_doc_id(user_id, doc_name):
         queries the DocId for that Documents table.
         This function returns the DocId.
     '''
-    sql = text("""SELECT doc_id FROM Documents WHERE user_id=:UID and DocName=:DNAME""")
+    sql = text("""SELECT DocId FROM Documents WHERE UserId=:UID and DocName=:DNAME""")
     record = {"UID": user_id, "DNAME": doc_name}
     doc_id = connect.execute(sql, **record)
     return doc_id
@@ -95,7 +95,7 @@ def set_read_user_permission(user_id, doc_id):
         set to "read". However, if it is already set then the "read" permission is added to the existing
         permission set. This function gives a user "read" permissions of a file.
     '''
-    sql_query_1 = text("""SELECT PermissionId FROM Permissions WHERE user_id=:UID and doc_id=:DID""")
+    sql_query_1 = text("""SELECT PermissionId FROM Permissions WHERE UserId=:UID and DocId=:DID""")
     param_1 = {"UID": user_id, "DID": doc_id}
     permission_id = connect.execute(sql_query_1, **param_1)
     sql_query_2 = text("""SELECT UserPermissions from Permissions WHERE PermissionId=:PID""")
@@ -117,7 +117,7 @@ def set_write_user_permission(user_id, doc_id):
         set to "write". However, if it is already set then the "write" permission is added to the existing
         permission set. This function gives a user "write" permissions of a file.
     '''
-    sql_query_1 = text("""SELECT PermissionId FROM Permissions WHERE user_id=:UID and doc_id=:DID""")
+    sql_query_1 = text("""SELECT PermissionId FROM Permissions WHERE UserId=:UID and DocId=:DID""")
     param_1 = {"UID": user_id, "DID": doc_id}
     permission_id = connect.execute(sql_query_1, **param_1)
     sql_query_2 = text("""SELECT UserPermissions from Permissions WHERE PermissionId=:PID""")
@@ -206,7 +206,7 @@ def set_read_group_permission(user_id, doc_id):
         set to "read". However, if it is already set then the "read" permission is added to the existing
         permission set. This function gives a group "read" permissions of a file.
     '''
-    sql_query_1 = text("""SELECT PermissionId FROM Permissions WHERE user_id=:UID and doc_id=:DID""")
+    sql_query_1 = text("""SELECT PermissionId FROM Permissions WHERE UserId=:UID and DocId=:DID""")
     param_1 = {"UID": user_id, "DID": doc_id}
     permission_id = connect.execute(sql_query_1, **param_1)
     sql_query_2 = text("""SELECT GroupPermissions from Permissions WHERE PermissionId=:PID""")
@@ -228,7 +228,7 @@ def set_write_group_permission(user_id, doc_id):
         set to "write". However, if it is already set then the "write" permission is added to the existing
         permission set. This function gives a group "write" permissions of a file.
     '''
-    sql_query_1 = text("""SELECT PermissionId FROM Permissions WHERE user_id=:UID and doc_id=:DID""")
+    sql_query_1 = text("""SELECT PermissionId FROM Permissions WHERE UserId=:UID and DocId=:DID""")
     param_1 = {"UID": user_id, "DID": doc_id}
     permission_id = connect.execute(sql_query_1, **param_1)
     sql_query_2 = text("""SELECT GroupPermissions from Permissions WHERE PermissionId=:PID""")
@@ -427,7 +427,7 @@ def get_user_permissions(user_id, doc_id):
         and queries the PermissionId and UserPermissions details.
         This function returns the UserPermissions set to the user.
     '''
-    sql_query_1 = text("""SELECT PermissionId FROM Permissions WHERE user_id=:UID and doc_id=:DID""")
+    sql_query_1 = text("""SELECT PermissionId FROM Permissions WHERE UserId=:UID and DocId=:DID""")
     param_1 = {"UID": user_id, "DID": doc_id}
     permission_id = connect.execute(sql_query_1, **param_1)
     sql_query_2 = text("""SELECT UserPermissions from Permissions WHERE PermissionId=:PID""")
@@ -442,7 +442,7 @@ def get_group_permissions(user_id, doc_id):
         and queries the PermissionId and GroupPermissions details.
         This function returns the GroupPermissions set to the user.
     '''
-    sql_query_1 = text("""SELECT PermissionId FROM Permissions WHERE user_id=:UID and doc_id=:DID""")
+    sql_query_1 = text("""SELECT PermissionId FROM Permissions WHERE UserId=:UID and DocId=:DID""")
     param_1 = {"UID": user_id, "DID": doc_id}
     permission_id = connect.execute(sql_query_1, **param_1)
     sql_query_2 = text("""SELECT GroupPermissions from Permissions WHERE PermissionId=:PID""")
@@ -479,7 +479,7 @@ def unset_read_user_permission(user_id, doc_id):
     user_permissions = get_user_permissions(user_id, doc_id)
     user_permissions.remove('R')
     user_permissions = "".join(user_permissions)
-    sql_query_1 = text("""SELECT PermissionId FROM Permissions WHERE user_id=:UID and doc_id=:DID""")
+    sql_query_1 = text("""SELECT PermissionId FROM Permissions WHERE UserId=:UID and DocId=:DID""")
     param_1 = {"UID": user_id, "DID": doc_id}
     permission_id = connect.execute(sql_query_1, **param_1)
     sql_query_2 = text("""UPDATE Permissions SET UserPermissions=:UP WHERE PermissionId=:PID""")
@@ -497,7 +497,7 @@ def unset_write_user_permission(user_id, doc_id):
     user_permissions = get_user_permissions(user_id, doc_id)
     user_permissions.remove('W')
     user_permissions = "".join(user_permissions)
-    sql_query_1 = text("""SELECT PermissionId FROM Permissions WHERE user_id=:UID and doc_id=:DID""")
+    sql_query_1 = text("""SELECT PermissionId FROM Permissions WHERE UserId=:UID and DocId=:DID""")
     param_1 = {"UID": user_id, "DID": doc_id}
     permission_id = connect.execute(sql_query_1, **param_1)
     sql_query_2 = text("""UPDATE Permissions SET UserPermissions=:UP WHERE PermissionId=:PID""")
@@ -515,7 +515,7 @@ def unset_share_user_permission(user_id, doc_id):
     user_permissions = get_user_permissions(user_id, doc_id)
     user_permissions.remove('S')
     user_permissions = "".join(user_permissions)
-    sql_query_1 = text("""SELECT PermissionId FROM Permissions WHERE user_id=:UID and doc_id=:DID""")
+    sql_query_1 = text("""SELECT PermissionId FROM Permissions WHERE UserId=:UID and DocId=:DID""")
     param_1 = {"UID": user_id, "DID": doc_id}
     permission_id = connect.execute(sql_query_1, **param_1)
     sql_query_2 = text("""UPDATE Permissions SET UserPermissions=:UP WHERE PermissionId=:PID""")
@@ -533,7 +533,7 @@ def unset_delete_user_permission(user_id, doc_id):
     user_permissions = get_user_permissions(user_id, doc_id)
     user_permissions.remove('D')
     user_permissions = "".join(user_permissions)
-    sql_query_1 = text("""SELECT PermissionId FROM Permissions WHERE user_id=:UID and doc_id=:DID""")
+    sql_query_1 = text("""SELECT PermissionId FROM Permissions WHERE UserId=:UID and DocId=:DID""")
     param_1 = {"UID": user_id, "DID": doc_id}
     permission_id = connect.execute(sql_query_1, **param_1)
     sql_query_2 = text("""UPDATE Permissions SET UserPermissions=:UP WHERE PermissionId=:PID""")
@@ -551,7 +551,7 @@ def unset_analytics_user_permission(user_id, doc_id):
     user_permissions = get_user_permissions(user_id, doc_id)
     user_permissions.remove('A')
     user_permissions = "".join(user_permissions)
-    sql_query_1 = text("""SELECT PermissionId FROM Permissions WHERE user_id=:UID and doc_id=:DID""")
+    sql_query_1 = text("""SELECT PermissionId FROM Permissions WHERE UserId=:UID and DocId=:DID""")
     param_1 = {"UID": user_id, "DID": doc_id}
     permission_id = connect.execute(sql_query_1, **param_1)
     sql_query_2 = text("""UPDATE Permissions SET UserPermissions=:UP WHERE PermissionId=:PID""")
@@ -571,7 +571,7 @@ def unset_read_group_permission(user_id, doc_id):
     group_permissions = get_group_permissions(user_id, doc_id)
     group_permissions.remove('R')
     group_permissions = "".join(group_permissions)
-    sql_query_1 = text("""SELECT PermissionId FROM Permissions WHERE user_id=:UID and doc_id=:DID""")
+    sql_query_1 = text("""SELECT PermissionId FROM Permissions WHERE UserId=:UID and DocId=:DID""")
     param_1 = {"UID": user_id, "DID": doc_id}
     permission_id = connect.execute(sql_query_1, **param_1)
     sql_query_2 = text("""UPDATE Permissions SET GroupPermissions=:GP WHERE PermissionId=:PID""")
@@ -589,7 +589,7 @@ def unset_write_group_permission(user_id, doc_id):
     group_permissions = get_group_permissions(user_id, doc_id)
     group_permissions.remove('W')
     group_permissions = "".join(group_permissions)
-    sql_query_1 = text("""SELECT PermissionId FROM Permissions WHERE user_id=:UID and doc_id=:DID""")
+    sql_query_1 = text("""SELECT PermissionId FROM Permissions WHERE UserId=:UID and DocId=:DID""")
     param_1 = {"UID": user_id, "DID": doc_id}
     permission_id = connect.execute(sql_query_1, **param_1)
     sql_query_2 = text("""UPDATE Permissions SET GroupPermissions=:GP WHERE PermissionId=:PID""")
@@ -608,7 +608,7 @@ def unset_share_group_permission(user_id, doc_id):
     group_permissions = get_group_permissions(user_id, doc_id)
     group_permissions.remove('S')
     group_permissions = "".join(group_permissions)
-    sql_query_1 = text("""SELECT PermissionId FROM Permissions WHERE user_id=:UID and doc_id=:DID""")
+    sql_query_1 = text("""SELECT PermissionId FROM Permissions WHERE UserId=:UID and DocId=:DID""")
     param_1 = {"UID": user_id, "DID": doc_id}
     permission_id = connect.execute(sql_query_1, **param_1)
     sql_query_2 = text("""UPDATE Permissions SET GroupPermissions=:GP WHERE PermissionId=:PID""")
@@ -626,7 +626,7 @@ def unset_delete_group_permission(user_id, doc_id):
     group_permissions = get_group_permissions(user_id, doc_id)
     group_permissions.remove('D')
     group_permissions = "".join(group_permissions)
-    sql_query_1 = text("""SELECT PermissionId FROM Permissions WHERE user_id=:UID and doc_id=:DID""")
+    sql_query_1 = text("""SELECT PermissionId FROM Permissions WHERE UserId=:UID and DocId=:DID""")
     param_1 = {"UID": user_id, "DID": doc_id}
     permission_id = connect.execute(sql_query_1, **param_1)
     sql_query_2 = text("""UPDATE Permissions SET GroupPermissions=:GP WHERE PermissionId=:PID""")
@@ -644,7 +644,7 @@ def unset_analytics_group_permission(user_id, doc_id):
     group_permissions = get_group_permissions(user_id, doc_id)
     group_permissions.remove('A')
     group_permissions = "".join(group_permissions)
-    sql_query_1 = text("""SELECT PermissionId FROM Permissions WHERE user_id=:UID and doc_id=:DID""")
+    sql_query_1 = text("""SELECT PermissionId FROM Permissions WHERE UserId=:UID and DocId=:DID""")
     param_1 = {"UID": user_id, "DID": doc_id}
     permission_id = connect.execute(sql_query_1, **param_1)
     sql_query_2 = text("""UPDATE Permissions SET GroupPermissions=:GP WHERE PermissionId=:PID""")
@@ -663,7 +663,7 @@ def unset_read_others_permission(user_id, doc_id):
     other_permissions = get_others_permissions(user_id, doc_id)
     other_permissions.remove('R')
     other_permissions = "".join(other_permissions)
-    sql_query_1 = text("""SELECT PermissionId FROM Permissions WHERE user_id=:UID and doc_id=:DID""")
+    sql_query_1 = text("""SELECT PermissionId FROM Permissions WHERE UserId=:UID and DocId=:DID""")
     param_1 = {"UID": user_id, "DID": doc_id}
     permission_id = connect.execute(sql_query_1, **param_1)
     sql_query_2 = text("""UPDATE Permissions SET OtherPermissions=:OP WHERE PermissionId=:PID""")
@@ -681,7 +681,7 @@ def unset_write_others_permission(user_id, doc_id):
     other_permissions = get_others_permissions(user_id, doc_id)
     other_permissions.remove('W')
     other_permissions = "".join(other_permissions)
-    sql_query_1 = text("""SELECT PermissionId FROM Permissions WHERE user_id=:UID and doc_id=:DID""")
+    sql_query_1 = text("""SELECT PermissionId FROM Permissions WHERE UserId=:UID and DocId=:DID""")
     param_1 = {"UID": user_id, "DID": doc_id}
     permission_id = connect.execute(sql_query_1, **param_1)
     sql_query_2 = text("""UPDATE Permissions SET OtherPermissions=:OP WHERE PermissionId=:PID""")
@@ -700,7 +700,7 @@ def unset_share_others_permission(user_id, doc_id):
     other_permissions = get_others_permissions(user_id, doc_id)
     other_permissions.remove('S')
     other_permissions = "".join(other_permissions)
-    sql_query_1 = text("""SELECT PermissionId FROM Permissions WHERE user_id=:UID and doc_id=:DID""")
+    sql_query_1 = text("""SELECT PermissionId FROM Permissions WHERE UserId=:UID and DocId=:DID""")
     param_1 = {"UID": user_id, "DID": doc_id}
     permission_id = connect.execute(sql_query_1, **param_1)
     sql_query_2 = text("""UPDATE Permissions SET OtherPermissions=:OP WHERE PermissionId=:PID""")
@@ -718,7 +718,7 @@ def unset_delete_others_permission(user_id, doc_id):
     other_permissions = get_others_permissions(user_id, doc_id)
     other_permissions.remove('D')
     other_permissions = "".join(other_permissions)
-    sql_query_1 = text("""SELECT PermissionId FROM Permissions WHERE user_id=:UID and doc_id=:DID""")
+    sql_query_1 = text("""SELECT PermissionId FROM Permissions WHERE UserId=:UID and DocId=:DID""")
     param_1 = {"UID": user_id, "DID": doc_id}
     permission_id = connect.execute(sql_query_1, **param_1)
     sql_query_2 = text("""UPDATE Permissions SET OtherPermissions=:OP WHERE PermissionId=:PID""")
@@ -736,7 +736,7 @@ def unset_analytics_others_permission(user_id, doc_id):
     other_permissions = get_others_permissions(user_id, doc_id)
     other_permissions.remove('A')
     other_permissions = "".join(other_permissions)
-    sql_query_1 = text("""SELECT PermissionId FROM Permissions WHERE user_id=:UID and doc_id=:DID""")
+    sql_query_1 = text("""SELECT PermissionId FROM Permissions WHERE UserId=:UID and DocId=:DID""")
     param_1 = {"UID": user_id, "DID": doc_id}
     permission_id = connect.execute(sql_query_1, **param_1)
     sql_query_2 = text("""UPDATE Permissions SET OtherPermissions=:OP WHERE PermissionId=:PID""")
