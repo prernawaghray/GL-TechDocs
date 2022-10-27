@@ -23,7 +23,7 @@ from ..UserAuthentication.JWTAuthentication import authentication
 getUserProfile_bp = Blueprint('getprofile',__name__)
 #check for user authorisation
 
-@getUserProfile_bp.route('/api/getProfile',methods=['POST'])
+@getUserProfile_bp.route('/api/getProfile',methods=['GET','POST'])
 @authentication
 def getProfile(user_id):
     if request.method == 'POST':
@@ -32,31 +32,27 @@ def getProfile(user_id):
         session = session_factory()
         sql_stmt_1 = (select(User.username).where (User.Id == user_id))
         getProfileusername = session.execute(sql_stmt_1).first()[0]
-        if getProfileusername:
-            sql_stmt = (select(UsersProfile.firstName, UsersProfile.lastName, UsersProfile.streetAddress,
-                            UsersProfile.state,UsersProfile.country,UsersProfile.occupation,UsersProfile.purposeOfUsage,
-                            UsersProfile.signUpDate,UsersProfile.lastActiveDate).where (UsersProfile.username == getProfileusername))
-            result = session.execute(sql_stmt).first()
-            session.close()
-            if getProfile:
-                Data_Send = {
-                "userData":{"firstName": result[0],
-                            "lastName" : result[1],
-                            "address": {"streetAddress" : result[2], 
-                                        "state" : result[3],
-                                        "country" : result[4]},
-                            "occupation" : result[5],
-                            "purposeOfUse": result[6],
-                "usageStats":{"signUpDate": result[7],
-                            "lastActiveDate" : result[8]}
-                }}
-                return make_response(jsonify(Data_Send), 200)
-            else:
-                data_sent = {"message":"Not Found"} 
-                return make_response(jsonify(data_sent),404)
+        sql_stmt = (select(UsersProfile.firstName, UsersProfile.lastName, UsersProfile.streetAddress,
+                        UsersProfile.state,UsersProfile.country,UsersProfile.occupation,UsersProfile.purposeOfUsage,
+                        UsersProfile.signUpDate,UsersProfile.lastActiveDate).where (UsersProfile.username == getProfileusername))
+        result = session.execute(sql_stmt).first()
+        session.close()
+        if result:
+            Data_Send = {
+            "userData":{"firstName": result[0],
+                        "lastName" : result[1],
+                        "address": {"streetAddress" : result[2], 
+                                    "state" : result[3],
+                                    "country" : result[4]},
+                        "occupation" : result[5],
+                        "purposeOfUse": result[6],
+            "usageStats":{"signUpDate": result[7],
+                        "lastActiveDate" : result[8]}
+            }}
+            return make_response(jsonify(Data_Send), 200)
         else:
-            data_sent = {"message":"User not found"}
-            return make_response(jsonify(data_sent), 404)
+            data_sent = {"message":"Not Found"} 
+            return make_response(jsonify(data_sent),404)
     else:
         data_sent = {'message':'Method not allowed'}
         return make_response(jsonify(data_sent),400)
