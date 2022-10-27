@@ -19,7 +19,12 @@ from services.UserAuthentication.Logout import userLogout_bp
 with open('../config.yaml') as stream:
     configs = yaml.safe_load(stream)
 
+from DocumentVersionManager.DocumentVersionManager import documentVersionManagerBlueprint
+from UserHistoryManager.UserHistoryManager import userHistoryManagerBlueprint
+
 app= Flask(__name__)
+app.register_blueprint(documentVersionManagerBlueprint)
+app.register_blueprint(userHistoryManagerBlueprint)
 bcrypt = Bcrypt(app)
 app.register_blueprint(fileManagerBlueprint)
 #app.register_blueprint(fileManager_2)
