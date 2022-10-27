@@ -1,7 +1,0 @@
-User_Tables.py: file to create tables the very first time
-tbl_UserDetails.py: class for 5 different tables - UserAuthentication, UserProfile, LinkedAccount
-
-permissions.py: 
-1. Setting the Read, Write, Share, Analytics and Delete permissions for User Permissions,Group Prmissions and Other Permissions in the Permissions table
-2. Getting the permissions assigned for User Permissions,Group Prmissions and Other Permissions from Permissions table.
-3. Removing the Read, Write, Share, Analytics and Delete permissions for User Permissions,Group Prmissions and Other Permissions in the Permissions table
