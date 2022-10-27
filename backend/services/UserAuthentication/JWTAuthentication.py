@@ -17,6 +17,7 @@ from orm_Tables import User
 
 authTokenDecode_bp = Blueprint('AuthTokenDecode',__name__)
 
+## Below is the decorator for the authentication if the JWT token is send in header
 # def authentication(f):
 #     @wraps(f)
 #     def decorated(*args, **kwargs):
@@ -39,6 +40,8 @@ authTokenDecode_bp = Blueprint('AuthTokenDecode',__name__)
 #         return f(user_id[0], *args, **kwargs)
 #     return decorated
 
+
+##Below is the decorator for the authentication if JWT token in send in json
 def authentication(f):
     @wraps(f)
     def decorated(*args, **kwargs):
@@ -54,7 +57,7 @@ def authentication(f):
             session = session_factory()
             sql_stmt = (select(User.Id) .where (User.username == data["Email"]))
             user_id = session.execute(sql_stmt).first()
-
+            session.close()
             if not user_id[0]:
                 return jsonify(message="invalid token")
 
