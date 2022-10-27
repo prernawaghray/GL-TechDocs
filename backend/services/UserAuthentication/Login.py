@@ -25,7 +25,7 @@ def signin():
     bcrypt = Bcrypt(current_app)
     if request.method == 'POST':
         loginType = request.form.get('loginType')
-        username  = request.form.get('username')
+        username  = request.form.get('email')
         # Checking for the Login Type
         if loginType == 'google':
             session = session_factory()
