@@ -86,7 +86,8 @@ class User(Base):
 class UserProfile(Base):
     __tablename__ = "UsersProfile"
     
-    username         = Column(String(256), ForeignKey('User.username'),primary_key = True,nullable=False, unique=True)
+    Id              = Column(Integer, primary_key=True, autoincrement=True)
+    username         = Column(String(256), ForeignKey('User.username'),nullable=False, unique=True)
     firstName       = Column(String(100),nullable=True)
     lastName        = Column(String(100),nullable=True)
     streetAddress   = Column(String(256),nullable=True)
@@ -97,7 +98,8 @@ class UserProfile(Base):
     signUpDate      = Column(Date,nullable=True) 
     lastActiveDate  = Column(Date,nullable=True) 
 
-    def __init__(self, userID, firstName,lastName,streerAddress,state,country,occupation,purposeOfUsage,signUpDate,lastActiveDate):
+    def __init__(self, Id, userID, firstName,lastName,streerAddress,state,country,occupation,purposeOfUsage,signUpDate,lastActiveDate):
+        self.Id    = Id
         self.userID = userID
         self.firstName = firstName
         self.lastName = lastName
