@@ -10,6 +10,7 @@ from flask import Flask, jsonify, render_template
 import socket
 import yaml
 import sys
+from flask_cors import CORS
 sys.path.append('../')
 from services.FileManager.FileManager import fileManagerBlueprint
 from services.SampleBlueprint.sampleBlueprint import sampleBlueprint
@@ -26,6 +27,8 @@ from services.DocumentVersionManager.DocumentVersionManager import documentVersi
 from services.UserHistoryManager.UserHistoryManager import userHistoryManagerBlueprint
 
 app= Flask(__name__)
+CORS(app, resources={r"/*":{"origins":"*"}})
+
 app.register_blueprint(documentVersionManagerBlueprint)
 app.register_blueprint(userHistoryManagerBlueprint)
 bcrypt = Bcrypt(app)
