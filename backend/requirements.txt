@@ -11,3 +11,7 @@ Werkzeug==2.2.2
 zipp==3.8.1
 timeago==1.0.16
 Requests
+SQLAlchemy
+PyYAML==6.0
+Flask-RESTful==0.3.9
+Flask-SQLAlchemy==3.0.0
