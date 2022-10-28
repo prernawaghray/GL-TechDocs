@@ -25,11 +25,15 @@ userLogin_bp = Blueprint('login',__name__)
 def signin():
     bcrypt = Bcrypt(current_app)
     if request.method == 'POST':
-        loginType = request.form.get('loginType')
-        username  = request.form.get('email')
-        # content = request.get_json(silent=True)
-        # loginType = content["loginType"]
-        # username = content["email"]
+        # loginType = request.form.get('loginType')
+        # username  = request.form.get('email')
+        content = request.get_json(silent=True)
+        loginType = content["loginType"]
+        username = content["email"]
+
+        if not username:
+            data_sent = {"message": "Email field cannot be empty"}
+            return make_response(jsonify(data_sent), 401)  
         # Checking for the Login Type
         if loginType == 'google':
             session = session_factory()
@@ -37,7 +41,11 @@ def signin():
             result = session.execute(sql_stmt).first()
             session.close()
         #if user is registered
-            if result[0]:
+            if result == None:
+                data_sent = {"message":"User not Registered"} 
+                return make_response(jsonify(data_sent),401)
+              
+            if result:
                 if result[2] == 'google':
                     key = current_app.config["SECRET"]
                     admin = result[1]
@@ -58,16 +66,20 @@ def signin():
 
 # checking for the login type 
         elif loginType == "email":
-            password = request.form.get('password')
-            # password = content["password"]
+            # password = request.form.get('password')
+            password = content["password"]
             if password:
                 session = session_factory()
                 sql_stmt = (select(User.Id, User.isadmin, User.password, User.loginType).where (User.username == username))
                 result = session.execute(sql_stmt).first()
-                session.close()
+                session.close()    
 
-                if result:
-            
+                
+                if result == None:
+                    data_sent = {"message":"User not Registered"} 
+                    return make_response(jsonify(data_sent),401)
+              
+                if result[0]:
                     if result[2] == "google":
                         data_sent = {"message":"User not Registered"} 
                         return make_response(jsonify(data_sent),401)
@@ -90,8 +102,8 @@ def signin():
                         data_sent = {"message":"User not Registered"} 
                         return make_response(jsonify(data_sent),401)
                 else:
-                    data_sent = {"message": "Email field cannot be empty"}
-                    return make_response(jsonify(data_sent), 401)            
+                        data_sent = {"message":"User not Registered"} 
+                        return make_response(jsonify(data_sent),401)          
             else:
                 data_sent = {"message":"Password cannot be empty"}
                 return make_response(jsonify(data_sent), 401)
