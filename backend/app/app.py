@@ -19,6 +19,8 @@ from services.UserAuthentication.Login import userLogin_bp
 from services.UserAuthentication.Logout import userLogout_bp
 from services.UserProfileManagement.getprofile import getUserProfile_bp
 from services.UserProfileManagement.updateprofile import updateUserProfile_bp
+from services.ForgotPassword.forgotpassword import forgotpassword_bp
+from services.ForgotPassword.mail import mail_bp
 
 with open('../config.yaml') as stream:
     configs = yaml.safe_load(stream)
@@ -39,10 +41,12 @@ app.register_blueprint(userLogin_bp)
 app.register_blueprint(userLogout_bp)
 app.register_blueprint(getUserProfile_bp)
 app.register_blueprint(updateUserProfile_bp)
+app.register_blueprint(forgotpassword_bp)
+app.register_blueprint(mail_bp)
 
 app.config['ENV'] = configs["FLASK_ENV"]
 app.config['SAMPLE_TESTING'] = "test success"
-app.config["SECRET"]	= "secret"
+app.config["SECRET"] = "secret"
 
 # This function get the hostname and IP deatils of server, required for microservices
 def fetchDetails():
@@ -50,21 +54,21 @@ def fetchDetails():
 	host_ip = socket.gethostbyname(hostname)
 	return str(hostname) , str(host_ip)
 
-# # This is main / landing page API 
-# @app.route("/")
-# def hello_world():
-# 	return "<p> home page</p>"
+# This is main / landing page API 
+@app.route("/")
+def hello_world():
+	return "<p> home page</p>"
 
-# # This is for endpoint "Health" to healthcheck the container health in microservices
-# @app.route("/health")
-# def health():
-# 	return jsonify(Status ="UP")
+# This is for endpoint "Health" to healthcheck the container health in microservices
+@app.route("/health")
+def health():
+	return jsonify(Status ="UP")
 
-# # Endpoint for dynamic page 
-# @app.route("/details")
-# def details():
-# 	hostname, ip = fetchDetails()
-# 	return render_template('index.html', HOSTNAME=hostname, IP=ip)
+# Endpoint for dynamic page 
+@app.route("/details")
+def details():
+	hostname, ip = fetchDetails()
+	return render_template('index.html', HOSTNAME=hostname, IP=ip)
 
 
 

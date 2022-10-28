@@ -4,7 +4,6 @@ firstname, lastname, street address, state, country, occupation and purpose of u
 Process: When the post method is called, first the user authentication is verified.
 After the JWT token is verified, the entered userdetails are obtained and updated in the UserProfile Database.
 On succesful Updation "OK" is being sent, else "error message" is sent.
-
 '''
 
 from flask import Blueprint, current_app, jsonify
@@ -19,7 +18,7 @@ from DBConnect import session_factory
 from orm_Tables import User
 from sqlalchemy import create_engine, select, update
 from flask_bcrypt import Bcrypt
-from orm_Tables import UsersProfile
+from orm_Tables import UserProfile
 from ..UserAuthentication.JWTAuthentication import authentication
 
 
@@ -44,12 +43,17 @@ def updateProfile(user_id):
         purposeOfUsage = userData["purposeOfUse"]
         #Updating to database
         session = session_factory()
-        sql_stmt = (update(UsersProfile).where(UsersProfile.Id == emailId).values(firstName=firstName,lastName = lastName,streetAddress = streetAddress,state = state, country = country, occupation = occupation, purposeOfUsage = purposeOfUsage))
-        session.execute(sql_stmt)
+        sql_stmt = (update(UserProfile).where(UserProfile.Username == emailId).values(FirstName=firstName,LastName = lastName,StreetAddress = streetAddress,State = state, Country = country, Occupation = occupation, PurposeOfUsage = purposeOfUsage))
+        result = session.execute(sql_stmt)
         session.commit()
         session.close()
-        message = {"message":"OK"}
-        return make_response(jsonify(message), 200)
+        if result:
+            message = {"message":"OK"}
+            return make_response(jsonify(message), 200)
+        else:
+            data_sent = {"message":"Update Error Message"} 
+            return make_response(jsonify(data_sent),404)
+            
     else:
             data_sent = {"message":"Error Message"} 
             return make_response(jsonify(data_sent),404)

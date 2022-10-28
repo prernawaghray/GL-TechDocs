@@ -36,7 +36,7 @@ class DocumentHistory(Common):
     __tablename__ = "DocumentHistory"
 
     DocId = Column(Integer, ForeignKey("Documents.DocId"))
-    UserId = Column(Integer, ForeignKey("User.UserId"))
+    UserId = Column(String(256), ForeignKey("User.UserId"))
     RecordId = Column(Integer, primary_key=True, autoincrement=True)
     User = relationship("User")
     Document = relationship("Document")
@@ -55,7 +55,7 @@ class UserHistory(Common):
     __tablename__ = "UserHistory"
 
     RecordId = Column(Integer, primary_key=True, autoincrement=True)
-    UserId = Column(Integer, ForeignKey("User.UserId"))
+    UserId = Column(String(256), ForeignKey("User.UserId"))
     User = relationship("User")
     DocId = Column(Integer, ForeignKey("Documents.DocId"))
     Document = relationship("Document")
@@ -123,18 +123,19 @@ class User(Base):
     __tablename__ = "User"
 
     UserId = Column(String(256), primary_key=True, unique=True)
-    UserName = Column(String(256), nullable=False)
+    UserName = Column(String(256), primary_key=True,nullable=False)
     Password = Column(String(256), nullable=False)
     IsAdmin = Column(Boolean, nullable=False)
     LoginType = Column(String(256), nullable=False)
 
     # user = relationship("UserPofile",backref = "user", CASCADE = 'all, delete-orphan', lazy = 'dynamic' )
 
-    def __init__(self, UserId, UserName, Password, IsAdmin):
+    def __init__(self, UserId, UserName, Password, IsAdmin, LoginType):
         self.UserId = UserId
         self.UserName = UserName
         self.Password = Password
         self.IsAdmin = IsAdmin
+        self.LoginType = LoginType
 
 
 ################################

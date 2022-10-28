@@ -154,7 +154,7 @@ def defineTables():
         "   Password        varchar(256),"
         "   IsAdmin         boolean DEFAULT false,"
         "   LoginType       varchar(256),"
-        "   PRIMARY KEY (UserId),"
+        "   PRIMARY KEY (UserId, UserName),"
         "   INDEX idx_User (UserId)"
         ")"
     )
@@ -164,12 +164,12 @@ def defineTables():
     tbl_array['UserProfile'] = (
         "Create Table if not exists `UserProfile` ("
         "   UserId          varchar(256) NOT NULL UNIQUE,"
-        "   UserName        varchar(256) NOT NULL"
+        "   UserName        varchar(256) NOT NULL,"
         "   FirstName       varchar(100),"
         "   LastName        varchar(100),"
         "   StreetAddress   varchar(256),"
-        "   State           varchar(256)"
-        "   Country         varchar(100)"
+        "   State           varchar(256),"
+        "   Country         varchar(100),"
         "   Occupation      varchar(256),"
         "   PurposeOfUsage  varchar(256),"
         "   SignUpDate      date,"
@@ -189,7 +189,7 @@ def defineTables():
         "   AccountName         varchar(256),"
         "   AccountPassword     varchar(256),"
         "   PRIMARY KEY (UserId),"
-        "   FOREIGN KEY (UserId) REFERENCES User(UserId)"
+        "   FOREIGN KEY (UserId) REFERENCES User(UserId),"
         "   INDEX idx_LinkedAccount (UserId)"
         ")"
     )
