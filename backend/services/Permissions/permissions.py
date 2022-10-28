@@ -40,11 +40,11 @@ def set_permissions(share_email, user_id, doc_name,permission_type):
 
 def get_user_id(user_email):
     '''
-        This function takes user_name fields from the UserAuthentication table as its input arguments
+        This function takes user_name fields from the User table as its input arguments
         queries the userid for that user_email.
         This function returns the UserId.
     '''
-    sql = text("""SELECT UserId FROM UserAuthentication WHERE UserEmail=:UEMAIL""")
+    sql = text("""SELECT UserId FROM User WHERE UserName=:UEMAIL""")
     record = {"UEMAIL": user_email}
     user_id = connect.execute(sql, **record)
     return user_id
