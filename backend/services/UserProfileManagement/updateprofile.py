@@ -36,12 +36,12 @@ def updateProfile(user_id):
         emailId = user_id
         firstName = userData["firstName"]
         lastName = userData["lastName"]
-        address = requestparams["address"]
+        address = userData["address"]
         streetAddress = address["streetAddress"]
         state = address["state"]
         country = address["country"]
-        occupation = requestparams["occupation"]
-        purposeOfUsage = requestparams["purposeOfUse"]
+        occupation = userData["occupation"]
+        purposeOfUsage = userData["purposeOfUse"]
         #Updating to database
         session = session_factory()
         sql_stmt = (update(UsersProfile).where(UsersProfile.Id == emailId).values(firstName=firstName,lastName = lastName,streetAddress = streetAddress,state = state, country = country, occupation = occupation, purposeOfUsage = purposeOfUsage))

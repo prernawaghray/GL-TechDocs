@@ -45,10 +45,10 @@ def getProfile(user_id):
                                     "state" : result[3],
                                     "country" : result[4]},
                         "occupation" : result[5],
-                        "purposeOfUse": result[6],
+                        "purposeOfUse": result[6]},
             "usageStats":{"signUpDate": result[7],
                         "lastActiveDate" : result[8]}
-            }}
+            }
             return make_response(jsonify(Data_Send), 200)
         else:
             data_sent = {"message":"Not Found"} 
