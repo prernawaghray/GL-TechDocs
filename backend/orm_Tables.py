@@ -30,7 +30,7 @@ class DocumentHistory(Common):
     __tablename__ = "DocumentHistory"
 
     DocId           = Column(Integer, ForeignKey("Documents.DocId"))
-    UserId          = Column(String(256), ForeignKey("User.Id"))
+    UserId          = Column(Integer, ForeignKey("User.Id"))
     RecordId        = Column(Integer, primary_key=True, autoincrement=True)    
     User            = relationship("User")
     Document        = relationship("Document")
@@ -48,7 +48,7 @@ class UserHistory(Common):
     __tablename__ = "UserHistory"
 
     RecordId        = Column(Integer, primary_key=True, autoincrement=True)   
-    UserId          = Column(String(256), ForeignKey("User.Id"))
+    UserId          = Column(Integer, ForeignKey("User.Id"))
     User            = relationship("User")
     DocId           = Column(Integer, ForeignKey("Documents.DocId"))
     Document        = relationship("Document")
@@ -111,7 +111,7 @@ class UserSubscription(Common):
 class User(Base): 
     __tablename__ = "User"
     
-    Id              = Column(String(256), primary_key=True)
+    Id              = Column(Integer, primary_key=True)
     username        = Column(String(256), nullable=False, unique=True)
     password        = Column(String(256), nullable=False)
     isadmin         = Column(Boolean,nullable=False)
@@ -127,10 +127,11 @@ class User(Base):
         
 ################################
 
-class UserProfile(Base):
+class UsersProfile(Base):
     __tablename__ = "UsersProfile"
     
-    username         = Column(String(256), ForeignKey('User.username'),primary_key = True,nullable=False, unique=True)
+    Id              = Column(Integer, ForeignKey('User.Id'),primary_key=True, autoincrement=True)
+    username         = Column(String(256), ForeignKey('User.username'),nullable=False, unique=True)
     firstName       = Column(String(100),nullable=True)
     lastName        = Column(String(100),nullable=True)
     streetAddress   = Column(String(256),nullable=True)
@@ -141,7 +142,8 @@ class UserProfile(Base):
     signUpDate      = Column(Date,nullable=True) 
     lastActiveDate  = Column(Date,nullable=True) 
 
-    def __init__(self, userID, firstName,lastName,streerAddress,state,country,occupation,purposeOfUsage,signUpDate,lastActiveDate):
+    def __init__(self, Id, userID, firstName,lastName,streerAddress,state,country,occupation,purposeOfUsage,signUpDate,lastActiveDate):
+        self.Id    = Id
         self.userID = userID
         self.firstName = firstName
         self.lastName = lastName

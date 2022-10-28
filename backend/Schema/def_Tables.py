@@ -146,19 +146,20 @@ def defineTables():
 
     tbl_array['User'] = (
     "Create Table if not exists `User` ("
-    "   Id             varchar(256) not null,"
+    "   Id             int not null,"
     "   username       varchar(256),"
     "   password       varchar(256),"
     "   isadmin        boolean,"
     "   loginType      varchar(256),"
-    "   PRIMARY KEY (id),           "
-    "   INDEX idx_User (id)"
+    "   PRIMARY KEY (Id, username),           "
+    "   INDEX idx_User (Id)"
     ")"
     )
 
     tbl_array ['UsersProfile'] = (
     "Create Table if not exists `UsersProfile` ("
-    "   username          varchar(256),"
+    "   Id              int not null,"
+    "   username        varchar(256),"
     "   firstName       varchar(100),"
     "   lastName        varchar(100),"
     "   streetAddress   varchar(256),"
@@ -168,9 +169,9 @@ def defineTables():
     "   purposeOfUsage  varchar(256),"
     "   signUpDate      datetime,"
     "   lastActiveDate  datetime,"
-    "   PRIMARY KEY (username),"
-    "   FOREIGN KEY (username) REFERENCES User(username),"
-    "   INDEX idx_UserProfile (username)"
+    "   PRIMARY KEY (Id),"
+    "   FOREIGN KEY (Id, username) REFERENCES User(Id,username) ON UPDATE CASCADE,"
+    "   INDEX idx_UsersProfile (Id)"
     ")"
 
     )
