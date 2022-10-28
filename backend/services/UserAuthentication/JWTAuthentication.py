@@ -32,7 +32,7 @@ def authentication(f):
         try:
             data= jwt.decode(token, key, algorithms=["HS256"])
             session = session_factory()
-            sql_stmt = (select(User.Id) .where (User.username == data["Email"]))
+            sql_stmt = (select(User.UserId) .where (User.UserName == data["Email"]))
             user_id = session.execute(sql_stmt).first()
             
             if not user_id[0]:
@@ -59,7 +59,7 @@ def authentication(f):
 #         try:
 #             data= jwt.decode(token, key, algorithms=["HS256"])
 #             session = session_factory()
-#             sql_stmt = (select(User.Id) .where (User.username == data["Email"]))
+#             sql_stmt = (select(User.UserId) .where (User.UserName == data["Email"]))
 #             user_id = session.execute(sql_stmt).first()
 #             session.close()
 #             if not user_id[0]:

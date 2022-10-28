@@ -3,7 +3,6 @@
 This File is responsible for signing out. On receiving a request for sign out, the jwt is verified.
 On successful verification, the last active date in the UserProfile database is updated with the current date.
 on succesfull Updation of database JWT is sent. Else Error message is sent
-
 '''
 
 from flask import Blueprint, current_app, jsonify
@@ -11,7 +10,7 @@ from flask import request,make_response
 from . import *
 from flask import jsonify
 from DBConnect import session_factory
-from orm_Tables import UsersProfile
+from orm_Tables import UserProfile
 from flask_bcrypt import Bcrypt
 from .JWTAuthentication import authentication
 import pytz
@@ -30,7 +29,7 @@ def signout(user_id):
             currentDateTime = datetime.now(pytz.timezone('Asia/Kolkata'))
             currentDate = currentDateTime.today()
             session = session_factory()
-            sql_stmt = (update(UsersProfile).where(UsersProfile.username == logoutUsername).values(lastActiveDate=currentDate))
+            sql_stmt = (update(UserProfile).where(UserProfile.UserName == logoutUsername).values(LastActiveDate=currentDate))
             session.execute(sql_stmt)
             session.close()
         #sending the JWT Token after updating the database
@@ -41,4 +40,3 @@ def signout(user_id):
     else:
             data_sent = {"message":"Invalid Request/No User Session"} 
             return make_response(jsonify(data_sent),400)
-   

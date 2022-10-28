@@ -6,7 +6,6 @@ On request for login, the login type is intially checked.
 For Either of the login type (google or Email)", the UserAuthentication database is checked if user credentials.
 if the credenials are authentic a JWT token is generated and returned.
 Else the corresponding error message is generated.
-
 '''
 
 from flask import Blueprint, current_app, jsonify
@@ -25,26 +24,19 @@ userLogin_bp = Blueprint('login',__name__)
 def signin():
     bcrypt = Bcrypt(current_app)
     if request.method == 'POST':
-        # loginType = request.form.get('loginType')
-        # username  = request.form.get('email')
-        content = request.get_json(silent=True)
-        loginType = content["loginType"]
-        username = content["email"]
-
-        if not username:
-            data_sent = {"message": "Email field cannot be empty"}
-            return make_response(jsonify(data_sent), 401)  
+        loginType = request.form.get('loginType')
+        username  = request.form.get('email')
+        # content = request.get_json(silent=True)
+        # loginType = content["loginType"]
+        # username = content["email"]
         # Checking for the Login Type
         if loginType == 'google':
             session = session_factory()
-            sql_stmt = (select(User.Id, User.isadmin, User.loginType).where (User.username == username))
+            sql_stmt = (select(User.UserId, User.IsAdmin, User.LoginType).where (User.UserName == username))
             result = session.execute(sql_stmt).first()
             session.close()
         #if user is registered
-            if result == None:
-                data_sent = {"message":"User not Registered"} 
-                return make_response(jsonify(data_sent),401)
-              
+        
             if result:
                 if result[2] == 'google':
                     key = current_app.config["SECRET"]
@@ -66,20 +58,16 @@ def signin():
 
 # checking for the login type 
         elif loginType == "email":
-            # password = request.form.get('password')
-            password = content["password"]
+            password = request.form.get('password')
+            # password = content["password"]
             if password:
                 session = session_factory()
                 sql_stmt = (select(User.Id, User.isadmin, User.password, User.loginType).where (User.username == username))
                 result = session.execute(sql_stmt).first()
-                session.close()    
+                session.close()
 
-                
-                if result == None:
-                    data_sent = {"message":"User not Registered"} 
-                    return make_response(jsonify(data_sent),401)
-              
-                if result[0]:
+                if result:
+            
                     if result[2] == "google":
                         data_sent = {"message":"User not Registered"} 
                         return make_response(jsonify(data_sent),401)
@@ -102,10 +90,10 @@ def signin():
                         data_sent = {"message":"User not Registered"} 
                         return make_response(jsonify(data_sent),401)
                 else:
-                        data_sent = {"message":"User not Registered"} 
-                        return make_response(jsonify(data_sent),401)          
+                    data_sent = {"message": "User not Registered"}
+                    return make_response(jsonify(data_sent), 401)            
             else:
-                data_sent = {"message":"Password cannot be empty"}
+                data_sent = {"message":"User not Registered"}
                 return make_response(jsonify(data_sent), 401)
         else:
             data_sent = {"message":"User not Registered"} 
