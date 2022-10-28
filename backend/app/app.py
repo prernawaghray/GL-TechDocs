@@ -50,21 +50,21 @@ def fetchDetails():
 	host_ip = socket.gethostbyname(hostname)
 	return str(hostname) , str(host_ip)
 
-# This is main / landing page API 
-@app.route("/")
-def hello_world():
-	return "<p> home page</p>"
+# # This is main / landing page API 
+# @app.route("/")
+# def hello_world():
+# 	return "<p> home page</p>"
 
-# This is for endpoint "Health" to healthcheck the container health in microservices
-@app.route("/health")
-def health():
-	return jsonify(Status ="UP")
+# # This is for endpoint "Health" to healthcheck the container health in microservices
+# @app.route("/health")
+# def health():
+# 	return jsonify(Status ="UP")
 
-# Endpoint for dynamic page 
-@app.route("/details")
-def details():
-	hostname, ip = fetchDetails()
-	return render_template('index.html', HOSTNAME=hostname, IP=ip)
+# # Endpoint for dynamic page 
+# @app.route("/details")
+# def details():
+# 	hostname, ip = fetchDetails()
+# 	return render_template('index.html', HOSTNAME=hostname, IP=ip)
 
 
 
