@@ -130,11 +130,12 @@ class User(Base):
 
     # user = relationship("UserPofile",backref = "user", CASCADE = 'all, delete-orphan', lazy = 'dynamic' )
 
-    def __init__(self, UserId, UserName, Password, IsAdmin):
+    def __init__(self, UserId, UserName, Password, IsAdmin, LoginType):
         self.UserId = UserId
         self.UserName = UserName
         self.Password = Password
         self.IsAdmin = IsAdmin
+        self.LoginType = LoginType
 
 
 ################################
