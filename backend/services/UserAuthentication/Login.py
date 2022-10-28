@@ -17,6 +17,7 @@ from flask import jsonify
 from DBConnect import session_factory
 from orm_Tables import User
 from flask_bcrypt import Bcrypt
+from sqlalchemy import create_engine, select, update
 
 userLogin_bp = Blueprint('login',__name__)
 
@@ -26,6 +27,9 @@ def signin():
     if request.method == 'POST':
         loginType = request.form.get('loginType')
         username  = request.form.get('email')
+        # content = request.get_json(silent=True)
+        # loginType = content["loginType"]
+        # username = content["email"]
         # Checking for the Login Type
         if loginType == 'google':
             session = session_factory()
@@ -34,7 +38,7 @@ def signin():
             session.close()
         #if user is registered
             if result[0]:
-                if result[3] == 'google':
+                if result[2] == 'google':
                     key = current_app.config["SECRET"]
                     admin = result[1]
                     data_sent = {"Email": username,
@@ -55,32 +59,42 @@ def signin():
 # checking for the login type 
         elif loginType == "email":
             password = request.form.get('password')
-            session = session_factory()
-            sql_stmt = (select(User.Id, User.isadmin, User.password, User.loginType).where (User.username == username))
-            result = session.execute(sql_stmt).first()
-            session.close()
-                
-            if result[3] == "google":
-                data_sent = {"message":"User not Registered"} 
-                return make_response(jsonify(data_sent),401)
+            # password = content["password"]
+            if password:
+                session = session_factory()
+                sql_stmt = (select(User.Id, User.isadmin, User.password, User.loginType).where (User.username == username))
+                result = session.execute(sql_stmt).first()
+                session.close()
 
-# if the user is registered
-            if result[0]:   
-                if bcrypt.check_password_hash(result[2], password):
-                    key = current_app.config["SECRET"]
-                    admin = result[1]
-                    data_sent = {"Email": username,
-                                    "isAdmin": admin}
-                    JWT_Token = jwt.encode(data_sent, key, algorithm="HS256")
-                    data_sent  =  {"userAuthToken" : JWT_Token,     
-                                        "isAdmin":admin}
-                    return make_response(jsonify(data_sent), 200) 
+                if result:
+            
+                    if result[2] == "google":
+                        data_sent = {"message":"User not Registered"} 
+                        return make_response(jsonify(data_sent),401)
+
+        # if the user is registered
+                    if result[0]:   
+                        if bcrypt.check_password_hash(result[2], password):
+                            key = current_app.config["SECRET"]
+                            admin = result[1]
+                            data_sent = {"Email": username,
+                                            "isAdmin": admin}
+                            JWT_Token = jwt.encode(data_sent, key, algorithm="HS256")
+                            data_sent  =  {"userAuthToken" : JWT_Token,     
+                                                "isAdmin":admin}
+                            return make_response(jsonify(data_sent), 200) 
+                        else:
+                            data_sent = {"message":"Invalid Password"} 
+                            return make_response(jsonify(data_sent),401)
+                    else:
+                        data_sent = {"message":"User not Registered"} 
+                        return make_response(jsonify(data_sent),401)
                 else:
-                    data_sent = {"message":"Invalid Password"} 
-                    return make_response(jsonify(data_sent),401)
+                    data_sent = {"message": "Email field cannot be empty"}
+                    return make_response(jsonify(data_sent), 401)            
             else:
-                data_sent = {"message":"User not Registered"} 
-                return make_response(jsonify(data_sent),401)
+                data_sent = {"message":"Password cannot be empty"}
+                return make_response(jsonify(data_sent), 401)
         else:
             data_sent = {"message":"User not Registered"} 
             return make_response(jsonify(data_sent),401)
