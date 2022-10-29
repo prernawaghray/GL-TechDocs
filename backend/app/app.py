@@ -17,6 +17,7 @@ from services.UserAuthentication.Login import userLogin_bp
 from services.UserAuthentication.Logout import userLogout_bp
 from services.UserProfileManagement.getprofile import getUserProfile_bp
 from services.UserProfileManagement.updateprofile import updateUserProfile_bp
+from services.UserProfileManagement.deleteprofile import deletecode_bp
 from services.ForgotPassword.forgotpassword import forgotpassword_bp
 from services.ForgotPassword.mail import mail_bp
 
@@ -36,6 +37,7 @@ app.register_blueprint(userLogin_bp)
 app.register_blueprint(userLogout_bp)
 app.register_blueprint(getUserProfile_bp)
 app.register_blueprint(updateUserProfile_bp)
+app.register_blueprint(deletecode_bp)
 app.register_blueprint(forgotpassword_bp)
 app.register_blueprint(mail_bp)
 

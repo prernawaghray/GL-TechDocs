@@ -22,7 +22,7 @@ from flask import current_app
 from ..UserAuthentication.JWTAuthentication import authentication
 from ..DocumentVersionManager.DocumentVersionManager import VersionManage
 from ..UserHistoryManager import *
-from ..Permissions import get_user_permissions
+from ..Permissions.permissions import get_user_permissions
 
 
 # Suppress warnings
