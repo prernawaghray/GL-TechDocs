@@ -32,7 +32,7 @@ def signin():
         # Checking for the Login Type
         if loginType == 'google':
             session = session_factory()
-            sql_stmt = (select(User.UserId, User.IsAdmin, User.LoginType).where (User.UserName == username))
+            sql_stmt = (select(User.UserId, User.IsAdmin, User.LoginType, User.FirstName, User.LastName).where (User.UserName == username))
             result = session.execute(sql_stmt).first()
             session.close()
         #if user is registered
@@ -41,8 +41,12 @@ def signin():
                 if result[2] == 'google':
                     key = current_app.config["SECRET"]
                     admin = result[1]
+                    firstname = result[3]
+                    lastname = result [4]
                     data_sent = {"Email": username,
                                 "isAdmin": admin,
+                                "FirstName":firstname,
+                                "LastName":lastname
                                 }
                     # generate the JWT Token
                     JWT_Token = jwt.encode(data_sent, key, algorithm="HS256")
@@ -62,14 +66,14 @@ def signin():
             # password = content["password"]
             if password:
                 session = session_factory()
-                sql_stmt = (select(User.Id, User.isadmin, User.password, User.loginType).where (User.username == username))
+                sql_stmt = (select(User.UserId, User.IsAdmin, User.Password, User.LoginType, User.FirstName, User.LastName).where (User.UserName == username))
                 result = session.execute(sql_stmt).first()
                 session.close()
 
                 if result:
             
-                    if result[2] == "google":
-                        data_sent = {"message":"User not Registered"} 
+                    if result[3] == "google":
+                        data_sent = {"message":"User registered with google please login via google"} 
                         return make_response(jsonify(data_sent),401)
 
         # if the user is registered
@@ -77,8 +81,13 @@ def signin():
                         if bcrypt.check_password_hash(result[2], password):
                             key = current_app.config["SECRET"]
                             admin = result[1]
+                            firstname = result[4]
+                            lastname = result[5]
                             data_sent = {"Email": username,
-                                            "isAdmin": admin}
+                                            "isAdmin": admin,
+                                            "FirstName":firstname,
+                                            "LastName":lastname
+                                            }
                             JWT_Token = jwt.encode(data_sent, key, algorithm="HS256")
                             data_sent  =  {"userAuthToken" : JWT_Token,     
                                                 "isAdmin":admin}
