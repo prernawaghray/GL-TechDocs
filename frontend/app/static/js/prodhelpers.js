@@ -1,5 +1,5 @@
 var rootTestApiUrl = "http://localhost:9999/api/"
-var rootApiUrl = "http://localhost:6622/api/";
+var rootApiUrl = "http://localhost:5000/api/";
 var testing=true;
 //56733
 //6622
