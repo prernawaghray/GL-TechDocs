@@ -22,7 +22,7 @@ from flask import current_app
 from ..UserAuthentication.JWTAuthentication import authentication
 from ..DocumentVersionManager.DocumentVersionManager import VersionManage
 from ..UserHistoryManager import *
-from ..Permissions import * 
+from ..Permissions import get_user_permissions
 
 
 # Suppress warnings
@@ -250,8 +250,7 @@ def file_Modify(user_id):
                 session.commit()
             # Continue either updating or saving the file
             else:
-                #TODO get_user_permissions(userid, docid)
-                userperm = 'W' 
+                userperm = get_user_permissions(userid, docid)
                 # User has write permission
                 if('W' in userperm):
                     # get and create a new version for the document
