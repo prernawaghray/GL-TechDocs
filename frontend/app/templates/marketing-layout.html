@@ -20,13 +20,13 @@
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item"><a href="#" class="nav-link px-2 link-secondary">Home</a></li>
         <li class="nav-item"><a href="#" class="nav-link px-2 link-dark">Features</a></li>
-        <li class="nav-item"><a href="#" class="nav-link px-2 link-dark">Pricing</a></li>
+        <li class="nav-item"><a href="{{url_for('plans')}}" class="nav-link px-2 link-dark">Pricing</a></li>
         <li class="nav-item"><a href="{{url_for('faq')}}" class="nav-link px-2 link-dark">Help</a></li>
       </ul> 
     </div>
     <div class="text-end">
       <button type="button" class="btn btn-outline-primary me-2" onclick="redirectToLogin()">Login</button>
-      <button type="button" class="btn btn-warning">Sign-up</button>
+      <a href="/registration" class="nav-link px-2 link-dark"><button type="button" class="btn btn-warning">Sign-up</button></a>
     </div>
   </div>
 </nav>
