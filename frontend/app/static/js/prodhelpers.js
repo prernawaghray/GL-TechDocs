@@ -1,5 +1,5 @@
 var rootTestApiUrl = "http://localhost:9999/api/"
-var rootApiUrl = "http://localhost:6622/api/";
+var rootApiUrl = "http://localhost:5000/api/";
 var testing=true;
 //56733
 //6622
@@ -25,12 +25,12 @@ function getUserToken()
         if(authToken)
             return authToken;
         else
-            window.location.replace('/login');
+            return "";
     }
     catch(e)
     {
         console.log(e)
-        window.location.replace('/login')
+        window.location.replace('/login');
     }
 }
 
@@ -62,3 +62,9 @@ function getLoginType()
         return "email";
 
 }
+
+$(document).ready(function(){
+    $.ajaxSetup({
+        headers: { 'authToken': getUserToken() }
+    });
+});
