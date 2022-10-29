@@ -177,7 +177,7 @@ def defineTables():
         "   SignUpDate      date,"
         "   LastActiveDate  date,"
         "   PRIMARY KEY (UserId),"
-        "   FOREIGN KEY (UserId, UserName) REFERENCES User(UserId, UserName),"
+        "   FOREIGN KEY (UserId, UserName) REFERENCES User(UserId, UserName) ON UPDATE CASCADE ON DELETE CASCADE,"
         "   INDEX idx_UserProfile (UserId)"
         ")"
     )

@@ -4,7 +4,7 @@ import sqlalchemy
 import yaml
 from flask import Blueprint
 
-with open(os.path.dirname(__file__) + '../config.yaml') as stream:
+with open('../config.yaml') as stream:
     configs = yaml.safe_load(stream)
 url = configs['DB_URL']
 engine = sqlalchemy.create_engine(url)

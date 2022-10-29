@@ -20,9 +20,9 @@ from flask import Blueprint
 from flask import current_app
 #from Users import User
 from ..UserAuthentication.JWTAuthentication import authentication
-from ..DocumentVersionManager import VersionManage
+from ..DocumentVersionManager.DocumentVersionManager import VersionManage
 from ..UserHistoryManager import *
-from ..Permissions import get_user_permissions
+from ..Permissions.permissions import get_user_permissions
 
 
 # Suppress warnings
@@ -35,7 +35,7 @@ with open('../config.yaml') as stream:
 # Get file Data foler & log folder
 data_path = configs["DIR_ROOT"] + configs["DIR_DATA"] 
 log_path = configs['DIR_ROOT'] + configs['DIR_LOG']
-current_app.basicConfig(filename=log_path)
+#current_app.basicConfig(filename=log_path)
 
 # Start flask
 # Flask configurations
