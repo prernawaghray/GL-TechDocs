@@ -80,7 +80,7 @@ def get_reset_token(user_id, expires_sec):
   return (s.dumps({'Id': user_id}).decode('utf-8'))
 
 def verify_reset_token(token):
-  s = Serializer(current_app.config['SECRET_KEY'])
+  s = Serializer(current_app.config['SECRET'])
   try:
     user_id = s.loads(token)['Id']
   except Exception as e:
