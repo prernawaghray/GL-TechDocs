@@ -125,6 +125,7 @@ def payments_summary():
 def user_plans():
    return render_template('plans-and-subscriptions/user-plan.html')
 
+
 @app.route('/history')
 # @login_required
 def latexHistory():
