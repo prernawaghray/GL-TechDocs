@@ -49,8 +49,8 @@ class DocumentHistory(Common):
     User = relationship("User")
     Document = relationship("Document")
 
-    def __init__(self, user, docid, created_date, document_name, file_path, version):
-        self.User = user
+    def __init__(self, userid, docid, created_date, document_name, file_path, version):
+        self.UserId = userid
         self.DocId = docid
         self.CreatedDate = created_date
         self.DocName = document_name
@@ -69,8 +69,8 @@ class UserHistory(Common):
     Document = relationship("Document")
     Action = Column(Enum(ActionEnum))
 
-    def __init__(self, user, docid, time_stamp, document_name, action):
-        self.User = user
+    def __init__(self, userid, docid, time_stamp, document_name, action):
+        self.UserId = userid
         self.DocId = docid
         self.CreatedDate = time_stamp
         self.DocName = document_name
@@ -78,19 +78,19 @@ class UserHistory(Common):
 
 
 ############################
-class Permission(Common):
+class Permission(Base):
     __tablename__ = "Permissions"
 
     PermissionId = Column(Integer, primary_key=True, autoincrement=True)
+    DocId = Column(Integer, ForeignKey("Documents.DocId"))
     UserPermissions = Column(String(25))
     GroupPermissions = Column(String(25))
     OtherPermissions = Column(String(25))
     
     def __init__(self, DocId, UserId, UserPerm):
         self.DocId           = DocId
-        self.Userid          = UserId
+        self.UserId          = UserId
         self.UserPermissions = UserPerm
-
 
 #############################
 class PaymentAccount(Common):

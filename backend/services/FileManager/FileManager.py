@@ -36,6 +36,7 @@ with open('../config.yaml') as stream:
 data_path = configs["DIR_ROOT"] + configs["DIR_DATA"] 
 log_path = configs['DIR_ROOT'] + configs['DIR_LOG']
 #current_app.basicConfig(filename=log_path)
+logging.basicConfig(filename=log_path)
 
 # Start flask
 # Flask configurations
@@ -49,7 +50,7 @@ class FileManage:
     v_version  = 0
         
     @classmethod
-    def createNewFile(cls, userid, filename):
+    def createNewFile(cls, userid, filename, doctext):
         datestr  = datetime.today().strftime('%Y%m%d%H%M%S')
         dirpath  = data_path + '/' + userid
         if (filename == ""):
@@ -59,6 +60,7 @@ class FileManage:
             os.makedirs(dirpath)
         cls.v_filename = filename
         cls.v_filepath = filepath
+        
     
     @classmethod
     def writeToFile(cls, filepath, text):
@@ -131,7 +133,9 @@ def file_Create(user_id):
             if ((docid == 0) or (docid == '')):
                 ver = 1
             else:
+                # return jsonify({"message":"Wrong service called. Create file is for new file only!"})
                 raise Exception("Wrong service called. Create file is for new file only!")
+            
             
             # Method to create a new file path - object will store the values of filename, file path
             ver_obj.createNewVersionFile(userid, docname, ver, '')
