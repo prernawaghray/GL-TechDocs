@@ -6,41 +6,8 @@
 {% block body %}
 
 <div class="row">
-  <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
-    <div class="position-sticky pt-3 sidebar-sticky">
-      <ul class="nav flex-column">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">
-            <i class="bi bi-file-earmark-bar-graph-fill" style="font-size: 16px; padding-right: 5px;"></i>
-            My Documents
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">
-            <i class="bi bi-share-fill" style="font-size: 16px; padding-right: 5px;"></i>
-            Shared By Others
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">
-            <i class="bi bi-archive-fill" style="font-size: 16px; padding-right: 5px;"></i>
-            Archived
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">
-            <i class="bi bi-trash3-fill" style="font-size: 16px; padding-right: 5px;"></i>
-            Trash
-          </a>
-        </li>
-      </ul>
-    </div>
-  </nav>
-
-  <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-    <div style="height: 400px; width: 200px; position: fixed; top: 60%; left: 50%">
-      No files to view
-    </div>
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+    <div style="height: 400px; width: 200px; position: fixed; top: 60%; left: 50%" id="filelist-error-message" class="errorMessage"></div>
 
     <!-- PAGE HEADER AND SEARCH -->
     <div
@@ -131,7 +98,7 @@
         <thead id="thead">
           <tr>
             <td>
-              <input type="checkbox" id="maincheckbox">
+              <input type="checkbox" id="selectall">
             </td>
 
             <th scope="col">Title</th>
@@ -142,139 +109,12 @@
           </tr>
 
         </thead>
-        <tbody id="tbody">
-          <tr>
-            <td>
-
-              <input type="checkbox" class="case" name="case" value="1">
-            </td>
-
-            <td scope="col">Demo-doc</td>
-            <td scope="col">2.0</td>
-            <td scope="col">Oct-21st 3:15PM</td>
-            <td scope="col">John</td>
-            <td>
-              <!-- Actions Menu -->
-              <!-- Share Button -->
-              <button type="button" style="height: 25px; width: 25px; padding: 0px;" title="Share" data-docid="2"
-                data-bs-toggle="modal" data-bs-target="#shareModal" class="btn btn-outline-dark">
-                <i class="bi bi-share" style="font-size: 16px;"></i>
-              </button>
-              <!-- Copy Button -->
-              <button type="button" style="height: 25px; width: 25px; padding: 0px;" title="Copy"
-                class="btn btn-outline-dark">
-                <i class="bi bi-files" style="font-size: 16px;"></i>
-              </button>
-              <!-- Preview Button -->
-              <!--   <button type="button" style="height: 25px; width: 25px; padding: 0px;" title="Preview"
-                class="btn btn-outline-dark">
-                <i class="bi bi-eye" style="font-size: 16px;"></i>
-              </button> -->
-              <!-- Archive Button -->
-              <button type="button" style="height: 25px; width: 25px; padding: 0px;" title="Archive"
-                class="btn btn-outline-dark">
-                <i class="bi bi-file-earmark-zip" style="font-size: 16px;"></i>
-              </button>
-              <!-- Download Button -->
-              <button type="button" style="height: 25px; width: 25px; padding: 0px;" title="Download"
-                class="btn btn-outline-dark">
-                <i class="bi bi-download" style="font-size: 16px;"></i>
-              </button>
-              <!-- Delete Button -->
-              <button type="button" style="height: 25px; width: 25px; padding: 0px;" title="Delete" data-docid="2"
-                data-bs-toggle="modal" data-bs-target="#delmodal" class="btn btn-outline-dark">
-                <i class="bi bi-trash3" style="font-size: 16px;"></i>
-              </button>
-            </td>
-            <!-- <script>
-                $(document).ready(function () {
-  
-                    // FETCHING DATA FROM JSON FILE
-                    $.getJSON("Documents.json", 
-                            function (data) {
-                        var doc = '';
-  
-                        // ITERATING THROUGH OBJECTS
-                        $.each(data, function (key, value) {
-  
-                            //CONSTRUCTION OF ROWS HAVING
-                            // DATA FROM JSON OBJECT
-                            doc += '<tr>';
-                            doc += '<td>' + 
-                                value.DocName + '</td>';
-  
-                            doc += '<td>' + 
-                                value.UserId + '</td>';
-
-                            doc += '<td>' + 
-                                value.CreatedDate + '</td>';
-  
-                            doc += '<td>' + 
-                                value.ModifiedDate + '</td>';
-
-                            doc += '<td>' + 
-                                value.ModifiedBy + '</td>';
-  
-                            doc += '<td>' + 
-                                value.Version + '</td>';
-
-  
-                            doc += '</tr>';
-                        });
-                          
-                        //INSERTING ROWS INTO TABLE 
-                        $('#table').append(doc);
-                    });
-                });
-            </script> -->
-          <tr>
-            <td align="left">
-              <input type="checkbox" class="case" name="case" value="2">
-            </td>
-            <td>Row2</td>
-            <td>Row2</td>
-            <td>Row2</td>
-            <td>Row2</td>
-            <td>
-              <!-- Actions Menu -->
-              <!-- Share Button -->
-              <button type="button" style="height: 25px; width: 25px; padding: 0px;" title="Share" data-docid="2"
-                data-bs-toggle="modal" data-bs-target="#shareModal" class="btn btn-outline-dark">
-                <i class="bi bi-share" style="font-size: 16px;"></i>
-              </button>
-              <!-- Copy Button -->
-              <button type="button" style="height: 25px; width: 25px; padding: 0px;" title="Copy"
-                class="btn btn-outline-dark">
-                <i class="bi bi-files" style="font-size: 16px;"></i>
-              </button>
-              <!-- Preview Button -->
-              <!--  <button type="button" style="height: 25px; width: 25px; padding: 0px;" title="Preview"
-                class="btn btn-outline-dark">
-                <i class="bi bi-eye" style="font-size: 16px;"></i>
-              </button> -->
-              <!-- Archive Button -->
-              <button type="button" style="height: 25px; width: 25px; padding: 0px;" title="Archive"
-                class="btn btn-outline-dark">
-                <i class="bi bi-file-earmark-zip" style="font-size: 16px;"></i>
-              </button>
-              <!-- Download Button -->
-              <button type="button" style="height: 25px; width: 25px; padding: 0px;" title="Download"
-                class="btn btn-outline-dark">
-                <i class="bi bi-download" style="font-size: 16px;"></i>
-              </button>
-              <!-- Delete Button -->
-              <button type="button" style="height: 25px; width: 25px; padding: 0px;" title="Delete" data-docid="2"
-                data-bs-toggle="modal" data-bs-target="#delmodal" class="btn btn-outline-dark">
-                <i class="bi bi-trash3" style="font-size: 16px;"></i>
-              </button>
-            </td>
-
-          </tr>
-        </tbody>
+        <tbody id="tbody"></tbody>
     </div>
     <!-- END OF USER TABLE -->
   </main>
   <!-- ALL MODALS FOR ACTIONS MENU -->
+  <!-- SHARE BUTTON -->
   <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -304,6 +144,7 @@
   </div>
 </div>
 
+<!-- DELETE BUTTON -->
 <div class="modal fade" id="delmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -320,8 +161,6 @@
   </div>
 </div>
 </div>
-
-
 <!-- END OF MODALS -->
 
 {% endblock %}
