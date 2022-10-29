@@ -32,9 +32,15 @@ def updateProfile(user_id):
     if request.method == 'POST':
         requestparams = json.loads(request.data) #reading the parameters to update
         userData = requestparams["userData"]
-        emailId = user_id
+        userId= user_id
         firstName = userData["firstName"]
         lastName = userData["lastName"]
+        if len(firstName) > 10:
+            data_sent = {"message":"First name length should be less than 10"}
+            return make_response(jsonify(data_sent), 401)
+        if not firstName and not lastName:
+            data_sent = {"message":"Both first name and last name cannot be empty"}
+            return make_response(jsonify(data_sent), 400)
         address = userData["address"]
         streetAddress = address["streetAddress"]
         state = address["state"]
@@ -43,7 +49,7 @@ def updateProfile(user_id):
         purposeOfUsage = userData["purposeOfUse"]
         #Updating to database
         session = session_factory()
-        sql_stmt = (update(UserProfile).where(UserProfile.Username == emailId).values(FirstName=firstName,LastName = lastName,StreetAddress = streetAddress,State = state, Country = country, Occupation = occupation, PurposeOfUsage = purposeOfUsage))
+        sql_stmt = (update(UserProfile).where(UserProfile.UserId == userId).values(FirstName=firstName,LastName = lastName,StreetAddress = streetAddress,State = state, Country = country, Occupation = occupation, PurposeOfUsage = purposeOfUsage))
         result = session.execute(sql_stmt)
         session.commit()
         session.close()

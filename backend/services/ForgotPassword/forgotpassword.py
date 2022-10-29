@@ -8,7 +8,7 @@ from flask import Blueprint, current_app, jsonify
 from DBConnect import session_factory
 from orm_Tables import User
 from ..UserAuthentication.JWTAuthentication import authentication
-from .mail import send_reset_email
+from .mail import send_reset_email, verify_reset_token
 from sqlalchemy import create_engine, select, update
 
 
@@ -19,7 +19,7 @@ forgotpassword_bp = Blueprint('forgotpassword',__name__)
 
 @forgotpassword_bp.route('/api/forgot-password', methods=['GET','POST'])
 def forgot_password():
-    bcrypt = Bcrypt(current_app)
+    
     if request.method == "POST":
         data = (request.form["email_id"])
 
@@ -44,14 +44,15 @@ def forgot_password():
         return jsonify(({"message":"Method not allowed"}),404)
 
 
-@forgotpassword_bp.route('/api/reset-password/', methods=['GET','POST'])
-@authentication
-def reset_password(user_id):
+@forgotpassword_bp.route('/api/reset-password', methods=['GET','POST'])
+
+def reset_password():
     bcrypt = Bcrypt(current_app)
     if request.method == "POST":
-        #token = (request.form["token"])
+        key = current_app.config['SECRET']
+        token = (request.form["token"])
         new_password = (request.form["new_password"])
-        #user_id = verify_reset_token(token)
+        user_id = verify_reset_token(token)
         #print(token)
         #print(new_password)
         new_password = bcrypt.generate_password_hash(new_password)
@@ -64,7 +65,7 @@ def reset_password(user_id):
             #data.password = new_password
             #db.session.commit()
             session = session_factory()
-            sql_stmt = (update(User).where(User.UserName == user_id).values(Password=new_password))
+            sql_stmt = (update(User).where(User.UserId == user_id).values(Password=new_password))
             session.execute(sql_stmt)
             session.commit()
             session.close()
@@ -76,15 +77,16 @@ def reset_password(user_id):
 
 
 @forgotpassword_bp.route('/api/validate-token', methods=['GET', 'POST'])
-@authentication
-def validate_token(user_id):
+
+def validate_token():
     if request.method == "POST":
+        data = (request.form["token"])
+        print(data)
+        user_id = verify_reset_token(data)
+        print(user_id)
         if user_id is None:
             return make_response(jsonify({'message': 'Error'}), 404)
         else:
             return make_response(jsonify({'message': 'Success'}), 200)
     else:
         return jsonify(({"message":"Method not allowed"}),404)
-
-
-
