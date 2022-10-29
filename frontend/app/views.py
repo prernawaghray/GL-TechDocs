@@ -117,3 +117,7 @@ def faq():
 @app.route('/payments/summary')
 def payments_summary():
    return render_template('payments/summary.html')
+
+@app.route('/user-plans')
+def user_plans():
+   return render_template('plans-and-subscriptions/user-plan.html')
