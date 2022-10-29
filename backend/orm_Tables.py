@@ -26,8 +26,6 @@ from sqlalchemy.orm import relationship
 class Document(Common):
     __tablename__ = "Documents"
 
-    IsUpload        = Column(String(1))
-    IsTrash         = Column(String(1))
     ModifiedDate    = Column(DateTime)
     ModifiedBy      = Column(String(256))      
     

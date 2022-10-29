@@ -9,6 +9,7 @@ class Common(Base):
     DocName         = Column(String(256))
     UserId          = Column(String(256))
     IsUpload        = Column(Boolean)
+    IsTrash         = Column(Boolean)
     FilePath        = Column(Text)
     Version         = Column(Integer)
     CreatedDate     = Column(DateTime)
