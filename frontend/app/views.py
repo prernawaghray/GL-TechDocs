@@ -116,3 +116,7 @@ def clearSession():
 @app.route('/faq')
 def faq():
    return render_template('faq/faq.html')
+
+@app.route('/payments/summary')
+def payments_summary():
+   return render_template('payments/summary.html')

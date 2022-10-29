@@ -25,12 +25,12 @@ function getUserToken()
         if(authToken)
             return authToken;
         else
-            window.location.replace('/login');
+            return "";
     }
     catch(e)
     {
         console.log(e)
-        window.location.replace('/login')
+        window.location.replace('/login');
     }
 }
 
@@ -62,3 +62,9 @@ function getLoginType()
         return "email";
 
 }
+
+$(document).ready(function(){
+    $.ajaxSetup({
+        headers: { 'authToken': getUserToken() }
+    });
+});
