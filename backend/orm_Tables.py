@@ -26,9 +26,17 @@ from sqlalchemy.orm import relationship
 class Document(Common):
     __tablename__ = "Documents"
 
-    ModifiedDate = Column(DateTime)
-    ModifiedBy = Column(String(256))
-
+    ModifiedDate    = Column(DateTime)
+    ModifiedBy      = Column(String(256))      
+    
+    def __init__(self, UserId, DocName, Filepath, Datetime, Version, IsUpload):
+        self.UserId      = UserId
+        self.DocName     = DocName
+        self.FilePath    = Filepath
+        self.CreatedDate = Datetime
+        self.Version     = Version
+        self.IsUpload    = IsUpload
+  
 #############################
 
 
@@ -41,9 +49,9 @@ class DocumentHistory(Common):
     User = relationship("User")
     Document = relationship("Document")
 
-    def __init__(self, user, document, created_date, document_name, file_path, version):
+    def __init__(self, user, docid, created_date, document_name, file_path, version):
         self.User = user
-        self.Document = document
+        self.DocId = docid
         self.CreatedDate = created_date
         self.DocName = document_name
         self.FilePath = file_path
@@ -61,9 +69,9 @@ class UserHistory(Common):
     Document = relationship("Document")
     Action = Column(Enum(ActionEnum))
 
-    def __init__(self, user, document, time_stamp, document_name, action):
+    def __init__(self, user, docid, time_stamp, document_name, action):
         self.User = user
-        self.Document = document
+        self.DocId = docid
         self.CreatedDate = time_stamp
         self.DocName = document_name
         self.Action = action
@@ -77,6 +85,11 @@ class Permission(Common):
     UserPermissions = Column(String(25))
     GroupPermissions = Column(String(25))
     OtherPermissions = Column(String(25))
+    
+    def __init__(self, DocId, UserId, UserPerm):
+        self.DocId           = DocId
+        self.Userid          = UserId
+        self.UserPermissions = UserPerm
 
 
 #############################

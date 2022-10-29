@@ -13,8 +13,6 @@ import sys
 from flask_cors import CORS
 sys.path.append('../')
 from services.FileManager.FileManager import fileManagerBlueprint
-from services.SampleBlueprint.sampleBlueprint import sampleBlueprint
-#from services.FileManager_2.FileManager_2 import fileManager_2
 from services.UserAuthentication.Login import userLogin_bp
 from services.UserAuthentication.Logout import userLogout_bp
 from services.UserProfileManagement.getprofile import getUserProfile_bp
@@ -33,10 +31,7 @@ CORS(app, resources={r"/*":{"origins":"*"}})
 
 app.register_blueprint(documentVersionManagerBlueprint)
 app.register_blueprint(userHistoryManagerBlueprint)
-bcrypt = Bcrypt(app)
 app.register_blueprint(fileManagerBlueprint)
-#app.register_blueprint(fileManager_2)
-app.register_blueprint(sampleBlueprint)
 app.register_blueprint(userLogin_bp)
 app.register_blueprint(userLogout_bp)
 app.register_blueprint(getUserProfile_bp)

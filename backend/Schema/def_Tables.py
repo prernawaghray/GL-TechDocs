@@ -41,6 +41,8 @@ def defineTables():
         "   ModifiedDate    datetime,"
         "   ModifiedBy      varchar(256),"
         "   Version         int,"
+        "   IsUpload        boolean,"
+        "   IsTrash         boolean,"
         "   s_Misc1         varchar(1024),"
         "   s_Misc2         varchar(1024),"
         "   n_Misc1         int,"
