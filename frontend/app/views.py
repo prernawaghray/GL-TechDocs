@@ -64,7 +64,6 @@ def auth():
    return redirect('/dashboard')
 
 
-
 @app.route('/forgotpassword')
 def forgot_password():
    return render_template('forgotpassword/forgotpassword.html')
@@ -84,6 +83,10 @@ def logout():
 # @login_required
 def dashboard():
    return render_template('user-dashboard/dashboard.html')
+
+@app.route('/registration')
+def registration():
+   return render_template('user-registration/registration.html')
 
 @app.route('/latex-editor/new-document')
 # @login_required
