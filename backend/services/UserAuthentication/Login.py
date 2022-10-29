@@ -15,6 +15,7 @@ import jwt
 from flask import jsonify
 from DBConnect import session_factory
 from orm_Tables import User
+from orm_Tables import UserProfile
 from flask_bcrypt import Bcrypt
 from sqlalchemy import create_engine, select, update
 
@@ -32,7 +33,9 @@ def signin():
         # Checking for the Login Type
         if loginType == 'google':
             session = session_factory()
-            sql_stmt = (select(User.UserId, User.IsAdmin, User.LoginType, User.FirstName, User.LastName).where (User.UserName == username))
+            sql_stmt = (select(User.UserId, User.IsAdmin, User.LoginType).where (User.UserName == username))
+            sql_stmt_2 = (select(UserProfile.FirstName, UserProfile.LastName).where(UserProfile.UserName == username))
+            result_2 = session.execute(sql_stmt_2).first()
             result = session.execute(sql_stmt).first()
             session.close()
         #if user is registered
@@ -41,17 +44,17 @@ def signin():
                 if result[2] == 'google':
                     key = current_app.config["SECRET"]
                     admin = result[1]
-                    firstname = result[3]
-                    lastname = result [4]
+                    firstname = result_2[0]
+                    lastname = result_2[1]
                     data_sent = {"Email": username,
                                 "isAdmin": admin,
-                                "FirstName":firstname,
-                                "LastName":lastname
                                 }
                     # generate the JWT Token
                     JWT_Token = jwt.encode(data_sent, key, algorithm="HS256")
                     jsondata = {"userAuthToken":JWT_Token,
-                                "isAdmin":admin}
+                                "isAdmin":admin,
+                                "FirstName":firstname,
+                                "LastName":lastname}
                     return make_response(jsonify(jsondata), 200)
                 else:
                     data_sent = {"message":"User not Registered"} 
@@ -66,7 +69,9 @@ def signin():
             # password = content["password"]
             if password:
                 session = session_factory()
-                sql_stmt = (select(User.UserId, User.IsAdmin, User.Password, User.LoginType, User.FirstName, User.LastName).where (User.UserName == username))
+                sql_stmt = (select(User.UserId, User.IsAdmin, User.Password, User.LoginType).where (User.UserName == username))
+                sql_stmt_2 = (select(UserProfile.FirstName, UserProfile.LastName).where(UserProfile.UserName == username))
+                result_2 = session.execute(sql_stmt_2).first()
                 result = session.execute(sql_stmt).first()
                 session.close()
 
@@ -81,16 +86,16 @@ def signin():
                         if bcrypt.check_password_hash(result[2], password):
                             key = current_app.config["SECRET"]
                             admin = result[1]
-                            firstname = result[4]
-                            lastname = result[5]
+                            firstname = result_2[0]
+                            lastname = result_2[1]
                             data_sent = {"Email": username,
-                                            "isAdmin": admin,
-                                            "FirstName":firstname,
-                                            "LastName":lastname
+                                        "isAdmin": admin,
                                             }
                             JWT_Token = jwt.encode(data_sent, key, algorithm="HS256")
                             data_sent  =  {"userAuthToken" : JWT_Token,     
-                                                "isAdmin":admin}
+                                                "isAdmin":admin,
+                                                "FirstName":firstname,
+                                                "LastName":lastname}
                             return make_response(jsonify(data_sent), 200) 
                         else:
                             data_sent = {"message":"Invalid Password"} 
