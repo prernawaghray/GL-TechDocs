@@ -1,5 +1,7 @@
 from DBConnect import Base
 from sqlalchemy import Column, Integer, String, Text, DateTime, Boolean
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import relationship
 
  #############################
 class Common(Base):
@@ -17,6 +19,7 @@ class Common(Base):
     s_Misc2         = Column(String(1024))
     n_Misc1         = Column(Integer)
     n_Misc2         = Column(Integer)
+    
  
     #Constructor methods to insert data into Documents table
     def __init__(self, UserId, DocName, Filepath, Datetime, Version, IsUpload):
