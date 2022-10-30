@@ -1,8 +1,16 @@
-var rootApiUrl = "http://localhost:56733/api/";
-var rootFrontEndUrl = "http://localhost:56733/";
+var rootTestApiUrl = "http://localhost:9999/api/"
+var rootApiUrl = "http://localhost:5000/api/";
+var testing=true;
+//56733
+//6622
+var rootFrontEndUrl = "/";
 function getApiUrl(api)
 {
+    if (testing)
+    return rootTestApiUrl+api;
+    else
     return rootApiUrl+api;
+
 }
 function getFrontEndUrl(path)
 {
@@ -17,12 +25,12 @@ function getUserToken()
         if(authToken)
             return authToken;
         else
-            window.location.replace('/login');
+            return "";
     }
     catch(e)
     {
         console.log(e)
-        window.location.replace('/login')
+        window.location.replace('/login');
     }
 }
 
@@ -38,10 +46,25 @@ function parseJwt (token) {
 
 function getResponseMessage(data)
 {
-    if("responseJSON" in data && "message" in data.responseJSON)
+    if("responseJSON" in data && data.responseJSON !=undefined)
+      if("message" in data.responseJSON)
         return data.responseJSON.message;
-    else
+    
         return data.statusText;
 }
 
+function getLoginType()
+{
+    parsedToken=parseJwt(getUserToken());
+    if(parsedToken.loginType!=undefined)
+        return parsedToken.loginType;
+    else
+        return "email";
 
+}
+
+$(document).ready(function(){
+    $.ajaxSetup({
+        headers: { 'authToken': getUserToken() }
+    });
+});

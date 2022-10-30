@@ -1,126 +1,92 @@
 {% extends "marketing-layout.html" %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>For Universities</title>
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
-        crossorigin="anonymous"
-    />
-    <header class="p-3 mb-3 border-bottom">
-        <div class="container">
-          <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-            <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none">
-              <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"/></svg>
-            </a>
-      
-            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-              <li><a href="#" class="nav-link px-2 link-secondary">Home</a></li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle px-2 link-dark" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Features
-                </a>
-                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item active" href="#">Premium Features</a></li>
-                  <li><hr class="dropdown-divider"></li>
-                  <li><a class="dropdown-item" href="#">For Writing</a></li>
-                  <li><a class="dropdown-item" href="#">For Teaching</a></li>
-                  <li><a class="dropdown-item" href="#">For Group</a></li>
-                  <li><a class="dropdown-item" href="#">For Universities</a></li>
-                  <li><a class="dropdown-item" href="#">For Publishers</a></li>
-                  
-                </ul>
-              </li>
-              <li><a href="#" class="nav-link px-2 link-dark">Pricing</a></li>
-              <li><a href="#" class="nav-link px-2 link-dark">Help</a></li>
-            </ul>
-      
-            <div class="text-end">
-              <button type="button" class="btn btn-outline-primary me-2" onclick="redirectToLogin()">Login</button>
-              <button type="button" class="btn btn-warning">Sign-up</button>
-            </div>
-          </div>
-        </div>
-      </header>
-</head>
-<body>
-    
-    <main>
-        <div class="b-example-divider"></div>
-        <div class = "card">
-            <div class=" container px-1 py-2">
-                <h1 class="pb-2 border-bottom">For Universities </h1>
-                <div class=" card-body row-cols-1 row-cols-md-1 align-items-md-center py-5 ">
-                    <div class="d-flex flex-column text-center align-items-center gap-2">
+{% block pageCss%}
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="b-example-divider"></div>
+    <div class="card">
+        <div class=" container px-1 py-2">
+            <h1 class="pb-2 border-bottom">For Universities </h1>
+            <div class=" card-body row-cols-1 row-cols-md-1 align-items-md-center py-5 ">
+                <div class="d-flex flex-column text-center align-items-center gap-2">
                     <h3 class="fw-bold ">Get TecDocs For Your University</h3>
-                    <p class="text-muted align-content-center">TecDocs is an online collaborative writing and publishing tool that makes the whole process of writing, editing and publishing scientific documents much quicker and easier. TecDocs provides the convenience of an easy-to-use LaTeX editor with real-time collaboration and the fully compiled output produced automatically in the background as you type.</p>
-                    </div>
+                    <p class="text-muted align-content-center">TecDocs is an online collaborative writing and
+                        publishing tool that makes the whole process of writing, editing and publishing scientific
+                        documents much quicker and easier. TecDocs provides the convenience of an easy-to-use LaTeX
+                        editor with real-time collaboration and the fully compiled output produced automatically in
+                        the background as you type.</p>
                 </div>
             </div>
         </div>
-        <div class="container px-1 py-2">
-            <div class="row row-cols-1 row-cols-sm-2 g-4">
-                <div class="d-flex flex-column gap-2">
-                  <div
+    </div>
+    <div class="container px-1 py-2">
+        <div class="row row-cols-1 row-cols-sm-2 g-4">
+            <div class="d-flex flex-column gap-2">
+                <div
                     class="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3">
                     <svg class="bi" width="1em" height="1em">
-                      <use xlink:href="#collection" />
+                        <use xlink:href="#collection" />
                     </svg>
-                  </div>
-                  <p>If you'd like to find out more about how Overleaf can support your students and researchers, please get in touch, we'd love to hear from you.</p>
-                  <p><a href="/for/contact-sales" class="btn btn-primary" event-tracking-ga="For-Pages" event-tracking="Universities-Click-Contact" event-tracking-label="View-Button" event-tracking-trigger="click">Contact Sales</a></p></div>    
-    
                 </div>
-            <div class="row row-cols-1 row-cols-sm-2 g-4">
-                    <div class="d-flex flex-column gap-2">
-                        <div class="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3">
-                            <svg class="bi" width="1em" height="1em">
-                                <use xlink:href="#collection" />
-                            </svg>
-                        </div>
-                        <div><p><strong>Overleaf Commons includes:</strong></p></div>
-                    <ul>
-                            <li><strong>Overleaf Professional accounts</strong> – for students, faculty and staff.</li>
-                            <li><strong>Hassle-free license management</strong> – users simply register with their institutional email address on Overleaf (or add it to their existing Overleaf account) to join your Overleaf Commons license and receive their upgrade automatically.</li>
-                            <li><strong>An Overleaf resource portal</strong> – featuring templates, FAQs and Help resources, and a quick way for new users to sign up.</li>
-                            <li><strong>Support</strong> – we’ll help you get everything set up and then we’re here to answer questions from students, faculty and staff about the platform, templates or LaTeX itself!</li>
-                            <li><strong>Training videos and webinars</strong> – to help ensure your users and admin staff are ready to use the Overleaf platform.</li>
-                            <li><strong>Metrics and analytics</strong> – we provide an administrative dashboard with metrics and analytics on platform use, users, projects and submissions.</li>
-                    </ul>
+                <p>If you'd like to find out more about how Overleaf can support your students and researchers,
+                    please get in touch, we'd love to hear from you.</p>
+                <p><a href="/for/contact-sales" class="btn btn-primary" event-tracking-ga="For-Pages"
+                        event-tracking="Universities-Click-Contact" event-tracking-label="View-Button"
+                        event-tracking-trigger="click">Contact Sales</a></p>
             </div>
-            </div>
-                        
 
         </div>
-           
-        </div>  
-        
-        
+        <div class="row row-cols-1 row-cols-sm-2 g-4">
+            <div class="d-flex flex-column gap-2">
+                <div
+                    class="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3">
+                    <svg class="bi" width="1em" height="1em">
+                        <use xlink:href="#collection" />
+                    </svg>
+                </div>
+                <div>
+                    <p><strong>Overleaf Commons includes:</strong></p>
+                </div>
+                <ul>
+                    <li><strong>Overleaf Professional accounts</strong> – for students, faculty and staff.</li>
+                    <li><strong>Hassle-free license management</strong> – users simply register with their
+                        institutional email address on Overleaf (or add it to their existing Overleaf account) to
+                        join your Overleaf Commons license and receive their upgrade automatically.</li>
+                    <li><strong>An Overleaf resource portal</strong> – featuring templates, FAQs and Help resources,
+                        and a quick way for new users to sign up.</li>
+                    <li><strong>Support</strong> – we’ll help you get everything set up and then we’re here to
+                        answer questions from students, faculty and staff about the platform, templates or LaTeX
+                        itself!</li>
+                    <li><strong>Training videos and webinars</strong> – to help ensure your users and admin staff
+                        are ready to use the Overleaf platform.</li>
+                    <li><strong>Metrics and analytics</strong> – we provide an administrative dashboard with metrics
+                        and analytics on platform use, users, projects and submissions.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
 
-        <div><div></div></div>
-        <div class="row section-row"><div class="col-xs-12 col-sm-12"><div class="no-card text-center"><p>Contact Us for our Service kit to help gather support internally</p>
-                <p>Includes instructions and a letter for your favorite librarian, head of department, or other decision maker.</p>
-             <p><a href="/for/contact-Us" class="btn btn-primary btn-sm-3" event-tracking-ga="For-Pages" event-tracking="Universities-Click-Contact" event-tracking-label="View-Button" event-tracking-trigger="click">Contact us</a></p></div></div></div>
-           
+<div class="row section-row">
+    <div class="col-xs-12 col-sm-12">
+        <div class="no-card text-center">
+            <p>Contact Us for our Service kit to help gather support internally</p>
+            <p>Includes instructions and a letter for your favorite librarian, head of department, or other decision
+                maker.</p>
+            <p><a href="/for/contact-Us" class="btn btn-primary btn-sm-3" event-tracking-ga="For-Pages"
+                    event-tracking="Universities-Click-Contact" event-tracking-label="View-Button"
+                    event-tracking-trigger="click">Contact us</a>
+            </p>
+        </div>
+    </div>
+</div>
 
-        
-        
+</div>
+{% endblock %}
 
-        
-    </main>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"
-      integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13"
-      crossorigin="anonymous"
-    > function redirectToLogin(){
-        window.location = "{{url_for('login')}}";
-       }
-   </script>
-</body>
-</html>
+
+{% block pageJS%}
+
+{% endblock %}
