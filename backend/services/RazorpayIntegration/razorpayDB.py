@@ -1,15 +1,14 @@
 # DB Connector library
 import mysql.connector
 
-
 # Function to insert the record in transactions table
 def insert_rec(**payment_details):
     # Connect to the MySQL database
     mydb = mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="Smitha",
-        database="techdocs"
+        host="44.197.242.29",
+        user="latexdb",
+        password="Latexdb123!",
+        database="latexdb"
     )
 
     # Define a Cursor
@@ -17,7 +16,7 @@ def insert_rec(**payment_details):
 
     sql = """ INSERT INTO UserTransactions
                (payment_id,
-                user_id,
+                UserId,
                 type,
                 amount,
                 currency,

@@ -26,6 +26,7 @@ with open('../config.yaml') as stream:
 
 from services.DocumentVersionManager.DocumentVersionManager import documentVersionManagerBlueprint
 from services.UserHistoryManager.UserHistoryManager import userHistoryManagerBlueprint
+from services.RazorpayIntegration.razorPay import razorPayBlueprint
 
 app= Flask(__name__)
 CORS(app, resources={r"/*":{"origins":"*"}})
@@ -40,6 +41,7 @@ app.register_blueprint(updateUserProfile_bp)
 app.register_blueprint(deletecode_bp)
 app.register_blueprint(forgotpassword_bp)
 app.register_blueprint(mail_bp)
+app.register_blueprint(razorPayBlueprint)
 
 app.config['ENV'] = configs["FLASK_ENV"]
 app.config['SAMPLE_TESTING'] = "test success"
