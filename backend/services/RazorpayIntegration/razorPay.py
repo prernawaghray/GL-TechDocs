@@ -89,6 +89,15 @@ def app_status():
         payment_details['card_emi'] = card_details['emi']
         payment_details['card_sub_type'] = card_details['sub_type']
         payment_details['card_token_iin'] = card_details['token_iin']
+    else:
+        payment_details['card_type '] = None
+        payment_details['card_network'] = None
+        payment_details['card_last4'] = None
+        payment_details['card_issuer'] = None
+        payment_details['card_international'] = None
+        payment_details['card_emi'] = None
+        payment_details['card_sub_type'] = None
+        payment_details['card_token_iin'] = None
         #To check order details
     #orderdetails = client.order.payments(payment_details['order_id'])
     #print(orderdetails)
