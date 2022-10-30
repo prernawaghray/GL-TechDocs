@@ -1,5 +1,4 @@
-
-function saveUsertoLocal (userObject){
+  function saveUsertoLocal (userObject){
 
 		localStorage.setItem(userObject, []);
 		return true;
@@ -36,4 +35,3 @@ function saveUsertoLocal (userObject){
 				let fetchuser =localStorage.getItem(keyname);
 				return true;
 	}
-
