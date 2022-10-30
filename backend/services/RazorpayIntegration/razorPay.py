@@ -20,7 +20,7 @@ razorPayBlueprint = Blueprint('razorPayBlueprint', __name__)
 client = razorpay.Client(auth=(pgkeys.r_id, pgkeys.r_key))
 user_id = ""
 #Home page to accept the transaction information
-@razorPayBlueprint.route('/api/')
+@razorPayBlueprint.route('/api/homeRazor.html')
 def home_page():
     return render_template('homeRazor.html')
 
