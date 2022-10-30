@@ -292,13 +292,14 @@ def file_Modify(user_id):
             session.add(userhist_entry)
             session.flush()
             session.commit()
-                    
+            
             session.close()
+
             # building output data
             data_out = json.dumps({'UserId':userid, 'DocId':docid, 'DocName':docname, 'Filepath': newfilepath})
             mess_out = 'Success'
         except Exception as err:
-            mess_out = x
+            mess_out = "Error"
             current_app.logger.exception("Failure Modifying file! "+str(err))
     
     current_app.logger.info("Service File Modify ended")
@@ -330,7 +331,6 @@ def file_Rename(user_id):
         userid      = user_id
         docid       = content['DocId']
         docname     = content['DocName']
-        doctext     = content['DocText']
         sql_stmt    = ''
         
         # open db connection
@@ -348,21 +348,38 @@ def file_Rename(user_id):
             if (noofrecords == 0):
                 raise Exception('Document reference id not found. Cannot rename!')
             else:
-                #TODO Update DocumentHistory table too
                 mod_date = datetime.today()
                 # update Documents table with the latest version
                 sql_stmt = update(Document)\
                     .where(Document.DocId == docid)\
                     .values({Document.DocName:docname, Document.ModifiedDate:mod_date, Document.ModifiedBy:userid})
+                sql_stmt_2 = update (DocumentHistory)\
+                    .where (DocumentHistory.DocId == docid)\
+                        .values({DocumentHistory.DocName:docname})
                 session.execute(sql_stmt)
+                session.execute(sql_stmt_2)
                 session.commit()
+                
+                index = docname.index('.tex')
+                docname = docname[:index]
+                
+                userhist_entry = UserHistory(userid, docid, datetime.today(), docname, 'rename')
+                session.add(userhist_entry)
+                session.flush()
+                session.commit()
+
+                file_paths_stmt = (select(DocumentHistory.FilePath).where(DocumentHistory.DocId==docid))
+                file_paths = session.execute(file_paths_stmt).all()
+                for path in file_paths:
+                    #TODO rename files in the FS
+                    print(path)
                 
                 session.close()
                 # building output data
                 data_out = json.dumps({'UserId':userid, 'DocId':docid, 'DocName':docname})
                 mess_out = 'Success'
         except Exception as err:
-            mess_out = 'Error'
+            mess_out = x
             current_app.logger.exception("Failure Renaming file! "+str(err))
     
     current_app.logger.info("Service File Rename ended")

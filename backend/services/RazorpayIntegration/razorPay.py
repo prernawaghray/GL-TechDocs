@@ -3,13 +3,13 @@
 #--------------------------------------#
 
 import razorpay
-import pgkeys
 from flask import Flask, render_template, request
 from random import randint
-import razorpayDB
+from .razorpayDB import *
 from datetime import datetime
 from flask import Blueprint
 from flask import current_app
+import yaml
 
 # Start flask
 # Flask configurations
@@ -17,11 +17,15 @@ razorPayBlueprint = Blueprint('razorPayBlueprint', __name__)
 
 # app = Flask(__name__)
 
+with open('../config.yaml') as stream:
+    configs = yaml.safe_load(stream)
+r_id = configs["PGKEY_RID"]
+r_key = configs["PGKEY_RKEY"]
 # Create a Razorpay client
-client = razorpay.Client(auth=(pgkeys.r_id, pgkeys.r_key))
+client = razorpay.Client(auth=(r_id, r_key))
 user_id = ""
 #Home page to accept the transaction information
-@razorPayBlueprint.route('/')
+@razorPayBlueprint.route('/api/razorpayhome')
 def home_page():
     return render_template('home.html')
 
@@ -39,7 +43,7 @@ def create_order(amt,descr):
     order_id = response['id']
     return(order_id)
 
-@razorPayBlueprint.route('/submit', methods = ['POST'])
+@razorPayBlueprint.route('/api/razorpaysubmit', methods = ['POST'])
 def app_submit():
     global user_id
     amt_d     = request.form['amt']
@@ -64,7 +68,7 @@ def app_submit():
                            descr=descr,
                            amtD=amt_d,
                            amt=amt,
-                           key=pgkeys.r_id,
+                           key=r_id,
                            currency='INR',
                            name=c_name,
                            orderId=order_id
@@ -72,7 +76,7 @@ def app_submit():
 
 
 # Return the status of the payment
-@razorPayBlueprint.route('/status', methods=['POST'])
+@razorPayBlueprint.route('/api/razorpaystatus', methods=['POST'])
 def app_status():
     # Create logical flow and store the details
     # Store the details in transaction table

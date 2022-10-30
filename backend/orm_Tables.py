@@ -17,6 +17,7 @@ class ActionEnum(enum.Enum):
     edit = "edit"
     share = "share"
     delete = "delete"
+    rename = "rename"
 
 
 from sqlalchemy.orm import relationship

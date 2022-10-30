@@ -43,7 +43,7 @@ def delete_account(user_id):
                             sql_stmt = (delete(User).where(User.UserId == user_id))
                             session.execute(sql_stmt)
                             session.commit()
-                            check_stmt = (select(User).where(User.UserId == user_id))
+                            check_stmt = (select(User).where(User.UserId == user_id)).first()
                             check = session.execute(check_stmt)
                             session.close()
                             if check is None:
