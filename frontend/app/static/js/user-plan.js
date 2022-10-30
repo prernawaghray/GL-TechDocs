@@ -12,7 +12,20 @@ toggler.addEventListener("change", () => {
 // const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
 // const tooltipList = [...tooltipTriggerList].map(tooltipTriggerE1 => new bootstrap.Tooltip(tooltipTriggerE1))
 
+window.onload = function(){
+	localStorage.setItem("Plan-Price", "₹199");
+	localStorage.setItem("Plan-type", "Premium Monthly Subscription");
+  };
 
+toggler.addEventListener("change", () => {
+	if (toggler.checked) {
+		localStorage.setItem("Plan-Price", "₹1999");
+		localStorage.setItem("Plan-type", "Premium Yearly Subscription");
+	} else {
+		localStorage.setItem("Plan-Price", "₹199");
+		localStorage.setItem("Plan-type", "Premium Monthly Subscription");
+	}
+});
 
 
 
