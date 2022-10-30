@@ -19,7 +19,17 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item"><a href="#" class="nav-link px-2 link-secondary">Home</a></li>
-        <li class="nav-item"><a href="#" class="nav-link px-2 link-dark">Features</a></li>
+        <!--Features Drop-down-->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle px-2 link-dark" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Features
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item active" href="{{url_for('premium_features')}}">Premium Features</a></li>
+            <li><hr class="dropdown-divider"></li>
+            
+          </ul>
+        </li>
         <li class="nav-item"><a href="#" class="nav-link px-2 link-dark">Pricing</a></li>
         <li class="nav-item"><a href="#" class="nav-link px-2 link-dark">Help</a></li>
       </ul> 

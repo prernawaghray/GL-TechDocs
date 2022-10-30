@@ -109,3 +109,7 @@ def saveToken():
 def clearSession():
    [session.pop(key) for key in list(session.keys())]
    return  make_response({'status':True}, 200)
+
+@app.route('/features/premium-features')
+def premium_features():
+   return render_template('Features/premium-features.html')
