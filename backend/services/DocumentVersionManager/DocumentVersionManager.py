@@ -57,14 +57,13 @@ class VersionManage:
         
         if current_file_path == "":
             with open(file_path,"w") as f:
-                for line in f:
-                    f.write(line)
-
-        # TODO: copy contents from old file to new file
-        with open(current_file_path) as f:
-            with open(file_path, "w") as f1:
-                for line in f:
-                    f1.write(line)
+                f.write("")
+        else:
+            # TODO: copy contents from old file to new file
+            with open(current_file_path) as f:
+                with open(file_path, "w") as f1:
+                    for line in f:
+                        f1.write(line)
 
         cls.v_file_name = document_name
         cls.v_file_path = file_path

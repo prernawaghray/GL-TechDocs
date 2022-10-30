@@ -136,9 +136,8 @@ def file_Create(user_id):
                 # return jsonify({"message":"Wrong service called. Create file is for new file only!"})
                 raise Exception("Wrong service called. Create file is for new file only!")
             
-            #FIXME on passing empty file path getting an error
             # Method to create a new file path - object will store the values of filename, file path
-            ver_obj.createNewVersionFile(userid, docname, ver, '/tmp/sample.tex')
+            ver_obj.createNewVersionFile(userid, docname, ver, '')
             newfilepath = ver_obj.v_file_path
             docname     = ver_obj.v_file_name
         
@@ -187,7 +186,7 @@ def file_Create(user_id):
             data_out = json.dumps({'UserId':userid, 'DocId':docid_out, 'DocName':docname, 'Filepath': newfilepath})
             mess_out = 'Success'
         except Exception as err:
-            mess_out = 'Error'
+            mess_out = "Error"
             current_app.logger.exception("Failure Creating File! "+str(err))
     
     current_app.logger.info("Service File Create ended")
@@ -258,11 +257,13 @@ def file_Modify(user_id):
                 # User has write permission
                 if('W' in userperm):
                     # get and create a new version for the document
-                    sql_stmt = select(Document.Version).where(Document.DocId == docid)
+                    sql_stmt = (select(Document.Version).where(Document.DocId == docid))
                     sql_result = session.execute(sql_stmt)
                     # there is always only 1 row
                     for row in sql_result:
-                        ver = file_obj.createNewVersion(row.Version)
+                        ver_row = row[0]
+                        file_obj.createNewVersion(ver_row)
+                        ver = file_obj.v_version
                     # create a new file with new version
                     ver_obj.createNewVersionFile(userid, docname, ver, '')
                     newfilepath = ver_obj.v_file_path
@@ -297,7 +298,7 @@ def file_Modify(user_id):
             data_out = json.dumps({'UserId':userid, 'DocId':docid, 'DocName':docname, 'Filepath': newfilepath})
             mess_out = 'Success'
         except Exception as err:
-            mess_out = 'Error'
+            mess_out = x
             current_app.logger.exception("Failure Modifying file! "+str(err))
     
     current_app.logger.info("Service File Modify ended")

@@ -430,10 +430,10 @@ def get_user_permissions(user_id, doc_id):
     '''
     sql_query_1 = text("""SELECT PermissionId FROM Permissions WHERE UserId=:UID and DocId=:DID""")
     param_1 = {"UID": user_id, "DID": doc_id}
-    permission_id = connect.execute(sql_query_1, **param_1)
+    permission_id = connect.execute(sql_query_1, **param_1).first()
     sql_query_2 = text("""SELECT UserPermissions from Permissions WHERE PermissionId=:PID""")
-    param_2 = {"PID": permission_id}
-    user_permission = connect.execute(sql_query_2, **param_2)
+    param_2 = {"PID": permission_id[0]}
+    user_permission = connect.execute(sql_query_2, **param_2).first()
     return list(user_permission)
 
 
