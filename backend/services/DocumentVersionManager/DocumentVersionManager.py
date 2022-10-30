@@ -54,6 +54,11 @@ class VersionManage:
 
         if not os.path.exists(file_directory):
             os.makedirs(file_directory)
+        
+        if current_file_path == "":
+            with open(file_path,"w") as f:
+                for line in f:
+                    f.write(line)
 
         # TODO: copy contents from old file to new file
         with open(current_file_path) as f:
