@@ -2,10 +2,10 @@
 import mysql.connector
 
 mydb = mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="Smitha",
-        database="techdocs"
+        host="44.197.242.29",
+        user="latexdb",
+        password="Latexdb123!",
+        database="latexdb"
         )
 
     # Define a Cursor
@@ -18,7 +18,7 @@ mycursor.execute(sql)
 #Create the transactions table
 sql=""" CREATE TABLE UserTransactions(
             payment_id VARCHAR(255) NOT NULL,
-            user_id VARCHAR(255) NOT NULL,
+            UserId VARCHAR(255) NOT NULL,
             type VARCHAR(255) ,
             amount DECIMAL (6,2) NOT NULL,
             currency VARCHAR(10) ,
@@ -45,9 +45,9 @@ sql=""" CREATE TABLE UserTransactions(
 mycursor.execute(sql)
 mycursor.execute("show tables")
 
-for tables in  mycursor:
-    print(tables)
+#for tables in  mycursor:
+    #print(tables)
 #Close the connection
-    mydb.close()
+mydb.close()
 
 

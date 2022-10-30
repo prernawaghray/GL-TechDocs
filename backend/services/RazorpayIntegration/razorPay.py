@@ -8,16 +8,20 @@ from flask import Flask, render_template, request
 from random import randint
 import razorpayDB
 from datetime import datetime
+from flask import Blueprint
+from flask import current_app
 
+# Start flask
+# Flask configurations
+razorPayBlueprint = Blueprint('razorPayBlueprint', __name__)
 
-app = Flask(__name__)
+# app = Flask(__name__)
 
 # Create a Razorpay client
-
 client = razorpay.Client(auth=(pgkeys.r_id, pgkeys.r_key))
 user_id = ""
 #Home page to accept the transaction information
-@app.route('/')
+@razorPayBlueprint.route('/')
 def home_page():
     return render_template('home.html')
 
@@ -35,7 +39,7 @@ def create_order(amt,descr):
     order_id = response['id']
     return(order_id)
 
-@app.route('/submit', methods = ['POST'])
+@razorPayBlueprint.route('/submit', methods = ['POST'])
 def app_submit():
     global user_id
     amt_d     = request.form['amt']
@@ -68,7 +72,7 @@ def app_submit():
 
 
 # Return the status of the payment
-@app.route('/status', methods=['POST'])
+@razorPayBlueprint.route('/status', methods=['POST'])
 def app_status():
     # Create logical flow and store the details
     # Store the details in transaction table
@@ -102,5 +106,5 @@ def app_status():
 
 
 # Run the webapp
-if __name__ =='__main__':
-    app.run(debug= True)
+#if __name__ =='__main__':
+ #   app.run(debug= True)
