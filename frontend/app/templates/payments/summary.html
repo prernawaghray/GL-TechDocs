@@ -15,9 +15,8 @@
             <div class="container">
                 <h2>Summary</h2>
                 <div class="list">
-                <h4>Premium Monthly Subscription</h4>
+                <h4 id="PlanName">Premium Monthly Subscription</h4>
                     <ul>
-                        <li class="list">Helpdesk - chat</li>
                         <li class="list">Plagiarism check</li>
                         <li class="list">Sharing with multiple people (to edit)</li>
                         <li class="list">Extra storage - upgrade</li>
@@ -30,8 +29,8 @@
                 </div>
                     <hr />
                     <h2>Payment Summary</h2>
-                    <pre>Premium Monthly Subscription       ₹199</pre>
-                    <pre>Total Payable                      ₹199(Incl. all taxes)
+                    <pre><span id="PlanName2">Premium Monthly Subscription</span>       <span id="Price">₹199</span></pre>
+                    <pre>Total Payable                      <span id="Price2">₹199</span>(Incl. all taxes)
                     </pre>
                     <br />
             </div>
@@ -328,6 +327,12 @@
                       </div>
                     </div>
     </form>
+    <script>
+		document.getElementById("Price").innerHTML = localStorage.getItem("Plan-Price");
+		document.getElementById("PlanName").innerHTML = localStorage.getItem("Plan-type");
+		document.getElementById("Price2").innerHTML = localStorage.getItem("Plan-Price");
+		document.getElementById("PlanName2").innerHTML = localStorage.getItem("Plan-type");
+	</script>       
     {% endblock %}
 
 {% block pageJS%}
