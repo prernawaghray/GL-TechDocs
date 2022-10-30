@@ -24,14 +24,15 @@ function updateProfile(data) {
     $('#purpose').val(userData.purposeOfUse);
     $('#purpose').selectpicker('refresh');
 
-    $('#signupdate').text(usageStats.signUpDate);
-    $('#activedate').text(usageStats.lastActiveDate);
+    $('#signupdate').text((new Date(Date.parse(usageStats.signUpDate))).toLocaleDateString('en-gb'));
+    $('#activedate').text((new Date(Date.parse(usageStats.lastActiveDate))).toLocaleDateString('en-gb'));
+    
 
 }
 
 function loadProfileData() {
     try {
-        $.ajax({
+        $.ajax({    
             data: {
                 authToken: getUserToken()
             },
@@ -157,15 +158,9 @@ function deleteAccount() {
             type: 'POST',
             url: getApiUrl('deleteAccount'),
             success: function (data) {
-                //In case of success the data contains the JSON
-
-                if (data.status == true) {
-                    showAlert('#delete-errorMessage', 'alert-success', "Delete Account!!", "Account Deleted Fully");
-                    clearSession();
-                }
-                else {
-                    showAlert('#delete-errorMessage', 'alert-warning', "Delete Account!!", data.message);
-                }
+                showAlert('#delete-errorMessage', 'alert-success', "Delete Account!!", data.message);
+                
+                clearSession();
             },
             error: function (data) {
                 // in case of error we need to read response from data.responseJSON
