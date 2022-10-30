@@ -28,14 +28,7 @@ from mysql.connector import connect, errorcode
 # Method to store definitions of all the necessary tables into an array
 # This array will later be looped and executed to create tables 
 def defineTables():
-    # Table - Documents
-    # Stores all Document info - the latest version only
     
-    #Table - DocumentHistory
-
-
-    
-
     # Table - PaymentAccounts
     # Stores the payment methods of all users
     # Col - AccType, possible values are 'creditcard', 'debitcard', 'personal'
@@ -142,7 +135,8 @@ def defineTables():
         ")"
     )
 
-
+    # Table - Documents
+    # Stores all Document info - the latest version only
     tbl_array['Documnents'] = (
         "Create Table if not exists `Documents` ("
         "DocId          int not null AUTO_INCREMENT,"
@@ -168,6 +162,8 @@ def defineTables():
         ")"
     )
 
+
+    #Table DocumentHistory
     tbl_array['DocumentHistory'] = (
         "Create Table if not exists `DocumentHistory` ("
         "RecordId       int not null AUTO_INCREMENT,"
