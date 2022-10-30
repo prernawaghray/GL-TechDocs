@@ -64,7 +64,6 @@ def auth():
    return redirect('/dashboard')
 
 
-
 @app.route('/forgotpassword')
 def forgot_password():
    return render_template('forgotpassword/forgotpassword.html')
@@ -84,6 +83,10 @@ def logout():
 # @login_required
 def dashboard():
    return render_template('user-dashboard/dashboard.html')
+
+@app.route('/registration')
+def registration():
+   return render_template('user-registration/registration.html')
 
 @app.route('/latex-editor/new-document')
 # @login_required
@@ -109,3 +112,21 @@ def saveToken():
 def clearSession():
    [session.pop(key) for key in list(session.keys())]
    return  make_response({'status':True}, 200)
+
+@app.route('/faq')
+def faq():
+   return render_template('faq/faq.html')
+
+@app.route('/payments/summary')
+def payments_summary():
+   return render_template('payments/summary.html')
+
+@app.route('/user-plans')
+def user_plans():
+   return render_template('plans-and-subscriptions/user-plan.html')
+
+
+@app.route('/history')
+# @login_required
+def latexHistory():
+   return render_template('latex-history/history.html')

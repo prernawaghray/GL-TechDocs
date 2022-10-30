@@ -12,29 +12,7 @@ body {
     font-family: "roboto", sans-serif;
 }
 
-/* section{
-    padding: 20px 0;
-    background-image: none;
-    background-size: cover;
-    background-position: center;
-    position: relative;
-    z-index: 1;
-} */
-
-/* section::after{
-    content: "";
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to right, #5e6f86 0%, #aec2d6 100%);
-    position: absolute;
-    top: 0;
-    left: 0;
-    opacity: 0.35;
-    z-index: -1;
-
-} */
-
-.container {
+.pricing-container {
     width: 100%;
     max-width: 1400px;
     min-width: 320px;
@@ -59,6 +37,13 @@ body {
     text-align: center;
 }
 
+.section-intro h4{
+    color:grey;
+    font-size: 20px;
+    font-weight: 500;
+    text-align: center;
+}
+
 :root{
     --color-1:#262d31;
     --color-2: #4076b8;
@@ -71,7 +56,7 @@ align-items: center;
 }
 
 .section-intro .plan-switch{
-    width: 240px;
+    width: 233px;
     background: var(--color-1);
     height: 55px;
     appearance: none;
@@ -99,21 +84,21 @@ align-items: center;
 
 .section-intro .toggle-switch-container .Yearly{
     position: absolute;
-    right: 42px;
-    top:18px;
+    right: 32px;
+    top: 18px;
     pointer-events: none;
 }
 
 .section-intro .plan-switch::before{
     content: "";
     position: absolute;
-    height: 44px;
-    width: 110px;
+    height: 50px;
+    width: 115px;
     border-radius: 24px;
     background: var(--color-2);
     top: 50%;
     transform: translateY(-50%);
-    left: 6px;
+    left: 2px;
     transition: all 0.1s;
 }
 
@@ -122,48 +107,6 @@ align-items: center;
     width: 110px;
 }
     
-
-
-/* .toggle-switch {
-	display: flex;
-    font-weight: 300;
-    font-weight: bold;
-    color: #000;
-    padding: 10px;
-	height: 50px;
-	width: 100%;
-	justify-content: center;
-	align-items: center;
-	margin-bottom: 1.5rem;
-} */
-
-/* .toggler {
-	appearance: none;
-	-webkit-appearance: none;
-	-moz-appearance: none;
-	width: 60px;
-	height: 30px;
-	background-color: #2a37be;
-	border-radius: 25px;
-	margin: 0 1rem;
-	position: relative;
-} */
-
-/* .toggler::before {
-	content: "";
-	width: 20px;
-	height: 20px;
-	background-color: white;
-	position: absolute;
-	border-radius: 50%;
-	top: 50%;
-	transform: translateY(-50%);
-	right: 4px;
-}
-
-.toggler:checked:before {
-	right: 55%;
-} */
 
 .plan-cards {
 	display: flex;
@@ -293,7 +236,7 @@ align-items: center;
     color: #4e4e4e;
     font-weight: 300;
     font-size: 16px;
-    line-height: 1.8;
+    line-height: 1.0;
 }
 
 .card-pricing_button{
@@ -314,7 +257,8 @@ align-items: center;
 }
 
 .dot{
-    vertical-align:top;
+    font-size: 150%;
+    /* vertical-align: bottom; */
 }
 
 .Features{
@@ -466,9 +410,7 @@ button, html input[type=button], input[type=reset], input[type=submit] {
     cursor: pointer;
 }
 
-/* button, select {
-    text-transform: none;
-} */
+
 
 button {
     overflow: visible;
@@ -494,9 +436,6 @@ button, input, optgroup, select, textarea {
     user-select: none;
 }
 
-/* .mfComparePricingPlansBtn{ */
-
-/* } */
 .compare-table-button{
     font-size: 14px;
     font-weight: 500;
@@ -549,11 +488,6 @@ svg:not(:root) {
     overflow: hidden;
 }
 
-/* svg[Attributes Style] {
-    width: 16;
-    height: 16;
-    fill: currentcolor;
-} */
 
 .PricingComparison {
     color: #333;
@@ -562,13 +496,24 @@ svg:not(:root) {
 
 .P-row_1 {
     border-bottom: 1px solid #dadada;
+    display: block;
+    z-index: 1;
 }
 
 .PricingComparisonTitle {
     font-size: 16px;
+    position: sticky;
+    /* display: block; */
+    box-sizing: border-box;
     font-weight: 300;
     color: #000;
     line-height: 50px;
+    border-bottom: 1px rgb(180, 180, 180) solid;
+    border-collapse: collapse;
+}
+
+.z-2{
+    z-index: 2;
 }
 
 .row_1 {
@@ -577,7 +522,7 @@ svg:not(:root) {
 }
 
 .row_1:before {
-    display: table;
+    display: block;
     content: " ";
 }
 
@@ -592,44 +537,6 @@ body {
 }
 
 
-.PlanFeatureTitle p{
-    position: relative;
-    width: 120px;
-    background: black;
-    color: white;
-    padding: 5px 0;
-    text-align: center;
-    border-radius: 8px;
-    display: block;
-    margin: 0 auto;
-    opacity: 0;
-    transition: 0.5s opacity;
-}
-
-.PlanFeatureTitle p:before{
-    content: '';
-    width: 10px;
-    height: 10px;
-    position: absolute;
-    top: -6px;
-    background: black;
-    z-index: -1;
-    left: 50%;
-    transform: translateX(-50%) rotate(45deg);
-}
-
-.PlanFeatureTitle:hover >p{
-    opacity: 1;
-}
-/* .mfComparePricingPlansBtnTxt */
-
-/* .ComparePlans */
-/* 
-.mfCompareTable
-.PricingComparison
-.P-row_1
-.row_1
-.PricingComparisonTitle */
 
 .col-md-4, .col-sm-4{
     padding-right: calc(var(--responsive-gutter-width) / 2);
@@ -646,12 +553,6 @@ body {
     }
 } 
 
-.PricingComparisonTitle {
-    font-size: 16px;
-    font-weight: 300;
-    color: #000;
-    line-height: 50px;
-}
 
 .PricingComparison {
     color: #333;
@@ -664,6 +565,48 @@ body {
     color: #000;
     line-height: 50px;
     position: relative;
+}
+
+.buy-button-1 .button-2{
+    padding: 0 30px;
+    color: #1925c6;
+    background:transparent;
+    font-size: 15px;
+    font-weight: 500;
+    border: 1px solid #424244;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all .3s;
+}
+
+.buy-button-2 .button-3{
+    padding: 0 20px;
+    color: #1925c6;
+    background:transparent;
+    font-size: 15px;
+    font-weight: 500;
+    border: 1px solid #424244;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all .3s;
+}
+
+.buy-button-1, .buy-button-2{
+    padding-bottom: 5px;
+}
+
+.buy-button-1{
+    background-color: #f9f9f9;
+}
+
+.buy-button-2{
+    background-color: #f1f1f1;
+}
+
+.button-2:hover,
+.button-3:hover{
+    color: #faf9ff;
+    background: linear-gradient(to right, #2b0076 0%, #3a0ebe 100%);
 }
 
 .PricingComparison, .F-Column {
@@ -693,6 +636,12 @@ body {
 }
 
 .Pricing-Highlight {
+    border-bottom: 0;
+    background: #f1f1f1;
+    margin-right: -1px;
+}
+
+.Pricing-Highlight_1 {
     border-bottom: 0;
     background: #f9f9f9;
     margin-right: -1px;
@@ -729,29 +678,36 @@ body {
 }
 
 
-.FeatureInfo {
+.FeatureName {
     border-bottom: 1px dashed #666;
     color: black;
     cursor: pointer;
     padding-bottom: 2px;
 }
 
-.FeatureInfo #data-bs-title{
-    background-color: #000;
+.FeatureInfo {
+    cursor: pointer;
 }
+/* .FeatureName #data-bs-title{
+    background-color: #000;
+} */
 
 .PlanAvailableTxt {
     font-size: 20px;
 }
 
-.Basic-Plan, .Premium-Plan{
+.Basic-Plan, .Premium-Plan-1, .Premium-Plan{
     padding: 12px;
     min-height: 50px;
     padding-top: 15px;
 }
 
-.Premium-Plan {
+.Basic-Plan{
     background: #f9f9f9;
+}
+
+.Premium-Plan {
+    background: #f1f1f1;
     color: #4210c1;
 }
 

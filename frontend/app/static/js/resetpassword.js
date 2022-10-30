@@ -27,7 +27,7 @@ function validateToken() {
             error: function (data) {
                 // in case of error we need to read response from data.responseJSON
                 hideLoadingButton();
-                showAlert('#valid-token-errorMessage', 'alert-danger', "Reset Password!!", data.responseJSON.message);
+                showAlert('#valid-token-errorMessage', 'alert-danger', "Reset Password!!", getResponseMessage(data));
             }
         });
     }
@@ -64,7 +64,7 @@ function forgotpassword() {
             },
             error: function (data) {
                 // in case of error we need to read response from data.responseJSON
-                showAlert('#forgot-password-errorMessage', 'alert-danger', "Forgot Password!!", data.responseJSON.message);
+                showAlert('#forgot-password-errorMessage', 'alert-danger', "Forgot Password!!", getResponseMessage(data));
             }
         });
     }
@@ -93,7 +93,7 @@ function changePassword() {
             },
             error: function (data) {
                 // in case of error we need to read response from data.responseJSON
-                showAlert('#password-errorMessage', 'alert-danger', "Reset Password!!", data.responseJSON.message);
+                showAlert('#password-errorMessage', 'alert-danger', "Reset Password!!", getResponseMessage(data));
             }
         });
     }

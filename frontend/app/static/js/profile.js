@@ -8,8 +8,25 @@ $(document).ready(function () {
 });
 
 function updateProfile(data) {
-    $('#first-name').val(data.firstName);
-    $('#last-name').val(data.lastName);
+    userData = data.userData;
+    usageStats = data.usageStats;
+    $('#first-name').val(userData.firstName);
+    $('#last-name').val(userData.lastName);
+    $('#address').val(userData.address.streetAddress);
+    $('#country').val(userData.address.country);
+    $('#country').selectpicker('refresh');
+    $('#country').trigger('change');
+    
+    $('#state').val(userData.address.state);
+    $('#state').selectpicker('refresh');
+
+    $('#occupation').val(userData.occupation);
+    $('#purpose').val(userData.purposeOfUse);
+    $('#purpose').selectpicker('refresh');
+
+    $('#signupdate').text(usageStats.signUpDate);
+    $('#activedate').text(usageStats.lastActiveDate);
+
 }
 
 function loadProfileData() {
@@ -23,16 +40,13 @@ function loadProfileData() {
             success: function (data) {
                 //In case of success the data contains the JSON
 
-                if (data.status == true) {
-                    updateProfile(data.userData);
-                }
-                else {
-                    showAlert('#profile-errorMessage', 'alert-warning', "Profile Update!!", data.message);
-                }
+
+                    updateProfile(data);
+ 
             },
             error: function (data) {
                 // in case of error we need to read response from data.responseJSON
-                showAlert('#profile-errorMessage', 'alert-danger', "Profile Update!!", data.responseJSON.message);
+                showAlert('#profile-errorMessage', 'alert-danger', "Profile Update!!", getResponseMessage(data));
             }
         });
     }
@@ -42,35 +56,39 @@ function loadProfileData() {
 }
 
 function profileUpdate() {
+    removeAlert('#profile-errorMessage');
     try {
         $.ajax({
-            data: {
+            contentType:"application/json; charset=utf-8",
+            dataType:"json",
+            data: JSON.stringify({
                 authToken: getUserToken(),
                 userData:
                 {
                     firstName: $('#first-name').val(),
                     lastName: $('#last-name').val(),
+                    address : {
+                        streetAddress: $('#address').val(),
+                        state:$('#state').val(),
+                        country:$('#country').val(),},
+                      occupation: $('#occupation').val(),
+                      purposeOfUse:$('#purpose').val(),
                 }
 
-            },
+            }),
             type: 'POST',
             url: getApiUrl('updateProfile'),
             success: function (data) {
                 //In case of success the data contains the JSON
 
-                if (data.status == true) {
-                    showAlert('#profile-errorMessage', 'alert-success', "Profile Update!!", "Successfully updated");
-                }
-                else {
-                    showAlert('#profile-errorMessage', 'alert-warning', "Profile Update!!", data.message);
 
-                    //showError(data.responseJSON.message,'Profile Update')
+                    showAlert('#profile-errorMessage', 'alert-success', "Profile Update!!", data.message);
 
-                }
+
             },
             error: function (data) {
                 // in case of error we need to read response from data.responseJSON
-                showAlert('#profile-errorMessage', 'alert-danger', "Profile Update!!", data.responseJSON.message);
+                showAlert('#profile-errorMessage', 'alert-danger', "Profile Update!!", getResponseMessage(data));
             }
         });
     }
@@ -94,19 +112,13 @@ function changePassword() {
             success: function (data) {
                 //In case of success the data contains the JSON
 
-                if (data.status == true) {
+                
                     showAlert('#password-errorMessage', 'alert-success', "Change Password!!", "Successfully changed");
-                }
-                else {
-                    showAlert('#password-errorMessage', 'alert-warning', "Change Password!!", data.message);
-
-                    //showError(data.responseJSON.message,'Profile Update')
-
-                }
+               
             },
             error: function (data) {
                 // in case of error we need to read response from data.responseJSON
-                showAlert('#password-errorMessage', 'alert-danger', "Change Password!!", data.responseJSON.message);
+                showAlert('#password-errorMessage', 'alert-danger', "Change Password!!", getResponseMessage(data));
             }
         });
     }
@@ -139,9 +151,8 @@ function deleteAccount() {
         $.ajax({
             data: {
                 authToken: localStorage.getItem('userToken'),
+                loginType:getLoginType(),
                 currentPassword: $('#delete-password').val()
-
-
             },
             type: 'POST',
             url: getApiUrl('deleteAccount'),
@@ -158,7 +169,7 @@ function deleteAccount() {
             },
             error: function (data) {
                 // in case of error we need to read response from data.responseJSON
-                showAlert('#delete-errorMessage', 'alert-danger', "Delete Account!!", data.responseJSON.message);
+                showAlert('#delete-errorMessage', 'alert-danger', "Delete Account!!", getResponseMessage(data));
             }
         });
     }
@@ -201,10 +212,10 @@ var passwordFormMessages =
 var profileUpdateRules =
 {
     'first-name': {
-        require_from_group: [1, ".form-control"]
+        require_from_group: [1, ".namegroup"]
     },
     'last-name': {
-        require_from_group: [1, ".form-control"]
+        require_from_group: [1, ".namegroup"]
     }
 };
 
@@ -280,4 +291,62 @@ function validateFormsAndAddHandlers() {
         $(this).validate();
     });
 
+    if(getLoginType()=="google")
+    {
+        $('#password :input').prop("disabled",true);
+        showAlert('#password-errorMessage', 'alert-warning', "Google Login!", "Use Google account to change your password");
+        $("#nativedelete").hide();
+        $('#googledelete').show();
+        $('#googledeletetext').show();
+        $('#confirm-delete').prop('disabled',true);
+        $('#delete-btn').hide();
+        google.accounts.id.initialize({
+            client_id: getClientId(),
+            callback: handleGoogleAuthResponse,
+            prompt_parent_id:"googledelete"
+          });
+         
+          google.accounts.id.renderButton($('#googledelete')[0],googleLoginButtonOptions);
+      
+    }
+    else
+    {
+        $('#googledeletetext').remove();
+    }
+
 }
+$(document).ready(function(){
+    $("#country").on("changed.bs.select", 
+        function(e, clickedIndex, newValue, oldValue) {
+        console.log(this.value, clickedIndex, newValue, oldValue);
+        stateOp=getStateOptions(this.value);
+        $("#state").selectpicker('destroy');
+        $("#state").html(stateOp);
+        $("#state").selectpicker('render');
+        $("#state").selectpicker('refresh');
+    });
+
+});
+
+
+var googleLoginButtonOptions=
+{ theme: 'filled_blue', 
+size: 'large',
+width:'300px',
+text:"continue_with"};
+
+function handleGoogleAuthResponse(token) {
+    var response = parseJwt(token.credential);
+    if(response.email == parseJwt(getUserToken()).Email)
+    {
+        $('#googledeletetext').remove();
+        $('#delete-password').val('Google Verified');
+        $('#confirm-delete').prop('disabled',false);
+        $('#delete-btn').show();
+        $('#accountVerified').text("Account is verified - proceed to delete");
+    }
+  }
+
+  window.onload = function () {
+       
+  };
