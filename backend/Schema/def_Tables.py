@@ -28,54 +28,7 @@ from mysql.connector import connect, errorcode
 # Method to store definitions of all the necessary tables into an array
 # This array will later be looped and executed to create tables 
 def defineTables():
-    # Table - Documents
-    # Stores all Document info - the latest version only
-    tbl_array['Documents'] = (
-        "Create Table if not exists `Documents` ("
-        "   DocId           int not null AUTO_INCREMENT,"
-        "   DocName         varchar(256),"
-        "   UserId          varchar(256),"
-        "   IsUpload        boolean,"
-        "   FilePath        text,"
-        "   CreatedDate     datetime,"
-        "   ModifiedDate    datetime,"
-        "   ModifiedBy      varchar(256),"
-        "   Version         int,"
-        "   IsUpload        boolean,"
-        "   IsTrash         boolean,"
-        "   s_Misc1         varchar(1024),"
-        "   s_Misc2         varchar(1024),"
-        "   n_Misc1         int,"
-        "   n_Misc2         int,"
-        "   PRIMARY KEY (DocId),"
-        "   UNIQUE (DocId, UserId),"
-        "   INDEX idx_Doc_ByUserDoc      (UserId, DocId),"
-        "   INDEX idx_Doc_ByUserCreated  (UserId, CreatedDate),"
-        "   INDEX idx_Doc_ByUserModified (UserId, ModifiedDate)"
-        ")"
-    )
-
-    # Table - Permissions
-    # Store permission of all documents for all users
-    # Col Permission, possible values are (R)ead, (W)rite, (S)hare
-    tbl_array['Permissions'] = (
-        "Create Table if not exists `Permissions` ("
-        "   PermissionId        int not null AUTO_INCREMENT,"
-        "   DocId               int,"
-        "   UserId              varchar(256),"
-        "   UserPermissions     varchar(25),"
-        "   GroupPermissions    varchar(25),"
-        "   OtherPermissions    varchar(25),"
-        "   Version             int,"
-        "   s_Misc1             varchar(1024),"
-        "   s_Misc2             varchar(1024),"
-        "   n_Misc1             int,"
-        "   n_Misc2             int,"
-        "   PRIMARY KEY (PermissionId),"
-        "   INDEX idx_Perm_ByUserDoc (UserId, DocId)"
-        ")"
-    )
-
+    
     # Table - PaymentAccounts
     # Stores the payment methods of all users
     # Col - AccType, possible values are 'creditcard', 'debitcard', 'personal'
@@ -179,6 +132,84 @@ def defineTables():
         "   PRIMARY KEY (UserId),"
         "   FOREIGN KEY (UserId, UserName) REFERENCES User(UserId, UserName) ON UPDATE CASCADE ON DELETE CASCADE,"
         "   INDEX idx_UserProfile (UserId)"
+        ")"
+    )
+
+    # Table - Documents
+    # Stores all Document info - the latest version only
+    tbl_array['Documnents'] = (
+        "Create Table if not exists `Documents` ("
+        "DocId          int not null AUTO_INCREMENT,"
+        "DocName        varchar(256),"
+        "UserId         varchar(256),"
+        "IsUpload       boolean,"
+        "FilePath       text,"
+        "CreatedDate    datetime,"
+        "ModifiedDate   datetime,"
+        "ModifiedBy     varchar(256),"
+        "Version        int,"
+        "IsTrash        boolean,"
+        "s_Misc1        varchar(1024),"
+        "s_Misc2        varchar(1024),"
+        "n_Misc1        int,"
+        "n_Misc2        int,"
+        "PRIMARY KEY (DocId),"
+        "UNIQUE (DocId),"
+        "FOREIGN KEY (UserId) REFERENCES User(UserId) ON DELETE CASCADE,"
+        "INDEX idx_Doc_ByUserDoc (UserId, DocId),"
+        "INDEX idx_Doc_ByUserCreated (UserId, CreatedDate),"
+        "INDEX idx_Doc_ByUserModified (UserId, ModifiedDate)"
+        ")"
+    )
+
+
+    #Table DocumentHistory
+    tbl_array['DocumentHistory'] = (
+        "Create Table if not exists `DocumentHistory` ("
+        "RecordId       int not null AUTO_INCREMENT,"
+        "DocId          int,"
+        "DocName        varchar(256),"
+        "UserId         varchar(256),"
+        "IsUpload       boolean,"
+        "FilePath       text,"
+        "CreatedDate    datetime,"
+        "ModifiedDate   datetime,"
+        "ModifiedBy     varchar(256),"
+        "Version        int,"
+        "IsTrash        boolean,"
+        "s_Misc1        varchar(1024),"
+        "s_Misc2        varchar(1024),"
+        "n_Misc1        int,"
+        "n_Misc2        int,"
+        "PRIMARY KEY (RecordId),"
+        "FOREIGN KEY (UserId) REFERENCES User(UserId) ON DELETE CASCADE,"
+        "FOREIGN KEY (DocId) REFERENCES Documents(DocId) ON DELETE CASCADE ON UPDATE CASCADE,"
+        "INDEX idx_Doc_ByUserDoc (UserId, DocId),"
+        "INDEX idx_Doc_ByUserCreated (UserId, CreatedDate),"
+        "INDEX idx_Doc_ByUserModified (UserId, ModifiedDate)"
+        ")"
+    )
+
+    # Table - Permissions
+    # Store permission of all documents for all users
+    # Col Permission, possible values are (R)ead, (W)rite, (S)hare
+    tbl_array['Permissions'] = (
+        "Create Table if not exists `Permissions` ("
+        "   PermissionId        int not null AUTO_INCREMENT,"
+        "   DocId               int,"
+        "   UserId              varchar(256),"
+        "   UserPermissions     varchar(25),"
+        "   GroupPermissions    varchar(25),"
+        "   OtherPermissions    varchar(25),"
+        "   Version             int,"
+        "   s_Misc1             varchar(1024),"
+        "   s_Misc2             varchar(1024),"
+        "   n_Misc1             int,"
+        "   n_Misc2             int,"
+        "   PRIMARY KEY (PermissionId),"
+        "   FOREIGN KEY (DocId) REFERENCES Documents(DocId) ON DELETE CASCADE,"
+        "   FOREIGN KEY (UserId) REFERENCES User(UserId) ON DELETE CASCADE,"
+        "   INDEX idx_Perm_ByUserDoc (UserId, DocId)"
         ")"
     )
 

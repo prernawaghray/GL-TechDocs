@@ -26,8 +26,10 @@ from sqlalchemy.orm import relationship
 class Document(Common):
     __tablename__ = "Documents"
 
+    UserId          = Column(String(256), ForeignKey("User.UserId"))
     ModifiedDate    = Column(DateTime)
-    ModifiedBy      = Column(String(256))      
+    ModifiedBy      = Column(String(256))  
+    User            = relationship('User')    
     
     def __init__(self, UserId, DocName, Filepath, Datetime, Version, IsUpload):
         self.UserId      = UserId
@@ -83,9 +85,11 @@ class Permission(Base):
 
     PermissionId = Column(Integer, primary_key=True, autoincrement=True)
     DocId = Column(Integer, ForeignKey("Documents.DocId"))
+    UserId = Column(String(256), ForeignKey("User.UserId"))
     UserPermissions = Column(String(25))
     GroupPermissions = Column(String(25))
     OtherPermissions = Column(String(25))
+    User = relationship("User")
     
     def __init__(self, DocId, UserId, UserPerm):
         self.DocId           = DocId

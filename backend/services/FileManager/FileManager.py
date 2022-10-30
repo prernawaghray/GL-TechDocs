@@ -136,9 +136,9 @@ def file_Create(user_id):
                 # return jsonify({"message":"Wrong service called. Create file is for new file only!"})
                 raise Exception("Wrong service called. Create file is for new file only!")
             
-            
+            #FIXME on passing empty file path getting an error
             # Method to create a new file path - object will store the values of filename, file path
-            ver_obj.createNewVersionFile(userid, docname, ver, '')
+            ver_obj.createNewVersionFile(userid, docname, ver, '/tmp/sample.tex')
             newfilepath = ver_obj.v_file_path
             docname     = ver_obj.v_file_name
         
@@ -316,7 +316,7 @@ def file_Modify(user_id):
 # 3.b files does not have to be renamed
 # 4. Output: UserId, DocId, DocName, FilePath
 '''
-@fileManagerBlueprint.route('/api/ilerename', methods = ['GET', 'POST'])
+@fileManagerBlueprint.route('/api/filerename', methods = ['GET', 'POST'])
 @authentication
 def file_Rename(user_id):
     current_app.logger.info("Service File Rename initiated")
@@ -347,6 +347,7 @@ def file_Rename(user_id):
             if (noofrecords == 0):
                 raise Exception('Document reference id not found. Cannot rename!')
             else:
+                #TODO Update DocumentHistory table too
                 mod_date = datetime.today()
                 # update Documents table with the latest version
                 sql_stmt = update(Document)\

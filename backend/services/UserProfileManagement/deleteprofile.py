@@ -15,7 +15,7 @@ from ..ForgotPassword.mail import send_reset_email, verify_reset_token
 from sqlalchemy import create_engine, select, delete
 
 deletecode_bp = Blueprint('deletecode',__name__)
-@deletecode_bp.route('/api/delete', methods=["GET", "POST"])
+@deletecode_bp.route('/api/deleteAccount', methods=["GET", "POST"])
 @authentication
 #@login_required
 def delete_account(user_id):  
@@ -29,7 +29,7 @@ def delete_account(user_id):
         #user = User.query.filter_by(username=JWT_Decode_Token.value()).first()
         login_type = request.form.get('loginType')
         if login_type == 'email':
-            password = request.form.get('password')
+            password = request.form.get('currentPassword')
             # password = getpass.getpass('Confirm Password: ')
             if password:
                 session = session_factory()
