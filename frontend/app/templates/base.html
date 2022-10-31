@@ -61,7 +61,8 @@
     <script src="{{ url_for('static', filename='js/validators.js') }}"></script>
     <script src="{{ url_for('static', filename='js/clientsecret.js') }}"></script>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
-    <!-- END:GLOBAL JS -->
+    <script src="{{url_for('static', filename='js/logout.js')}}"></script>
+    <!-- END:GLOBAurlL JS -->
 
     <!-- PAGE JS -->
     {% block layoutJS %}{% endblock %}
