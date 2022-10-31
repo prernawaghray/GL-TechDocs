@@ -12,6 +12,10 @@ import yaml
 import sys
 from flask_cors import CORS
 sys.path.append('../')
+with open('../config.yaml') as stream:
+    configs = yaml.safe_load(stream)
+
+from services.UserRegistration.register import register_bp
 from services.FileManager.FileManager import fileManagerBlueprint
 from services.UserAuthentication.Login import userLogin_bp
 from services.UserAuthentication.Logout import userLogout_bp
@@ -20,10 +24,6 @@ from services.UserProfileManagement.updateprofile import updateUserProfile_bp
 from services.UserProfileManagement.deleteprofile import deletecode_bp
 from services.ForgotPassword.forgotpassword import forgotpassword_bp
 from services.ForgotPassword.mail import mail_bp
-
-with open('../config.yaml') as stream:
-    configs = yaml.safe_load(stream)
-
 from services.DocumentVersionManager.DocumentVersionManager import documentVersionManagerBlueprint
 from services.UserHistoryManager.UserHistoryManager import userHistoryManagerBlueprint
 from services.RazorpayIntegration.razorPay import razorPayBlueprint
@@ -31,6 +31,7 @@ from services.RazorpayIntegration.razorPay import razorPayBlueprint
 app= Flask(__name__)
 CORS(app, resources={r"/*":{"origins":"*"}})
 
+app.register_blueprint(register_bp)
 app.register_blueprint(documentVersionManagerBlueprint)
 app.register_blueprint(userHistoryManagerBlueprint)
 app.register_blueprint(fileManagerBlueprint)
@@ -72,4 +73,4 @@ def details():
 
 
 if __name__ == '__main__':
-	app.run(host='0.0.0.0',debug=True, port=5000)
+	app.run(debug=True)

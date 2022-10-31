@@ -4,12 +4,11 @@
 
 import razorpay
 import pgkeys
-from flask import Flask, render_template, request
+from flask import Blueprint,  current_app, render_template, request
 from random import randint
 import razorpayDB
 from datetime import datetime
-from flask import Blueprint
-from flask import current_app
+
 
 # Start flask
 # Flask configurations
@@ -21,9 +20,9 @@ razorPayBlueprint = Blueprint('razorPayBlueprint', __name__)
 client = razorpay.Client(auth=(pgkeys.r_id, pgkeys.r_key))
 user_id = ""
 #Home page to accept the transaction information
-@razorPayBlueprint.route('/')
+@razorPayBlueprint.route('/api/homeRazor.html')
 def home_page():
-    return render_template('home.html')
+    return render_template('homeRazor.html')
 
 def create_order(amt,descr):
     order_currency ='INR'
@@ -39,7 +38,7 @@ def create_order(amt,descr):
     order_id = response['id']
     return(order_id)
 
-@razorPayBlueprint.route('/submit', methods = ['POST'])
+@razorPayBlueprint.route('/api/submit', methods = ['POST'])
 def app_submit():
     global user_id
     amt_d     = request.form['amt']
@@ -72,7 +71,7 @@ def app_submit():
 
 
 # Return the status of the payment
-@razorPayBlueprint.route('/status', methods=['POST'])
+@razorPayBlueprint.route('/api/status', methods=['POST'])
 def app_status():
     # Create logical flow and store the details
     # Store the details in transaction table
@@ -90,6 +89,15 @@ def app_status():
         payment_details['card_emi'] = card_details['emi']
         payment_details['card_sub_type'] = card_details['sub_type']
         payment_details['card_token_iin'] = card_details['token_iin']
+    else:
+        payment_details['card_type '] = None
+        payment_details['card_network'] = None
+        payment_details['card_last4'] = None
+        payment_details['card_issuer'] = None
+        payment_details['card_international'] = None
+        payment_details['card_emi'] = None
+        payment_details['card_sub_type'] = None
+        payment_details['card_token_iin'] = None
         #To check order details
     #orderdetails = client.order.payments(payment_details['order_id'])
     #print(orderdetails)

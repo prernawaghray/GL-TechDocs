@@ -16,4 +16,7 @@ DIR_ROOT: "/tmp/"
 DIR_DATA: "testdata"
 DIR_LOG: "log/filemanager.log"
 
+#RazorPay
+PGKEY_RID: "rzp_test_R1Oa1vwB1Pp57U"
+PGKEY_RKEY: "3O2TjVzxSPosdRFZmYco0u1z"
 

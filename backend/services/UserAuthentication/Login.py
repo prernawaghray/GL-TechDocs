@@ -48,6 +48,7 @@ def signin():
                     lastname = result_2[1]
                     data_sent = {"Email": username,
                                 "isAdmin": admin,
+                                "loginType":loginType
                                 }
                     # generate the JWT Token
                     JWT_Token = jwt.encode(data_sent, key, algorithm="HS256")
@@ -90,6 +91,7 @@ def signin():
                             lastname = result_2[1]
                             data_sent = {"Email": username,
                                         "isAdmin": admin,
+                                        "loginType":loginType
                                             }
                             JWT_Token = jwt.encode(data_sent, key, algorithm="HS256")
                             data_sent  =  {"userAuthToken" : JWT_Token,     
