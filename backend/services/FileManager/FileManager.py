@@ -1,5 +1,5 @@
 # Libraries
-from asyncore import file_dispatcher
+# from asyncore import file_dispatcher
 import os
 import warnings
 import logging
@@ -349,26 +349,6 @@ def file_Rename(user_id):
             if (noofrecords == 0):
                 raise Exception('Document reference id not found. Cannot rename!')
             else:
-                mod_date = datetime.today()
-                # update Documents table with the latest version
-                sql_stmt = update(Document)\
-                    .where(Document.DocId == docid)\
-                    .values({Document.DocName:docname, Document.ModifiedDate:mod_date, Document.ModifiedBy:userid})
-                sql_stmt_2 = update (DocumentHistory)\
-                    .where (DocumentHistory.DocId == docid)\
-                        .values({DocumentHistory.DocName:docname})
-                session.execute(sql_stmt)
-                session.execute(sql_stmt_2)
-                session.commit()
-                
-                index = docname.index('.tex')
-                docname = docname[:index]
-                
-                userhist_entry = UserHistory(userid, docid, datetime.today(), docname, 'rename')
-                session.add(userhist_entry)
-                session.flush()
-                session.commit()
-
                 file_paths_stmt = (select(DocumentHistory.FilePath).where(DocumentHistory.DocId==docid))
                 file_paths = session.execute(file_paths_stmt).all()
                 for path in file_paths:
@@ -377,13 +357,32 @@ def file_Rename(user_id):
                     replacement = r"/tmp/testdata/"+userid+r"/"+docname
                     new_path = re.sub(pattern,replacement,path)
                     os.rename(path, new_path)
-                
-                session.close()
+                    sql_stmt = sql_stmt = update(Document)\
+                    .where(Document.DocId == docid)\
+                    .values({Document.DocName:docname, Document.ModifiedDate:mod_date, Document.ModifiedBy:userid, Document.FilePath:new_path})
+                    sql_stmt_2 = update (DocumentHistory)\
+                        .where (DocumentHistory.DocId == docid)\
+                            .values({DocumentHistory.DocName:docname, DocumentHistory.FilePath:new_path})
+                    session.execute(sql_stmt)
+                    session.execute(sql_stmt_2)
+                    session.commit()
+                    mod_date = datetime.today()
+                    # update Documents table with the latest version
+                    
+                    
+                    index = docname.index('.tex')
+                    docname = docname[:index]
+                    
+                    userhist_entry = UserHistory(userid, docid, datetime.today(), docname, 'rename')
+                    session.add(userhist_entry)
+                    session.flush()
+                    session.commit()
+                    session.close()
                 # building output data
                 data_out = json.dumps({'UserId':userid, 'DocId':docid, 'DocName':docname})
                 mess_out = 'Success'
         except Exception as err:
-            mess_out = x
+            mess_out = a
             current_app.logger.exception("Failure Renaming file! "+str(err))
     
     current_app.logger.info("Service File Rename ended")
@@ -455,7 +454,7 @@ def file_delete(user_id):
     current_app.logger.info("Service file/delete initiated")
     if(request.method == 'POST'):
         content  = request.get_json(silent=True)
-        userid   = content['UserId']
+        userid   = user_id
         docid    = content['DocId']
         userperm = get_user_permissions(userid, docid)
         try:
@@ -491,25 +490,29 @@ def file_delete(user_id):
 @authentication
 def file_view(user_id):
     userid = user_id
-    docid   = content['DocId']
-    userperm = get_user_permissions(userid, docid)
-    try:
-        if('R' in userperm):
-            session = session_factory()
-            sql_stmt = (select(Document.FilePath).where(Document.DocId==docid))
-            result = session.execute(sql_stmt).first()
-            session.close()
+    if request.method == "POST":
+        content  = request.get_json(silent=True)
+        docid   = content['DocId']
+        userperm = get_user_permissions(userid, docid)
+        try:
+            if('W' in userperm):
+                session = session_factory()
+                sql_stmt = (select(Document.FilePath).where(Document.DocId==docid))
+                result = session.execute(sql_stmt).first()
+                session.close()
 
-            file_path = result[0]
-            with open(file_path,'r') as f:
-                data = f.read()
-            data_out = {"file_content":data}
-            return jsonify(data_out)
-            
-    except:
-        return jsonify(message="error")
+                file_path = result[0]
+                with open(file_path,'r') as f:
+                    data = f.read()
+                data_out = {"file_content":data}
+                return jsonify(data_out)
+                print(data_out)
+                
+        except:
+            print(x)
+            return jsonify(message="error")
 
-@fileManagerBlueprint.route('/file/trash', methods = ['GET', 'POST'])
+@fileManagerBlueprint.route('/api/file/trash', methods = ['GET', 'POST'])
 @authentication
 def file_trash(user_id):
     current_app.logger.info("Service file/move to trash initiated")
