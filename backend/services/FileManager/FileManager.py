@@ -253,7 +253,7 @@ def file_Modify(user_id):
                 session.commit()
             # Continue either updating or saving the file
             else:
-                userperm = get_user_permissions(userid, docid)
+                userperm = get_user_permissions(userid, docid) #W/R
                 # User has write permission
                 if('W' in userperm):
                     # get and create a new version for the document
@@ -442,29 +442,112 @@ def file_GetList(user_id):
 @fileManagerBlueprint.route('/api/file/delete', methods=['GET', 'POST'])
 @authentication
 def file_delete(user_id):
-    #docid
-    #userid
-    #update db and delete file
-    #return json
-    #TODO api to delete file
-    pass
+    userid   = ''
+    docid    = ''
+    filename = ''
+    data_out = ''
+    mess_out = ''
+
+    current_app.logger.info("Service file/delete initiated")
+    if(request.method == 'POST'):
+        content  = request.get_json(silent=True)
+        userid   = content['UserId']
+        docid    = content['DocId']
+        try:
+            if(userperm == 'w'):
+                session = session_factory()
+                sql_stmt = delete(Document.DocName, Document.FilePath).where(Document.DocId == docid)
+                 #sql = "DELETE FROM Documents WHERE (DocName = file_name and UserId= user_id)"
+                sql_result = session.execute(sql_stmt)
+                session.close()
+                if (os.path.exists(Document.Filepath)):
+                    os.remove(Document.Filepath)
+                else:
+                    current_app.logger.error("File does not exist at the path: ", filepath)
+                mess_out='Success'
+            else:
+                raise Exception("Access to delete denied!")
+        except Exception:
+            mess_out = 'fail'
+            current_app.logger.exception("Failure deleting file!")
+    current_app.logger.info("Service file/delete ended")
+    return jsonify(message=mess_out)
 
 @fileManagerBlueprint.route('/api/file/view', methods=['GET', 'POST'])
 @authentication
 def file_view(user_id):
-    #TODO api to view file
-    pass
+    userid = user_id
+    docid   = content['DocId']
+    
+    try:
+        userperm = get_user_permissions(userid, docid)
+        if('W' in userperm):
+            session = session_factory()
+            sql_stmt = (select(Document.FilePath).where(Document.DocId==docid))
+            result = session.execute(sql_stmt).first()
+            session.close()
+            
+    except:
+        pass
 
 @fileManagerBlueprint.route('/file/trash', methods = ['GET', 'POST'])
 @authentication
 def file_trash(user_id):
-    #docid
-    #userid
-    #update db
-    #return json
-    pass
+    current_app.logger.info("Service file/move to trash initiated")
+    mess_out = ''
+
+    if (request.method == 'POST'):
+        content   = request.get_json(silent=True)
+        userid    = content['UserId']
+        docid     = content['DocId']
+        userperm = 'W'
+        try:
+            if (userperm == 'W'):
+                session = session_factory()
+                sql_stmt=update(Document).set(Document.IsTrash == 1).where(Document.DocId == docid)
+                #("UPDATE Documents SET IsTrash=1 WHERE DocName = file_name,UserId=user_id")
+                sql_result = session.execute(sql_stmt)
+                session.commit()
+                session.close()
+                mess_out = 'success'
+            else:
+                raise Exception("Permission to move to trash denied!")
+            #return jsonify(message = "File moved to trash successfully")
+        except Exception:
+            #return jsonify(message='Oops! Something went wrong')
+            mess_out = 'fail'
+            current_app.logger.exception("Failure moving file to trash!")
+
+    current_app.logger.info("Service file/move to trash ended")
+    return jsonify(message=mess_out)
 
 @fileManagerBlueprint.route('/api/file/retrive', methods = ['GET','POST'])
 @authentication
 def file_retrive(user_id):
-    pass
+    current_app.logger.info("Service file/retrieve from trash initiated")
+    mess_out = ''
+    if request.method == 'POST':
+        content   = request.get_json(silent=True)
+        userid    = content['UserId']
+        docid     = content['DocId']
+        userperm = 'W'
+
+        try:
+            if (userperm == 'w'):
+                session = session_factory()
+                sql_stmt=update(Document).set(Document.IsTrash == 0).where(Document.DocId == docid)
+                #("UPDATE Documents SET IsTrash=1 WHERE DocName = file_name,UserId=user_id")
+                sql_result = session.execute(sql_stmt)
+                session.commit()
+                session.close()
+                mess_out = 'success'
+            else:
+                raise Exception("Permission to retrieve from trash denied!")
+            #return jsonify(message = "File moved to trash successfully")
+        except Exception:
+            #return jsonify(message='Oops! Something went wrong')
+            mess_out = 'fail'
+            current_app.logger.exception("Failure retrieving file from trash!")
+
+    current_app.logger.info("Service file/retrieve from trash ended")
+    return jsonify(message=mess_out)
