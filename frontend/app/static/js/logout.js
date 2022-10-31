@@ -1,7 +1,7 @@
 /* this logoutButtonClicked function checks for the userToken in local Storage
    if JWT is i local storage it removes it sends JWT to backend for validation
    if it is valid redirects to home page after logout
-   if it is invalid or not in local storage, it issues a "bad requests" alert and 
+   if it is invalid or not in local storage, it issues a "bad request" alert and 
    redirects to home page*/
 
    
@@ -20,7 +20,7 @@ async function logoutButtonClicked()
                 'authToken': userToken,
             }
         })
-        .then(response => { if(response.status == 400) {
+        .then(response => { if(response.status == 400 || response.status == 401) {
                                 window.alert('bad request');
                             }})
         // .then(data => {console.log(data))
