@@ -27,7 +27,8 @@ def register():
         userId=str(uuid.uuid4())
         userName=content['email']
         password=content['password']
-        confirm=content['confirm']
+        firstname=content["FirstName"]
+        lastname=content["LastName"]
         IsAdmin=False
         loginType=content['loginType']
         secure_password = bcrypt.generate_password_hash(password) 
@@ -38,30 +39,25 @@ def register():
         
         #usernamedata=str(usernamedata)
         if result==None:
-            if password==confirm:
-                #i have to changeto sql alchemy type
-                session = session_factory()
-                sql_statement1= insert(User).values(UserId=userId,UserName=userName,Password=secure_password,IsAdmin=IsAdmin,LoginType=loginType)
-                sql_statement2= insert(UserProfile).values(UserId=userId,UserName=userName,SignUpDate=currentDate,LastActiveDate=currentDate)
-                result1=session.execute(sql_statement1)
-                result2=session.execute(sql_statement2)
-                session.commit()
-                check_stmt = (select(User) .where(User.UserId==userId))
-                check_stmt_2 = (select(UserProfile) .where(UserProfile.UserId==userId))
-                check = session.execute(check_stmt)
-                check_2 = session.execute(check_stmt_2)
-                session.close() 
-                if check and check_2:
-                    res={"message":'You are registered and can now login'}
-                    mess_out=make_response(jsonify(res), 200)
-                else:
-                    res={"message":'Registeration error-Cannot add user'}
-                    mess_out=make_response(jsonify(res), 401)
-            
+            session = session_factory()
+            sql_statement1= insert(User).values(UserId=userId,UserName=userName,Password=secure_password,IsAdmin=IsAdmin,LoginType=loginType)
+            sql_statement2= insert(UserProfile).values(UserId=userId,UserName=userName,FirstName=firstname, LastName=lastname,SignUpDate=currentDate,LastActiveDate=currentDate)
+            result1=session.execute(sql_statement1)
+            result2=session.execute(sql_statement2)
+            session.commit()
+            check_stmt = (select(User) .where(User.UserId==userId))
+            check_stmt_2 = (select(UserProfile) .where(UserProfile.UserId==userId))
+            check = session.execute(check_stmt)
+            check_2 = session.execute(check_stmt_2)
+            session.close() 
+            if check and check_2:
+                res={"message":'You are registered and can now login'}
+                mess_out=make_response(jsonify(res), 200)
             else:
-                res={"message":'Password does not match'}
-                #return render_template('register.html')
+                res={"message":'Registeration error-Cannot add user'}
                 mess_out=make_response(jsonify(res), 401)
+        
+        
         else:
             res={"message":'user already existed, please login or contact admin'}
             #return redirect(url_for('login'))

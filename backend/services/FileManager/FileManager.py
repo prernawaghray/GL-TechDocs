@@ -1,11 +1,12 @@
 # Libraries
-from asyncore import file_dispatcher
+# from asyncore import file_dispatcher
 import os
 import warnings
 import logging
 import yaml
 import requests
 import json
+import re
 #from functools import singledispatchmethod
 from datetime import datetime
 from xml.dom.xmlbuilder import DocumentLS 
@@ -348,38 +349,40 @@ def file_Rename(user_id):
             if (noofrecords == 0):
                 raise Exception('Document reference id not found. Cannot rename!')
             else:
-                mod_date = datetime.today()
-                # update Documents table with the latest version
-                sql_stmt = update(Document)\
-                    .where(Document.DocId == docid)\
-                    .values({Document.DocName:docname, Document.ModifiedDate:mod_date, Document.ModifiedBy:userid})
-                sql_stmt_2 = update (DocumentHistory)\
-                    .where (DocumentHistory.DocId == docid)\
-                        .values({DocumentHistory.DocName:docname})
-                session.execute(sql_stmt)
-                session.execute(sql_stmt_2)
-                session.commit()
-                
-                index = docname.index('.tex')
-                docname = docname[:index]
-                
-                userhist_entry = UserHistory(userid, docid, datetime.today(), docname, 'rename')
-                session.add(userhist_entry)
-                session.flush()
-                session.commit()
-
                 file_paths_stmt = (select(DocumentHistory.FilePath).where(DocumentHistory.DocId==docid))
                 file_paths = session.execute(file_paths_stmt).all()
                 for path in file_paths:
-                    #TODO rename files in the FS
-                    print(path)
-                
-                session.close()
+                    path = path[0]
+                    pattern = re.compile(r"/tmp/testdata/"+userid+r"/[a-zA-Z]+")
+                    replacement = r"/tmp/testdata/"+userid+r"/"+docname
+                    new_path = re.sub(pattern,replacement,path)
+                    os.rename(path, new_path)
+                    sql_stmt = sql_stmt = update(Document)\
+                    .where(Document.DocId == docid)\
+                    .values({Document.DocName:docname, Document.ModifiedDate:mod_date, Document.ModifiedBy:userid, Document.FilePath:new_path})
+                    sql_stmt_2 = update (DocumentHistory)\
+                        .where (DocumentHistory.DocId == docid)\
+                            .values({DocumentHistory.DocName:docname, DocumentHistory.FilePath:new_path})
+                    session.execute(sql_stmt)
+                    session.execute(sql_stmt_2)
+                    session.commit()
+                    mod_date = datetime.today()
+                    # update Documents table with the latest version
+                    
+                    
+                    index = docname.index('.tex')
+                    docname = docname[:index]
+                    
+                    userhist_entry = UserHistory(userid, docid, datetime.today(), docname, 'rename')
+                    session.add(userhist_entry)
+                    session.flush()
+                    session.commit()
+                    session.close()
                 # building output data
                 data_out = json.dumps({'UserId':userid, 'DocId':docid, 'DocName':docname})
                 mess_out = 'Success'
         except Exception as err:
-            mess_out = x
+            mess_out = a
             current_app.logger.exception("Failure Renaming file! "+str(err))
     
     current_app.logger.info("Service File Rename ended")
@@ -430,7 +433,7 @@ def file_GetList(user_id):
             session.close()
             # json object with array of json documents list 
             data_out = json.dumps({'Documents': docslist})
-            mess_out = 'Success'
+            mess_out = 'success'
         except Exception as err:
             mess_out = 'Error'
             current_app.logger.exception("Failure getting the list of files! "+str(err))
@@ -451,20 +454,30 @@ def file_delete(user_id):
     current_app.logger.info("Service file/delete initiated")
     if(request.method == 'POST'):
         content  = request.get_json(silent=True)
-        userid   = content['UserId']
+        userid   = user_id
         docid    = content['DocId']
+        userperm = get_user_permissions(userid, docid)
         try:
-            if(userperm == 'w'):
+            if(userperm == 'W'):
                 session = session_factory()
-                sql_stmt = delete(Document.DocName, Document.FilePath).where(Document.DocId == docid)
-                 #sql = "DELETE FROM Documents WHERE (DocName = file_name and UserId= user_id)"
-                sql_result = session.execute(sql_stmt)
+                file_paths_stmt = (select(DocumentHistory.FilePath) .where(DocumentHistory.docid == docid))
+                file_paths = session.execute(file_paths_stmt).all()
+                sql_stmt = delete(DocumentHistory).where (DocumentHistory.DocId == docid)
+                sql_stmt_2 = delete(Document) .where(Document.DocId == docid)
+                sql_stmt_3 = (select(Document.DocName).where(Document.DocId == docid))
+                docname = session.execute(sql_stmt_3).first()[0]
+                userhist_entry = UserHistory(userid, docid, datetime.today(), docname, 'delete')
+                session.add(userhist_entry)
+                session.flush()
+                session.execute(sql_stmt)
+                session.execute(sql_stmt_2)
                 session.close()
-                if (os.path.exists(Document.Filepath)):
-                    os.remove(Document.Filepath)
-                else:
-                    current_app.logger.error("File does not exist at the path: ", filepath)
-                mess_out='Success'
+                for file in file_paths:
+                    if (os.path.exists(file)):
+                        os.remove(file)
+                    else:
+                        current_app.logger.error("File does not exist at the path: ", file)
+                mess_out='success'
             else:
                 raise Exception("Access to delete denied!")
         except Exception:
@@ -477,36 +490,48 @@ def file_delete(user_id):
 @authentication
 def file_view(user_id):
     userid = user_id
-    docid   = content['DocId']
-    
-    try:
+    if request.method == "POST":
+        content  = request.get_json(silent=True)
+        docid   = content['DocId']
         userperm = get_user_permissions(userid, docid)
-        if('W' in userperm):
-            session = session_factory()
-            sql_stmt = (select(Document.FilePath).where(Document.DocId==docid))
-            result = session.execute(sql_stmt).first()
-            session.close()
-            
-    except:
-        pass
+        try:
+            if('W' in userperm):
+                session = session_factory()
+                sql_stmt = (select(Document.FilePath).where(Document.DocId==docid))
+                result = session.execute(sql_stmt).first()
+                session.close()
 
-@fileManagerBlueprint.route('/file/trash', methods = ['GET', 'POST'])
+                file_path = result[0]
+                with open(file_path,'r') as f:
+                    data = f.read()
+                data_out = {"file_content":data}
+                return jsonify(data_out)
+                print(data_out)
+                
+        except:
+            print(x)
+            return jsonify(message="error")
+
+@fileManagerBlueprint.route('/api/file/trash', methods = ['GET', 'POST'])
 @authentication
 def file_trash(user_id):
     current_app.logger.info("Service file/move to trash initiated")
     mess_out = ''
-
+    userperm = get_user_permissions(userid, docid)
     if (request.method == 'POST'):
         content   = request.get_json(silent=True)
         userid    = content['UserId']
         docid     = content['DocId']
-        userperm = 'W'
+        user
         try:
             if (userperm == 'W'):
                 session = session_factory()
-                sql_stmt=update(Document).set(Document.IsTrash == 1).where(Document.DocId == docid)
+                sql_stmt=update(Document).where(Document.DocId == docid) .values(IsTrash=1)
+                sql_stmt_2 = update(DocumentHistory) .where(DocumentHistory.DocId == docid).values(IsTrash = 1)
+                sql_stmt_3 = select()
                 #("UPDATE Documents SET IsTrash=1 WHERE DocName = file_name,UserId=user_id")
-                sql_result = session.execute(sql_stmt)
+                session.execute(sql_stmt)
+                session.execute(sql_stmt_2)
                 session.commit()
                 session.close()
                 mess_out = 'success'
@@ -530,14 +555,15 @@ def file_retrive(user_id):
         content   = request.get_json(silent=True)
         userid    = content['UserId']
         docid     = content['DocId']
-        userperm = 'W'
+        userperm = get_user_permissions(userid, docid)
 
         try:
             if (userperm == 'w'):
                 session = session_factory()
-                sql_stmt=update(Document).set(Document.IsTrash == 0).where(Document.DocId == docid)
-                #("UPDATE Documents SET IsTrash=1 WHERE DocName = file_name,UserId=user_id")
-                sql_result = session.execute(sql_stmt)
+                sql_stmt=update(Document).where(Document.DocId == docid) .values(IsTrash=0)
+                sql_stmt_2 = update(DocumentHistory) .where(DocumentHistory.DocId == docid).values(IsTrash = 0)
+                session.execute(sql_stmt)
+                session.execute(sql_stmt_2)
                 session.commit()
                 session.close()
                 mess_out = 'success'
@@ -551,3 +577,26 @@ def file_retrive(user_id):
 
     current_app.logger.info("Service file/retrieve from trash ended")
     return jsonify(message=mess_out)
+
+@fileManagerBlueprint.route('/api/file/getTrashList', methods=["GET","POST"])
+@authentication
+def gettrashlist(user_id):
+    userid = user_id
+    content = requests.get_json(silent=True)
+    trashlist = []
+    try:
+        session = session_factory()
+        sql_stmt = (select(Document.DocId, Document.DocName) .where(Document.UserId == userid))
+        result = session.execute(sql_stmt)
+        for row in result:
+            json_str = {
+                "DocId":row.DocId,
+                "DocName":row.DocName
+            }
+            trashlist.append(json_str)
+            data_out = json.dumps({'Documents': trashlist})
+            mess_out = 'Success'
+    except Exception as err:
+        mess_out = 'Error'
+        current_app.logger.exception("Failure getting the list of files! "+str(err))
+    return jsonify(message=mess_out, data=data_out)
