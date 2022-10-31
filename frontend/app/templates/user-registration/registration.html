@@ -10,23 +10,12 @@
 
 {% block body %}
 
-    <h2>User Registration</h2>
+   
     <!-- <span>A placeholder page</span>
     <p>This page is from templates/home-page/home.html which extends templates/marketing-layout.html </p> -->
-    <div class="container mt-5" >
-
-  <div class="row">
-    <div class="col-sm-4">
-      
-      </div>
-      <div class="col-sm-4" id="clickGmail">
-        <img src="{{ url_for('static',filename='images/icons/signupwithgoogle.png') }}"/>
-      </div>
-      <!-- Display Google sign-in button -->
-      
-      <div class="col-sm-4">
-      </div>
-  </div>
+    <div class="container mt-5 text-center">
+      <h2 class="text-center">User Registration</h2>
+      <img style="height:50px;" src="{{ url_for('static',filename='images/icons/signupwithgoogle.png') }}"/>
 
   <div class="row" id="gmailDiv" style="display: none;">
     <div class="col-sm-5">
@@ -40,43 +29,21 @@
       <div class="col-sm-5">
       </div>
   </div>
-   <div class="row">
-     <div class="col-sm-4">
-      </div>
-      <div class="col-sm-4">
-          <br/>
-          <p>-------------------------- OR --------------------------</p>
-      </div>
-      <div class="col-sm-4">
-      </div>
-  </div>
-  <div class="row">
-    <div class="col-sm-4">
-      
-    </div>
-    <div class="col-sm-4">
-      <div id="registerWithEmail" >
-          <h3>Register with email  </h3>
-         <table width="100%" class="tbl"> 
-            <tr><td>Full Name:</td><td><input type="text" name="fullname"/></td></tr>
-            <tr><td>Email Id:</td><td><input type="text" name="username"/></td></tr>
-            <tr><td>Password:</td><td><input type="password" name="password"/></td></tr>
-            <tr><td>Repeat Password:</td><td><input type="password" name="verifypassword"/></td></tr>
-            <tr>
-               <td></td>
-               <td><input type="submit" value="Register"/></td>
-            </tr>
-            
-          </table>
-      </div>
-      <img src="{{ url_for('static',filename='images/icons/signupwithemail.png') }}" id="clickEmail"/>
 
+  <br/> <br/>
+           OR <br/>
+    <div id="registerWithEmail" class="text-center" style="display:block;margin:auto; width:360px;">
+      <h5>Register with email  </h5>
+      <input class="form-control" placeholder="Full Name" type="text" name="fullname"/>
+      <input class="form-control" type="email" name="username" placeholder="Email ID"/>
+      <input class="form-control" type="password" name="password" placeholder="Password"/>
+      <input class="form-control" type="password" name="verifypassword" placeholder="Confirm Password"/>
+      <br/  >
+      <input class="btn btn-primary" type="submit" style="color:transparent; width:400px;height:50px;background-size:contain;background:url('{{ url_for('static',filename='images/icons/signupwithemail.png') }}');"/>
     </div>
-    <div class="col-sm-4">
-      
-    </div>
-  </div>
- 
+  
+   
+
   
 </div>
 
