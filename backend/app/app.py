@@ -10,11 +10,10 @@ from flask import Flask, jsonify, render_template
 import socket
 import yaml
 import sys
-from flask_cors import CORS
-sys.path.append('../')
-with open('../config.yaml') as stream:
-    configs = yaml.safe_load(stream)
 
+sys.path.append('../')
+
+from flask_cors import CORS
 from services.UserRegistration.register import register_bp
 from services.FileManager.FileManager import fileManagerBlueprint
 from services.UserAuthentication.Login import userLogin_bp
@@ -26,10 +25,12 @@ from services.ForgotPassword.forgotpassword import forgotpassword_bp
 from services.ForgotPassword.mail import mail_bp
 from services.DocumentVersionManager.DocumentVersionManager import documentVersionManagerBlueprint
 from services.UserHistoryManager.UserHistoryManager import userHistoryManagerBlueprint
-from services.RazorpayIntegration.razorPay import razorPayBlueprint
+# from services.RazorpayIntegration.razorPay import razorPayBlueprint
+
 
 app= Flask(__name__)
 CORS(app, resources={r"/*":{"origins":"*"}})
+app.config.from_object('config.ProdConfig')
 
 app.register_blueprint(register_bp)
 app.register_blueprint(documentVersionManagerBlueprint)
@@ -42,11 +43,7 @@ app.register_blueprint(updateUserProfile_bp)
 app.register_blueprint(deletecode_bp)
 app.register_blueprint(forgotpassword_bp)
 app.register_blueprint(mail_bp)
-app.register_blueprint(razorPayBlueprint)
-
-app.config['ENV'] = configs["FLASK_ENV"]
-app.config['SAMPLE_TESTING'] = "test success"
-app.config["SECRET"] = "secret"
+# app.register_blueprint(razorPayBlueprint)
 
 # This function get the hostname and IP deatils of server, required for microservices
 def fetchDetails():
@@ -69,8 +66,6 @@ def health():
 def details():
 	hostname, ip = fetchDetails()
 	return render_template('index.html', HOSTNAME=hostname, IP=ip)
-
-
 
 if __name__ == '__main__':
 	app.run(debug=True)

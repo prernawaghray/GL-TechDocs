@@ -4,16 +4,17 @@ import sqlalchemy
 import yaml
 from flask import Blueprint
 
-with open('../config.yaml') as stream:
-    configs = yaml.safe_load(stream)
-url = configs['DB_URL']
-engine = sqlalchemy.create_engine(url)
-connect = engine.connect()
-
-
 #creating the Permissions Blueprint
 permissions_bp = Blueprint('permissionsBlueprint', __name__)
+from dotenv import load_dotenv
 
+basedir = os.path.abspath(os.path.dirname(__file__))
+env = os.path.join(basedir,'../.env.local')
+if os.path.exists(env):
+    load_dotenv(env)
+url = os.environ.get('DB_URL')
+engine = sqlalchemy.create_engine(url)
+connect = engine.connect()
 
 @permissions_bp.route('/api/get_permissions', methods=['GET'])
 def get_permissions(user_id, doc_id):

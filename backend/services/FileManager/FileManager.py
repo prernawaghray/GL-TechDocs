@@ -5,6 +5,7 @@ import warnings
 import logging
 import yaml
 import requests
+from flask import request,make_response
 import json
 import re
 #from functools import singledispatchmethod
@@ -29,19 +30,14 @@ from ..Permissions.permissions import get_user_permissions
 # Suppress warnings
 warnings.filterwarnings("ignore")
 
-# Get logging filepath
-with open('../config.yaml') as stream:
-    configs = yaml.safe_load(stream)
-
-# Get file Data foler & log folder
-data_path = configs["DIR_ROOT"] + configs["DIR_DATA"] 
-log_path = configs['DIR_ROOT'] + configs['DIR_LOG']
-#current_app.basicConfig(filename=log_path)
-logging.basicConfig(filename=log_path)
-
-# Start flask
-# Flask configurations
 fileManagerBlueprint = Blueprint('fileManagerBlueprint', __name__)
+
+@fileManagerBlueprint.before_request
+def before_request_func():
+
+    data_path = current_app.config["DIR_ROOT"] + current_app.config["DIR_DATA"] 
+    log_path = current_app.config['DIR_ROOT'] + current_app.config['DIR_LOG']
+    logging.basicConfig(filename=log_path)
 
 ####################
 # File Manager Class
@@ -349,6 +345,7 @@ def file_Rename(user_id):
             if (noofrecords == 0):
                 raise Exception('Document reference id not found. Cannot rename!')
             else:
+
                 file_paths_stmt = (select(DocumentHistory.FilePath).where(DocumentHistory.DocId==docid))
                 file_paths = session.execute(file_paths_stmt).all()
                 for path in file_paths:
@@ -433,14 +430,14 @@ def file_GetList(user_id):
             session.close()
             # json object with array of json documents list 
             data_out = json.dumps({'Documents': docslist})
-            mess_out = 'success'
+            value={"message":"success"}
         except Exception as err:
-            mess_out = 'Error'
+            value={"message":"Error"}
             current_app.logger.exception("Failure getting the list of files! "+str(err))
     
     current_app.logger.info("Service Get Document List ended")
     # return the message and data string as response
-    return jsonify(message=mess_out, data=data_out)
+    return make_response(jsonify(value, data_out))
 
 @fileManagerBlueprint.route('/api/file/delete', methods=['GET', 'POST'])
 @authentication
