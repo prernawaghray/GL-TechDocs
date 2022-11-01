@@ -88,10 +88,10 @@ def dashboard():
 def registration():
    return render_template('user-registration/registration.html')
 
-@app.route('/latex-editor/new-document')
+@app.route('/latex-editor/<id>')
 # @login_required
-def latexEditor():
-   return render_template('latex-editor/editor.html')
+def latexEditor(id=0):
+   return render_template('latex-editor/editor.html',doc_id=id)
 
 @app.route('/plans')
 def plans():
