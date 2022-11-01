@@ -12,7 +12,48 @@
     <!-- PAGE HEADER AND SEARCH -->
     <div
       class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-      <h2 class="page-header"></h2>
+      <div class="btn-group me-2" role="group" aria-label="button menu">
+        <a href="{{url_for('latexEditor')}}" title="New">
+          <button type="button" class="btn btn-outline-info" style="height: 40px; width: 40px; padding: 0px;">
+            <i class="bi bi-file-earmark-plus" style="font-size: 25px;"></i>
+          </button>
+        </a>
+        <!-- Upload Button -->
+        <a href="#" data-bs-toggle="modal" data-bs-target="#UploadButton" data-bs-placement="bottom" title="Upload">
+          <button type="button" class="btn btn-outline-info" style="height: 40px; width: 40px; padding: 0px;">
+            <i class="bi bi-upload" style="font-size: 25px;"></i>
+          </button>
+        </a>
+        <!-- Share Button -->
+        <a class="disabled" href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-bs-placement="bottom"
+          title="Share">
+          <button type="button" class="btn disabled" style="height: 40px; width: 40px; padding: 0px;">
+            <i class="bi bi-share" style="font-size: 25px;"></i>
+          </button>
+        </a>
+        <!-- Archive Button -->
+        <a class="disabled" href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-bs-placement="bottom"
+          title="Archive">
+          <button type="button" class="btn disabled" style="height: 40px; width: 40px; padding: 0px;">
+            <i class="bi bi-file-earmark-zip" style="font-size: 25px;"></i>
+          </button>
+        </a>
+        <!-- Copy Button -->
+        <a class="disabled" href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-bs-placement="bottom"
+          title="Copy">
+          <button type="button" class="btn disabled" style="height: 40px; width: 40px; padding: 0px;">
+            <i class="bi bi-files" style="font-size: 25px;"></i>
+          </button>
+        </a>
+        <!-- Trash Button -->
+        <a class="disabled" href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-bs-placement="bottom"
+          title="Move to Trash">
+          <button type="button" class="btn disabled" style="height: 40px; width: 40px; padding: 0px;">
+            <i class="bi bi-trash3" style="font-size: 25px;"></i>
+          </button>
+        </a>
+      </div>
+      
       <form class="d-flex align-items-center flex-nowrap">
         <input class="form-control mr-sm-2" id="searchbar" type="search" placeholder="Search file" aria-label="Search" onkeyup="fileSearch()">
         <button class="btn btn-outline-info d-flex d-inline-block my-2 my-sm-0" type="submit">
@@ -24,47 +65,7 @@
 
     <!-- BUTTON MENU -->
     <!-- New Button -->
-    <div class="btn-group me-2" role="group" aria-label="button menu">
-      <a href="{{url_for('latexEditor')}}" title="New">
-        <button type="button" class="btn btn-outline-info" style="height: 40px; width: 40px; padding: 0px;">
-          <i class="bi bi-file-earmark-plus" style="font-size: 25px;"></i>
-        </button>
-      </a>
-      <!-- Upload Button -->
-      <a href="#" data-bs-toggle="modal" data-bs-target="#UploadButton" data-bs-placement="bottom" title="Upload">
-        <button type="button" class="btn btn-outline-info" style="height: 40px; width: 40px; padding: 0px;">
-          <i class="bi bi-upload" style="font-size: 25px;"></i>
-        </button>
-      </a>
-      <!-- Share Button -->
-      <a class="disabled" href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-bs-placement="bottom"
-        title="Share">
-        <button type="button" class="btn disabled" style="height: 40px; width: 40px; padding: 0px;">
-          <i class="bi bi-share" style="font-size: 25px;"></i>
-        </button>
-      </a>
-      <!-- Archive Button -->
-      <a class="disabled" href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-bs-placement="bottom"
-        title="Archive">
-        <button type="button" class="btn disabled" style="height: 40px; width: 40px; padding: 0px;">
-          <i class="bi bi-file-earmark-zip" style="font-size: 25px;"></i>
-        </button>
-      </a>
-      <!-- Copy Button -->
-      <a class="disabled" href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-bs-placement="bottom"
-        title="Copy">
-        <button type="button" class="btn disabled" style="height: 40px; width: 40px; padding: 0px;">
-          <i class="bi bi-files" style="font-size: 25px;"></i>
-        </button>
-      </a>
-      <!-- Trash Button -->
-      <a class="disabled" href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-bs-placement="bottom"
-        title="Move to Trash">
-        <button type="button" class="btn disabled" style="height: 40px; width: 40px; padding: 0px;">
-          <i class="bi bi-trash3" style="font-size: 25px;"></i>
-        </button>
-      </a>
-    </div>
+    
     <!-- END OF BUTTON MENU -->
 
     <!-- ALL MODALS FOR BUTTON MENU -->
