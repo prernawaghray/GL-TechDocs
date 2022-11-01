@@ -88,6 +88,18 @@ def dashboard():
 def registration():
    return render_template('user-registration/registration.html')
 
+@app.route('/doregistration', methods=['GET', 'POST'])
+def doregistration():
+   if request.method != 'POST':
+       return render_template('user-registration/registration.html')
+
+   if request.form['register'] == 'google':
+      print(request.form['register'])
+   else:
+      print(request.form['register'])
+
+   return render_template('user-registration/registration.html')
+
 @app.route('/latex-editor/new-document')
 # @login_required
 def latexEditor():
