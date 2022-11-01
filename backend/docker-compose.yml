@@ -4,15 +4,7 @@ services:
     build: ./
     restart: always
     env_file:
-      - .env
+      - .env.local
     ports:
       - "5000"
-  
-  nginx:
-    image: nginx:latest
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-    depends_on:
-      - app
-    ports:
-      - "80:80"
+    network_mode: "host"
