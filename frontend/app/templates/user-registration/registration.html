@@ -15,36 +15,43 @@
     <p>This page is from templates/home-page/home.html which extends templates/marketing-layout.html </p> -->
     <div class="container mt-5 text-center">
       <h2 class="text-center">User Registration</h2>
-      <img style="height:50px;" src="{{ url_for('static',filename='images/icons/signupwithgoogle.png') }}"/>
+     
 
-  <div class="row" id="gmailDiv" style="display: none;">
-    <div class="col-sm-5">
+    <div id="registerWithEmail" class="text-center mt-5" style="display:block;margin:auto; width:360px;">
+     
+      <div class="form-floating">
+        <input class="form-control" id="full-name" placeholder="Full name" type="text" name="fullname" required/>
+        <label for="full-name">Full Name</label>
       </div>
-      <div class="col-sm-2">
-          <div id="gSignIn"></div>
-          <!-- Show the user profile details -->
-          <div class="userContent" style="display: none;"></div>
+
+      <div class="form-floating mt-2">
+        <input type="email" class="form-control" name="username" placeholder="Email ID" id="email-input"  required/>
+        <label for="email-input">Email ID</label>
+      </div>
+
+      <div class="form-floating mt-2">
+        <input type="password" class="form-control" name="password" id="password-input" placeholder="password" required/>
+        <label for="password-input">Password</label>
+      </div>
+      
+      <div class="form-floating mt-2">
+        <input type="password" class="form-control" name="verifypassword" id="verify-password-input" placeholder="Verify Password" required/>
+        <label for="verify-password-input">Verify Password</label>
+      </div>
+
+      <div class="d-grid mt-2">
+      <button type="submit" class="btn btn-primary d-flex justify-content-start"><span><i class="bi bi-envelope-fill flex-fill"></i></span><span class="flex-fill"><b>Sign up with Email</b></span></button>   
+      </div>
+
+      <div class="d-flex mt-3 mb-3">
+            <div class="flex-fill"><hr/></div>
+            <div class="flex-fill">OR</div>
+            <div class="flex-fill"><hr/></div>
         </div>
-        <!-- Display Google sign-in button -->    
-      <div class="col-sm-5">
-      </div>
-  </div>
-
-  <br/> <br/>
-           OR <br/>
-    <div id="registerWithEmail" class="text-center" style="display:block;margin:auto; width:360px;">
-      <h5>Register with email  </h5>
-      <input class="form-control" placeholder="Full Name" type="text" name="fullname"/>
-      <input class="form-control" type="email" name="username" placeholder="Email ID"/>
-      <input class="form-control" type="password" name="password" placeholder="Password"/>
-      <input class="form-control" type="password" name="verifypassword" placeholder="Confirm Password"/>
-      <br/  >
-      <input class="btn btn-primary" type="submit" style="color:transparent; width:400px;height:50px;background-size:contain;background:url('{{ url_for('static',filename='images/icons/signupwithemail.png') }}');"/>
     </div>
-  
+    
+    <img style="height:48px;" src="{{ url_for('static',filename='images/icons/signupwithgoogle.png') }}"/>
    
-
-  
 </div>
 
 {% endblock %}
