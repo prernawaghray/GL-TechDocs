@@ -14,10 +14,10 @@ from orm_Tables import Document, DocumentHistory, User
 warnings.filterwarnings("ignore")
 
 import sys
-sys.path.append('./')
+sys.path.append('../')
 
 # Get logging filepath
-with open('./config.yaml') as stream:
+with open('../config.yaml') as stream:
     configs = yaml.safe_load(stream)
 
 # Data folder 
@@ -54,12 +54,16 @@ class VersionManage:
 
         if not os.path.exists(file_directory):
             os.makedirs(file_directory)
-
-        # TODO: copy contents from old file to new file
-        with open(current_file_path) as f:
-            with open(file_path, "w") as f1:
-                for line in f:
-                    f1.write(line)
+        
+        if current_file_path == "":
+            with open(file_path,"w") as f:
+                f.write("")
+        else:
+            # TODO: copy contents from old file to new file
+            with open(current_file_path) as f:
+                with open(file_path, "w") as f1:
+                    for line in f:
+                        f1.write(line)
 
         cls.v_file_name = document_name
         cls.v_file_path = file_path

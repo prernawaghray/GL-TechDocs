@@ -8,7 +8,7 @@ from datetime import datetime
 from flask import Flask, request, jsonify, json, Blueprint, current_app
 import sqlalchemy as db
 from DBConnect import session_factory
-from ..services.UserAuthentication.JWTAuthentication import authentication
+from ..UserAuthentication.JWTAuthentication import authentication
 
 from orm_Tables import UserHistory, ActionEnum, Document, User
 
@@ -16,10 +16,10 @@ from orm_Tables import UserHistory, ActionEnum, Document, User
 warnings.filterwarnings("ignore")
 
 import sys
-sys.path.append('./')
+sys.path.append('../')
 
 # Get logging filepath
-with open('./config.yaml') as stream:
+with open('../config.yaml') as stream:
     configs = yaml.safe_load(stream)
 
 # Initiate logging 
