@@ -51,7 +51,7 @@ def get_document_record(document_id):
 def get_user_record(user_id):
     try: 
         session = session_factory()
-        user_query = session.query(User).filter(User.Id == user_id).all()
+        user_query = session.query(User).filter(User.UserId == user_id).all()
         session.close()
         if len(user_query) > 0:
             return user_query[0]
@@ -64,7 +64,7 @@ def get_user_record(user_id):
 def get_user_record_by_email(email):
     try: 
         session = session_factory()
-        user_query = session.query(User).filter(User.username == email).all()
+        user_query = session.query(User).filter(User.UserName == email).all()
         session.close()
         if len(user_query) > 0:
             return user_query[0]
@@ -122,7 +122,7 @@ def create_user_history():
             else:
                 document_name = document.DocName
 
-            user_history_record = UserHistory(user, document, datetime.now(), document_name, action)
+            user_history_record = UserHistory(user.UserId, document.DocId, datetime.now(), document_name, action)
             if action == ActionEnum.share.value:
                 user_history_record.s_Misc1 = additionalInfo["email_id"]
 
@@ -177,7 +177,7 @@ def get_user_history():
 
         try :
             session = session_factory()
-            user_history_query = session.query(UserHistory).filter(UserHistory.UserId == user_record.Id).order_by(UserHistory.CreatedDate.desc()).offset(page_number*page_size).limit(page_size).all()
+            user_history_query = session.query(UserHistory).filter(UserHistory.UserId == user_record.UserId).order_by(UserHistory.CreatedDate.desc()).offset(page_number*page_size).limit(page_size).all()
             session.close()
             for user_history_record in user_history_query:
                 action = user_history_record.Action
