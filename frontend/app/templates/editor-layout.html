@@ -2,68 +2,10 @@
 
 {% block layoutCss %}
   <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard-layout.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/editor-layout.css') }}">
   <link rel="stylesheet" href="https://prismjs.com/themes/prism.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="https://prismjs.com/plugins/line-numbers/prism-line-numbers.css">
   <link rel="stylesheet" href="https://live.prismjs.com/prism-live.css">
-  <style>
-    latex-js {
-      display: inline-block;
-      width: 40%;
-      border: 1px solid red;
-      margin-right: 2em;
-    }
-    
-    .re-flex .item, .re-flex div.prism-live, textarea{
-      width: calc(50% - 20px);
-      height: calc(100%);
-    }
-    .re-flex .item:last-child{
-      margin-left:15px;
-    }
-    @media (max-width: 800px) {
-      .container-x > aside, .container-x .resize-handle--x{
-        display:none;
-      }
-      .re-flex{
-        flex-direction: column-reverse;
-      }
-      .re-flex .item, .re-flex div.prism-live{
-        margin-bottom: 20px;
-        width:100%;
-        height: calc(59% - 100px);
-      }
-      .re-flex .item:last-child{
-        margin-left:0px;
-      }
-    }
-
-    .assets-menu li a{
-      padding:5px;
-      background-color: aliceblue;
-    }
-    .assets-menu li:hover{
-      cursor: pointer;
-      background-color: rgb(214, 234, 252);
-    }
-
-    #editor-text{
-      background-color: transparent;
-      color: transparent;
-    }
-    
-    code[class*="language-"], pre[class*="language-"] {
-      font-size: 16px;
-      color: white;
-      text-shadow: none;
-    }
-
-    :not(pre) > code[class*="language-"], pre[class*="language-"] {
-        background: #444;
-    }
-
-  </style>
-
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/editor-layout.css') }}">
   {% block pageCss %}{% endblock%}
 {% endblock %}
 
@@ -156,18 +98,11 @@
 
 
 <div class="container-x">
-  <aside style="display: none !important;">
+  <!-- <aside style="display: none !important;">
     <p style="width:180px;">Assets</p>
   </aside>
-  <div  style="display: none !important;" class="resize-handle--x" data-target="aside"></div>
-  <main class="container-fluid body-main mt-2 bg-light">
-    <div class="d-flex align-items-stretch flex-wrap re-flex" style="height: calc(100% - 63px)">
-      <textarea id="editor-text" class="form-control prism-live language-latex"></textarea>
-      <iframe id="html-preview" sandbox="allow-same-origin allow-scripts" srcdoc="" class="shadow p-3 bg-body rounded item">
-
-      </iframe>
-    </div>
-  </main>
+  <div  style="display: none !important;" class="resize-handle--x" data-target="aside"></div> -->
+  {% block body %}{% endblock %}
 </div>
 
 
@@ -184,106 +119,41 @@
   <script src="https://prismjs.com/plugins/line-numbers/prism-line-numbers.js"></script>  
   
   <script src="{{url_for('static',filename='js/node_modules/latex.js/dist/latex.js')}}"></script>  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
 
   <script>
   
-    function refreshContent(){
+    function generateHTMLContent(type){
       var text = $editor.value;
       var generator = new latexjs.HtmlGenerator({ hyphenate: false });
       lDoc = latexjs.parse(text, { generator: generator }).htmlDocument('https://cdn.jsdelivr.net/npm/latex.js@0.12.4/dist/');
+      
       $('#html-preview').attr('srcDoc',lDoc.documentElement.outerHTML);
+     
+      if(type=='print'){
+        $('#html-preview')[0].contentWindow.print();
+      }
+        
     }
+   
     $(document).ready(function(){
       $editor=document.getElementById('editor-text');
-      
     
       //document.head.appendChild(generator.stylesAndScripts("https://cdn.jsdelivr.net/npm/latex.js@0.12.4/dist/"))
-      $editor.addEventListener('keyup',function(event){
-        refreshContent();
-      });
+      $editor.addEventListener('keyup',_.debounce(function(event){
+        generateHTMLContent('preview');
+      },300));
       
-      refreshContent();
+      generateHTMLContent('preview');
 
       $('#f-icon').click(function(){
         $('#f-icon').toggleClass('bi-fullscreen');
         $('#f-icon').toggleClass('bi-fullscreen-exit');
-
-      })
+      });
       
     });
   </script>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
-  <script>
-    const selectTarget = (fromElement, selector) => {
-      if (!(fromElement instanceof HTMLElement)) {
-        return null;
-      }
-
-      return fromElement.querySelector(selector);
-    };
-
-    const resizeData = {
-      tracking: false,
-      startWidth: null,
-      startCursorScreenX: null,
-      handleWidth: 5,
-      resizeTarget: null,
-      parentElement: null,
-      maxWidth: null,
-    };
-
-    $(document.body).on('mousedown', '.resize-handle--x', null, (event) => {
-      if (event.button !== 0) {
-        return;
-      }
-
-      event.preventDefault();
-      event.stopPropagation();
-
-      const handleElement = event.currentTarget;
-      
-      if (!handleElement.parentElement) {
-        console.error(new Error("Parent element not found."));
-        return;
-      }
-      
-      // Use the target selector on the handle to get the resize target.
-      const targetSelector = handleElement.getAttribute('data-target');
-      const targetElement = selectTarget(handleElement.parentElement, targetSelector);
-
-      if (!targetElement) {
-        console.error(new Error("Resize target element not found."));
-        return;
-      }
-      
-      resizeData.startWidth = $(targetElement).outerWidth();
-      resizeData.startCursorScreenX = event.screenX;
-      resizeData.resizeTarget = targetElement;
-      resizeData.parentElement = handleElement.parentElement;
-      resizeData.maxWidth = $(handleElement.parentElement).innerWidth() - resizeData.handleWidth;
-      resizeData.tracking = true;
-
-      console.log('tracking started');
-    });
-
-    $(window).on('mousemove', null, null, _.debounce((event) => {
-      if (resizeData.tracking) {
-        const cursorScreenXDelta = event.screenX - resizeData.startCursorScreenX;
-        const newWidth = Math.min(resizeData.startWidth + cursorScreenXDelta, resizeData.maxWidth);
-        
-        $(resizeData.resizeTarget).outerWidth(newWidth);
-      }
-    }, 1));
-
-    $(window).on('mouseup', null, null, (event) => {
-      if (resizeData.tracking) {
-        resizeData.tracking = false;
-
-        console.log('tracking stopped');
-      }
-    });
-  </script>
   {% block pageJS %}{% endblock%}
 
 {% endblock %}
