@@ -13,25 +13,24 @@
       <img src="{{url_for('static',filename='images/icons/android-chrome-192x192.png')}}" class="header-logo"/>
       <span class="header-text">TechDocs</span>
     </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+   
     
-    <div class="text-end d-flex">
+    <div class="">
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item"><a href="{{url_for('home')}}" class="nav-link px-2 link-secondary">Home</a></li>
           <li class="nav-item"><a href="{{url_for('premium_features')}}" class="nav-link px-2 link-dark">Features</a></li>
           <li class="nav-item"><a href="{{url_for('plans')}}" class="nav-link px-2 link-dark">Pricing</a></li>
           <li class="nav-item"><a href="{{url_for('faq')}}" class="nav-link px-2 link-dark">Help</a></li>
+          <li class="nav-item"><button type="button" class="btn btn-outline-primary me-2" onclick="redirectToLogin()">Login</button></li>
+          <li class="nav-item"><a href="{{url_for('registration')}}" class="btn btn-warning">Sign-up</a></li>
         </ul> 
       </div>
-      <div>
-        <button type="button" class="btn btn-outline-primary me-2" onclick="redirectToLogin()">Login</button>
-        <a href="{{url_for('registration')}}" class="btn btn-warning">Sign-up</a>
-      </div>
-      
     </div>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
   </div>
 </nav>
 
