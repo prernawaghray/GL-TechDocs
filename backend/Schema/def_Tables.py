@@ -2,18 +2,18 @@
 # Usage:
 # This script is used to configure tables on the dataabase
 # Ref_Task: 1.3.3
-# ----------------------------------------------------------------------------------
-# Pre requisites:
-# Database connection string, database name, userid & password are to be configured 
-#   as system environment variables 
-# These values are fetched from the environment variables
-# ----------------------------------------------------------------------------------
-# Revision history:
-## Author        Date       Comment
-## Shravan       20221005   Initial version
-# ----------------------------------------------------------------------------------
+# # ----------------------------------------------------------------------------------
+# # Pre requisites:
+# # Database connection string, database name, userid & password are to be configured 
+# #   as system environment variables 
+# # These values are fetched from the environment variables
+# # ----------------------------------------------------------------------------------
+# # Revision history:
+# ## Author        Date       Comment
+# ## Shravan       20221005   Initial version
+# # ----------------------------------------------------------------------------------
 
-# ToDo: Defining FK constraints later after the code for Users schema is uploaded
+# # ToDo: Defining FK constraints later after the code for Users schema is uploaded
 
 # Import all libraries
 import os
@@ -22,6 +22,8 @@ import os.path
 import logging
 import mysql.connector
 from mysql.connector import connect, errorcode
+import os
+from dotenv import load_dotenv
 
 
 ##
@@ -240,16 +242,19 @@ def createTables():
     # db_pass     = os.environ.get('MYSQL_PASS')
 
     # Get details from configuration file
-    with open(os.path.dirname(__file__) + '../config.yaml') as stream:
-        configs = yaml.safe_load(stream)
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    env = os.path.join(basedir,'../.env.local')
+    load_dotenv(env)
+    print(os.environ.get('DB_URL'))
+    
 
-    db_conn = configs['DB_CONN']
-    db_database = configs['DB_NAME']
-    db_user = configs['DB_USER']
-    db_pass = configs['DB_PASS']
-    log_path = configs['DIR_ROOT'] + configs['DIR_LOG']
-    # Initiate logging 
-    logging.basicConfig(filename=log_path)
+    db_conn = os.environ.get('DB_CONN')
+    db_database = os.environ.get('DB_NAME')
+    db_user = os.environ.get('DB_USER')
+    db_pass = os.environ.get('DB_PASS')
+    # log_path = os.environ.get('DIR_ROOT') + os.environ.get('DIR_LOG')
+    # # Initiate logging 
+    # logging.basicConfig(filename=log_path)
 
     try:
         cnx = mysql.connector.connect(

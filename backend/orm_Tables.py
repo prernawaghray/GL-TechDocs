@@ -27,7 +27,6 @@ from sqlalchemy.orm import relationship
 class Document(Common):
     __tablename__ = "Documents"
 
-    DocId           = Column(Integer, primary_key=True, autoincrement=True)
     UserId          = Column(String(256), ForeignKey("User.UserId"))
     ModifiedDate    = Column(DateTime)
     ModifiedBy      = Column(String(256))  
@@ -47,7 +46,7 @@ class Document(Common):
 class DocumentHistory(Common):
     __tablename__ = "DocumentHistory"
 
-    DocId = Column(Integer, ForeignKey("Documents.DocId"), autoincrement=False)
+    DocId = Column(Integer, ForeignKey("Documents.DocId"))
     UserId = Column(String(256), ForeignKey("User.UserId"))
     RecordId = Column(Integer, primary_key=True, autoincrement=True)
     User = relationship("User")
@@ -69,7 +68,7 @@ class UserHistory(Common):
     RecordId = Column(Integer, primary_key=True, autoincrement=True)
     UserId = Column(String(256), ForeignKey("User.UserId"))
     User = relationship("User")
-    DocId = Column(Integer, ForeignKey("Documents.DocId"),autoincrement=True)
+    DocId = Column(Integer, ForeignKey("Documents.DocId"))
     Document = relationship("Document")
     Action = Column(Enum(ActionEnum))
 
