@@ -98,10 +98,11 @@ class Permission(Base):
         self.UserPermissions = UserPerm
 
 #############################
-class PaymentAccount(Common):
+class PaymentAccount(Base):
     __tablename__ = "PaymentAccounts"
 
     RecordId = Column(Integer, primary_key=True, autoincrement=True)
+    UserId = Column(String(256), ForeignKey("User.UserId"))
     IsDefault = Column(Boolean)
     AccType = Column(String(50))
     AccName = Column(String(256))
@@ -109,30 +110,35 @@ class PaymentAccount(Common):
     AccCvv = Column(mysql.INTEGER(4))
     AccExpiry = Column(Date)
     AccIFSC = Column(String(128))
+    User = relationship("User")
 
 
 #############################
-class UserPayment(Common):
+class UserPayment(Base):
     __tablename__ = "UserPayments"
 
     RecordId = Column(Integer, primary_key=True, autoincrement=True)
+    UserId = Column(String(256), ForeignKey("User.UserId"))
     PaidDate = Column(DateTime)
     Amount = Column(mysql.DECIMAL(65, 30))
     PayAccountId = Column(Integer)
     PaymentMethod = Column(String(128))
     Status = Column(String(50))
     Notes = Column(Text)
+    User = relationship("User")
 
 
 #############################
-class UserSubscription(Common):
+class UserSubscription(Base):
     __tablename__ = "UserSubscriptions"
 
     RecordId = Column(Integer, primary_key=True, autoincrement=True)
+    UserId = Column(String(256), ForeignKey("User.UserId"))
     Type = Column(String(5))
     TypeDesc = Column(String(128))
     Status = Column(String(1))
     ExpiryDate = Column(DateTime)
+    User = relationship("User")
 
 
 #############################
