@@ -55,53 +55,7 @@ def defineTables():
         ")"
     )
 
-    # Table - UserPayments
-    # Stores the history of all payments of all users
-    # Col - PaymentMethod, possible values are 'card', 'netbank', 'UPI'
-    # Col - Status, possible values are 'success', 'failed'
-    tbl_array['UserPayments'] = (
-        "Create Table if not exists `UserPayments` ("
-        "   RecordId        int not null AUTO_INCREMENT,"
-        "   UserId          varchar(256),"
-        "   PaidDate        datetime,"
-        "   Amount          decimal(65,30),"
-        "   PayAccountId    int,"
-        "   PaymentMethod   varchar(128),"
-        "   Status          varchar(50),"
-        "   Notes           text,"
-        "   Version         int,"
-        "   s_Misc1         varchar(1024),"
-        "   s_Misc2         varchar(1024),"
-        "   n_Misc1         int,"
-        "   n_Misc2         int,"
-        "   PRIMARY KEY (RecordId),"
-        "   INDEX idx_UP_UserDate (UserId, PaidDate)"
-        ")"
-    )
-
-    # Table - UserSubscriptions
-    # Stores the User subscriptions info
-    # Col - Type, possible values are (F)ree, (PC) Paid Corporate
-    # Col - TypeDesc, possible values are 'Personal', 'Corporate'
-    # Col - Status, possible values are (A)ctive', (I)nactive
-    tbl_array['UserSubscriptions'] = (
-        "Create Table if not exists `UserSubscriptions` ("
-        "   RecordId        int not null AUTO_INCREMENT,"
-        "   UserId          varchar(256),"
-        "   Type            char(5),"
-        "   TypeDesc        varchar(128),"
-        "   Status          Char(1),"
-        "   ExpiryDate      datetime,"
-        "   Version         int,"
-        "   s_Misc1         varchar(1024),"
-        "   s_Misc2         varchar(1024),"
-        "   n_Misc1         int,"
-        "   n_Misc2         int,"
-        "   PRIMARY KEY (RecordId),"
-        "   INDEX idx_US_User (UserId)"
-        ")"
-    )
-
+    
     # Table - User
     # Store the credentials of the user
     tbl_array['User'] = (
@@ -214,6 +168,55 @@ def defineTables():
         "   INDEX idx_Perm_ByUserDoc (UserId, DocId)"
         ")"
     )
+    # Table - UserPayments
+    # Stores the history of all payments of all users
+    # Col - PaymentMethod, possible values are 'card', 'netbank', 'UPI'
+    # Col - Status, possible values are 'success', 'failed'
+    tbl_array['UserPayments'] = (
+        "Create Table if not exists `UserPayments` ("
+        "   RecordId        int not null AUTO_INCREMENT,"
+        "   UserId          varchar(256),"
+        "   PaidDate        datetime,"
+        "   Amount          decimal(65,30),"
+        "   PayAccountId    int,"
+        "   PaymentMethod   varchar(128),"
+        "   Status          varchar(50),"
+        "   Notes           text,"
+        "   Version         int,"
+        "   s_Misc1         varchar(1024),"
+        "   s_Misc2         varchar(1024),"
+        "   n_Misc1         int,"
+        "   n_Misc2         int,"
+        "   PRIMARY KEY (RecordId),"
+        "   FOREIGN KEY (UserId) REFERENCES User(UserId) ON DELETE CASCADE,"
+        "   INDEX idx_UP_UserDate (UserId, PaidDate)"
+        ")"
+    )
+
+    # Table - UserSubscriptions
+    # Stores the User subscriptions info
+    # Col - Type, possible values are (F)ree, (PC) Paid Corporate
+    # Col - TypeDesc, possible values are 'Personal', 'Corporate'
+    # Col - Status, possible values are (A)ctive', (I)nactive
+    tbl_array['UserSubscriptions'] = (
+        "Create Table if not exists `UserSubscriptions` ("
+        "   RecordId        int not null AUTO_INCREMENT,"
+        "   UserId          varchar(256),"
+        "   Type            char(5),"
+        "   TypeDesc        varchar(128),"
+        "   Status          Char(1),"
+        "   ExpiryDate      datetime,"
+        "   Version         int,"
+        "   s_Misc1         varchar(1024),"
+        "   s_Misc2         varchar(1024),"
+        "   n_Misc1         int,"
+        "   n_Misc2         int,"
+        "   PRIMARY KEY (RecordId),"
+        "   FOREIGN KEY (UserId) REFERENCES User(UserId) ON DELETE CASCADE,"
+        "   INDEX idx_US_User (UserId)"
+        ")"
+    )
+
 
     # Table - LinkedAccount
     # Store the details of Accounts to which the user is linked
@@ -243,7 +246,7 @@ def createTables():
 
     # Get details from configuration file
     basedir = os.path.abspath(os.path.dirname(__file__))
-    env = os.path.join(basedir,'../.env.local')
+    env = os.path.join(basedir,'../.env')
     load_dotenv(env)
     print(os.environ.get('DB_URL'))
     

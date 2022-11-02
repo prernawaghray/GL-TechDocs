@@ -252,7 +252,7 @@ def file_Modify(user_id):
             else:
                 userperm = get_user_permissions(userid, docid) #W/R
                 # User has write permission
-                if('W' in userperm):
+                if 'W' in userperm:
                     # get and create a new version for the document
                     sql_stmt = (select(Document.Version).where(Document.DocId == docid))
                     sql_result = session.execute(sql_stmt)
@@ -581,10 +581,12 @@ def file_retrive(user_id):
 @authentication
 def gettrashlist(user_id):
     userid = user_id
+    mess_out = ''
+    data_out = ''
     trashlist = []
     try:
         session = session_factory()
-        sql_stmt = (select(Document.DocId, Document.DocName) .where(Document.UserId == userid))
+        sql_stmt = (select(Document.DocId, Document.DocName) .where(Document.UserId == userid, Document.IsTrash == 1))
         result = session.execute(sql_stmt)
         for row in result:
             json_str = {
@@ -594,7 +596,7 @@ def gettrashlist(user_id):
             trashlist.append(json_str)
             data_out = json.dumps({'Documents': trashlist})
             mess_out = 'Success'
-    except Exception as err:
+    except Exception:
         mess_out = 'Error'
         current_app.logger.exception("Failure getting the list of files! "+str(err))
     return jsonify(message=mess_out, data=data_out)
