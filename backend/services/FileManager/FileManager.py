@@ -455,7 +455,7 @@ def file_delete(user_id):
         docid    = content['DocId']
         userperm = get_user_permissions(userid, docid)
         try:
-            if(userperm == 'W'):
+            if 'W' in userperm:
                 session = session_factory()
                 file_paths_stmt = (select(DocumentHistory.FilePath) .where(DocumentHistory.docid == docid))
                 file_paths = session.execute(file_paths_stmt).all()
@@ -483,7 +483,7 @@ def file_delete(user_id):
     current_app.logger.info("Service file/delete ended")
     return jsonify(message=mess_out)
 
-@fileManagerBlueprint.route('/api/file/view', methods=['GET', 'POST'])
+@fileManagerBlueprint.route('/api/fileview', methods=['GET', 'POST'])
 @authentication
 def file_view(user_id):
     userid = user_id
@@ -508,20 +508,21 @@ def file_view(user_id):
         except:
             print(x)
             return jsonify(message="error")
+    return jsonify(message="Method not allowed")
 
-@fileManagerBlueprint.route('/api/file/trash', methods = ['GET', 'POST'])
+@fileManagerBlueprint.route('/api/filetrash', methods = ['GET', 'POST'])
 @authentication
 def file_trash(user_id):
     current_app.logger.info("Service file/move to trash initiated")
     mess_out = ''
-    userperm = get_user_permissions(userid, docid)
+    
     if (request.method == 'POST'):
         content   = request.get_json(silent=True)
-        userid    = content['UserId']
+        userid = user_id
         docid     = content['DocId']
-        user
         try:
-            if (userperm == 'W'):
+            userperm = get_user_permissions(userid, docid)
+            if 'W' in userperm:
                 session = session_factory()
                 sql_stmt=update(Document).where(Document.DocId == docid) .values(IsTrash=1)
                 sql_stmt_2 = update(DocumentHistory) .where(DocumentHistory.DocId == docid).values(IsTrash = 1)
@@ -543,19 +544,20 @@ def file_trash(user_id):
     current_app.logger.info("Service file/move to trash ended")
     return jsonify(message=mess_out)
 
-@fileManagerBlueprint.route('/api/file/retrive', methods = ['GET','POST'])
+@fileManagerBlueprint.route('/api/fileretrive', methods = ['GET','POST'])
 @authentication
 def file_retrive(user_id):
     current_app.logger.info("Service file/retrieve from trash initiated")
     mess_out = ''
     if request.method == 'POST':
         content   = request.get_json(silent=True)
-        userid    = content['UserId']
+        userid    = user_id
         docid     = content['DocId']
-        userperm = get_user_permissions(userid, docid)
+        
 
         try:
-            if (userperm == 'w'):
+            userperm = get_user_permissions(userid, docid)
+            if 'W' in userperm:
                 session = session_factory()
                 sql_stmt=update(Document).where(Document.DocId == docid) .values(IsTrash=0)
                 sql_stmt_2 = update(DocumentHistory) .where(DocumentHistory.DocId == docid).values(IsTrash = 0)
@@ -575,11 +577,10 @@ def file_retrive(user_id):
     current_app.logger.info("Service file/retrieve from trash ended")
     return jsonify(message=mess_out)
 
-@fileManagerBlueprint.route('/api/file/getTrashList', methods=["GET","POST"])
+@fileManagerBlueprint.route('/api/getTrashList', methods=["GET","POST"])
 @authentication
 def gettrashlist(user_id):
     userid = user_id
-    content = requests.get_json(silent=True)
     trashlist = []
     try:
         session = session_factory()
