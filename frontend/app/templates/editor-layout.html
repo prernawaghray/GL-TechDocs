@@ -20,7 +20,7 @@
         <i class="bi bi-house-door-fill"></i>
       </span>
     </a>
-    <button class="btn btn-outline"><i class="bi bi-fullscreen" id="f-icon"></i></buttom>
+    <button class="btn btn-outline"><i class="bi bi-fullscreen" id="f-icon"></i></button>
     <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -32,6 +32,7 @@
       </div>
       <div class="offcanvas-body">
         <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+          <li class="nav-item" ><a data-bs-toggle="offcanvas" href="#" id="button-pdf" class="nav-link px-2 link-dark"><i class="bi bi-download"></i> Download as PDF</a></li>
           <li class="nav-item" ><a data-bs-toggle="offcanvas" href="#offcanvasAssets"  class="nav-link px-2 link-dark"><i class="bi bi-paperclip"></i> Assets</a></li>
           <li class="nav-item"><a  data-bs-toggle="offcanvas" href="#offcanvasHistory" class="nav-link px-2 link-dark"><i class="bi bi-clock-history"></i> History</a></li>
           <li class="nav-item dropdown">
@@ -39,7 +40,7 @@
               <i class="bi bi-person-circle"></i> Account
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
-              <li><a class="dropdown-item" href="{{url_for('profile')}}"">Account Settings</a></li>
+              <li><a class="dropdown-item" href="{{url_for('profile')}}">Account Settings</a></li>
               <li>
                 <hr class="dropdown-divider">
               </li>
@@ -122,7 +123,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
 
   <script>
-  
+    var htmlToPdf;
     function generateHTMLContent(type){
       var text = $editor.value;
       var generator = new latexjs.HtmlGenerator({ hyphenate: false });
@@ -133,7 +134,8 @@
       if(type=='print'){
         $('#html-preview')[0].contentWindow.print();
       }
-        
+      
+      htmlToPdf = lDoc.documentElement.outerHTML;
     }
    
     $(document).ready(function(){
@@ -145,6 +147,18 @@
       },300));
       
       generateHTMLContent('preview');
+
+      var downloadPdfBtn = document.getElementById("button-pdf");
+      downloadPdfBtn.addEventListener("click", function () {
+        var mywindow = window.open("", "PRINT", "height=1123, width=794");
+        mywindow.document.write(htmlToPdf);
+        mywindow.document.close();
+        mywindow.focus();
+        mywindow.print();
+        mywindow.close();
+
+        return true;
+      });
 
       $('#f-icon').click(function(){
         $('#f-icon').toggleClass('bi-fullscreen');
