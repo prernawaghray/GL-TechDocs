@@ -88,10 +88,10 @@ def dashboard():
 def registration():
    return render_template('user-registration/registration.html')
 
-@app.route('/latex-editor/new-document')
+@app.route('/latex-editor/<id>')
 # @login_required
-def latexEditor():
-   return render_template('latex-editor/editor.html')
+def latexEditor(id=0):
+   return render_template('latex-editor/editor.html',doc_id=id)
 
 @app.route('/plans')
 def plans():
@@ -125,8 +125,11 @@ def payments_summary():
 def user_plans():
    return render_template('plans-and-subscriptions/user-plan.html')
 
-
 @app.route('/history')
 # @login_required
 def latexHistory():
    return render_template('latex-history/history.html')
+
+@app.route('/premium-features')
+def premium_features():
+   return "PARKED"

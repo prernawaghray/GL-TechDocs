@@ -10,74 +10,48 @@
 
 {% block body %}
 
-    <h2>User Registration</h2>
+   
     <!-- <span>A placeholder page</span>
     <p>This page is from templates/home-page/home.html which extends templates/marketing-layout.html </p> -->
-    <div class="container mt-5" >
+    <div class="container mt-5 text-center">
+      <h2 class="text-center">User Registration</h2>
+     
 
-  <div class="row">
-    <div class="col-sm-4">
-      
+    <div id="registerWithEmail" class="text-center mt-5" style="display:block;margin:auto; width:360px;">
+     
+      <div class="form-floating">
+        <input class="form-control" id="full-name" placeholder="Full name" type="text" name="fullname" required/>
+        <label for="full-name">Full Name</label>
       </div>
-      <div class="col-sm-4" id="clickGmail">
-        <img src="{{ url_for('static',filename='images/icons/signupwithgoogle.png') }}"/>
-      </div>
-      <!-- Display Google sign-in button -->
-      
-      <div class="col-sm-4">
-      </div>
-  </div>
 
-  <div class="row" id="gmailDiv" style="display: none;">
-    <div class="col-sm-5">
+      <div class="form-floating mt-2">
+        <input type="email" class="form-control" name="username" placeholder="Email ID" id="email-input"  required/>
+        <label for="email-input">Email ID</label>
       </div>
-      <div class="col-sm-2">
-          <div id="gSignIn"></div>
-          <!-- Show the user profile details -->
-          <div class="userContent" style="display: none;"></div>
-        </div>
-        <!-- Display Google sign-in button -->    
-      <div class="col-sm-5">
-      </div>
-  </div>
-   <div class="row">
-     <div class="col-sm-4">
-      </div>
-      <div class="col-sm-4">
-          <br/>
-          <p>-------------------------- OR --------------------------</p>
-      </div>
-      <div class="col-sm-4">
-      </div>
-  </div>
-  <div class="row">
-    <div class="col-sm-4">
-      
-    </div>
-    <div class="col-sm-4">
-      <div id="registerWithEmail" >
-          <h3>Register with email  </h3>
-         <table width="100%" class="tbl"> 
-            <tr><td>Full Name:</td><td><input type="text" name="fullname"/></td></tr>
-            <tr><td>Email Id:</td><td><input type="text" name="username"/></td></tr>
-            <tr><td>Password:</td><td><input type="password" name="password"/></td></tr>
-            <tr><td>Repeat Password:</td><td><input type="password" name="verifypassword"/></td></tr>
-            <tr>
-               <td></td>
-               <td><input type="submit" value="Register"/></td>
-            </tr>
-            
-          </table>
-      </div>
-      <img src="{{ url_for('static',filename='images/icons/signupwithemail.png') }}" id="clickEmail"/>
 
-    </div>
-    <div class="col-sm-4">
+      <div class="form-floating mt-2">
+        <input type="password" class="form-control" name="password" id="password-input" placeholder="password" required/>
+        <label for="password-input">Password</label>
+      </div>
       
+      <div class="form-floating mt-2">
+        <input type="password" class="form-control" name="verifypassword" id="verify-password-input" placeholder="Verify Password" required/>
+        <label for="verify-password-input">Verify Password</label>
+      </div>
+
+      <div class="d-grid mt-2">
+      <button type="submit" class="btn btn-primary d-flex justify-content-start"><span><i class="bi bi-envelope-fill flex-fill"></i></span><span class="flex-fill"><b>Sign up with Email</b></span></button>   
+      </div>
+
+      <div class="d-flex mt-3 mb-3">
+            <div class="flex-fill"><hr/></div>
+            <div class="flex-fill">OR</div>
+            <div class="flex-fill"><hr/></div>
+      </div>
     </div>
-  </div>
- 
-  
+    
+    <img style="height:48px;" src="{{ url_for('static',filename='images/icons/signupwithgoogle.png') }}"/>
+   
 </div>
 
 {% endblock %}
