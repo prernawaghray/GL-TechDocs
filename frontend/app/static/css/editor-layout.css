@@ -107,3 +107,58 @@ html {
     border-right-style: solid;
   }
   
+
+  latex-js {
+    display: inline-block;
+    width: 40%;
+    border: 1px solid red;
+    margin-right: 2em;
+  }
+  
+  .re-flex .item, .re-flex div.prism-live, textarea{
+    width: calc(50% - 20px);
+    height: calc(100%);
+  }
+  .re-flex .item:last-child{
+    margin-left:15px;
+  }
+  @media (max-width: 800px) {
+    .container-x > aside, .container-x .resize-handle--x{
+      display:none;
+    }
+    .re-flex{
+      flex-direction: column-reverse;
+    }
+    .re-flex .item, .re-flex div.prism-live{
+      margin-bottom: 20px;
+      width:100%;
+      height: calc(59% - 100px);
+    }
+    .re-flex .item:last-child{
+      margin-left:0px;
+    }
+  }
+
+  .assets-menu li a{
+    padding:5px;
+    background-color: aliceblue;
+  }
+  .assets-menu li:hover{
+    cursor: pointer;
+    background-color: rgb(214, 234, 252);
+  }
+
+  #editor-text{
+    background-color: transparent;
+    color: transparent;
+  }
+  
+  code[class*="language-"], pre[class*="language-"] {
+    font-size: 16px;
+    color: white;
+    text-shadow: none;
+  }
+
+  :not(pre) > code[class*="language-"], pre[class*="language-"] {
+      background: #444;
+  }
