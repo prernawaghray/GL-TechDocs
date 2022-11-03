@@ -246,7 +246,7 @@ def createTables():
 
     # Get details from configuration file
     basedir = os.path.abspath(os.path.dirname(__file__))
-    env = os.path.join(basedir,'../.env')
+    env = os.path.join(basedir,'../.env.local')
     load_dotenv(env)
     print(os.environ.get('DB_URL'))
     

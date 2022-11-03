@@ -68,8 +68,7 @@ class UserHistory(Common):
     RecordId = Column(Integer, primary_key=True, autoincrement=True)
     UserId = Column(String(256), ForeignKey("User.UserId"))
     User = relationship("User")
-    DocId = Column(Integer, ForeignKey("Documents.DocId"))
-    Document = relationship("Document")
+    DocId = Column(Integer)
     Action = Column(Enum(ActionEnum))
 
     def __init__(self, userid, docid, time_stamp, document_name, action):
