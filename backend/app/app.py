@@ -22,6 +22,7 @@ from services.UserProfileManagement.getprofile import getUserProfile_bp
 from services.UserProfileManagement.updateprofile import updateUserProfile_bp
 from services.UserProfileManagement.deleteprofile import deletecode_bp
 from services.ForgotPassword.forgotpassword import forgotpassword_bp
+from services.ChangePassword.changepassword1 import changepassword_bp
 from services.ForgotPassword.mail import mail_bp
 from services.DocumentVersionManager.DocumentVersionManager import documentVersionManagerBlueprint
 from services.UserHistoryManager.UserHistoryManager import userHistoryManagerBlueprint
@@ -42,6 +43,7 @@ app.register_blueprint(getUserProfile_bp)
 app.register_blueprint(updateUserProfile_bp)
 app.register_blueprint(deletecode_bp)
 app.register_blueprint(forgotpassword_bp)
+app.register_blueprint(changepassword_bp)
 app.register_blueprint(mail_bp)
 # app.register_blueprint(razorPayBlueprint)
 
