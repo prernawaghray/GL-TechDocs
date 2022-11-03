@@ -1,15 +1,25 @@
 import requests
 import sys
 
+headers = {"authToken":'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFbWFpbCI6InRlc3RAdGVzdC5jb20iLCJpc0FkbWluIjpmYWxzZX0.7d4LVnr43Od8tK7tcCdMMRoieXYD8xycLJBxxQxSDOU'}
+
 #------------------------------
 # Test /file/creat - for upload
 # -----------------------------
 
-req = requests.post('http://127.0.0.1:5000/file/create',
-            json={"UserId":"123456",
-                "DocName":"test.tex","IsUpload":True,"DocData":"ra \n ndomdata"})
+# req = requests.post('http://127.0.0.1:5000/api/filecreate',
+#             json={"DocId":"0", "DocName":"test.tex","IsUpload":False,"DocText":"r\andom\data","RefDocId":"0"},
+#             headers=headers)
 
-print(req.json())
+# print(req.text)
+
+
+req = requests.post('http://127.0.0.1:5000/api/filerename',
+            #json={"DocId":"1", "DocName":"retest.tex","IsUpload":False,"DocText":"r\andom\data"},
+            json={"DocId":"1", "DocName":"retest.tex","IsUpload":False,"DocText":""},
+            headers=headers)
+
+print(req.text)
 
 #------------------
 # Test /file/create
