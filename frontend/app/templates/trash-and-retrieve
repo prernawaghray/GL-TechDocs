@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Trash.</h2>
+<button type = 'button' onclick = 'loaddata()'>Load</button>
+<p id="demo"></p>
+
+<script>
+const dbParam = JSON.stringify({table:"customers",limit:20});
+const xmlhttp = new XMLHttpRequest();
+xmlhttp.onload = function() {
+  const myObj = JSON.parse(this.responseText);
+  let text = "<table border='1'>"
+  for (let x in myObj) {
+    
+    text += "<tr><td>" + myObj[x].name + "</td><td><button type='button' onclick = 'retrieverow()' >Retrieve</input></td></tr>";
+  }
+  text += "</table>"    
+  document.getElementById("demo").innerHTML = text;
+}
+function loaddata(){
+xmlhttp.open("POST", "json_demo_html_table.php");
+xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+xmlhttp.send("x=" + dbParam);
+}
+</script>
+
+</body>
+</html>
