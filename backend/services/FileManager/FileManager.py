@@ -5,19 +5,18 @@ import warnings
 import logging
 import yaml
 import requests
-from flask import request,make_response
 import json
 import re
 #from functools import singledispatchmethod
 from datetime import datetime
 from xml.dom.xmlbuilder import DocumentLS 
 import sqlalchemy as db
-from sqlalchemy import create_engine, select, update
+from sqlalchemy import create_engine, select, update, delete
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from DBConnect import session_factory
 from orm_Tables import Document, Permission, DocumentHistory, UserHistory
-from flask import Flask, render_template, url_for, redirect, session, flash, request, jsonify, json
+from flask import Flask, render_template, url_for, redirect, session, flash, request, jsonify, json, make_response
 from flask import Blueprint
 from flask import current_app
 #from Users import User
@@ -37,7 +36,11 @@ def before_request_func():
 
     data_path = current_app.config["DIR_ROOT"] + current_app.config["DIR_DATA"] 
     log_path = current_app.config['DIR_ROOT'] + current_app.config['DIR_LOG']
+    if not os.path.exists(log_path):
+        open(log_path, 'a').close()
     logging.basicConfig(filename=log_path)
+    
+    return data_path, log_path
 
 ####################
 # File Manager Class
@@ -48,6 +51,7 @@ class FileManage:
         
     @classmethod
     def createNewFile(cls, userid, filename, doctext):
+        data_path, log_path = before_request_func()
         datestr  = datetime.today().strftime('%Y%m%d%H%M%S')
         dirpath  = data_path + '/' + userid
         if (filename == ""):
@@ -71,7 +75,8 @@ class FileManage:
     
     @classmethod
     def uploadFile(cls, userid, filename, docdata):
-        datestr  = datetime.today().strftime('%Y%m%d%H%M%S')
+        data_path, log_path = before_request_func()
+        #datestr  = datetime.today().strftime('%Y%m%d%H%M%S')
         dirpath  = data_path + '/' + userid
         filepath = dirpath+'/'+filename
         if not os.path.exists(dirpath):
@@ -105,8 +110,9 @@ def file_Create(user_id):
     newfilepath = ''
     refdocid    = 0
     reffilepath = ''
-    data_out    = ''
-    mess_out    = ''
+    data_out    = {}
+    mess_out    = 0
+    data_path, log_path = before_request_func()
 
     current_app.logger.info("Service File Create initiated")
 
@@ -148,7 +154,7 @@ def file_Create(user_id):
             docid_out = doc_entry.DocId
             session.commit()
             # entry into permissions table
-            perm_entry = Permission(docid_out, userid, 'W')
+            perm_entry = Permission(docid_out, userid, 'WRASD') #(W)rite/(R)ead/(A)nalytics/(S)hare/(D)elete
             session.add(perm_entry)
             session.flush()
             session.commit()
@@ -174,21 +180,24 @@ def file_Create(user_id):
                 with open(reffilepath, 'r') as firstfile, open(newfilepath, 'a') as secondfile:
                     for line in firstfile:
                         secondfile.write(line)
+                
+                with open(reffilepath, 'r') as firstfile:
+                    doctext = firstfile.read() 
             # Write data if given from the user
             elif (doctext != ''):
                 file_obj.writeToFile(newfilepath, doctext)
             
             session.close()
             # building output data
-            data_out = json.dumps({'UserId':userid, 'DocId':docid_out, 'DocName':docname, 'Filepath': newfilepath})
-            mess_out = 'Success'
+            data_out = {"UserId":userid, "DocId":docid_out, "DocName":docname, "DocText":doctext, "Filepath": newfilepath}
+            mess_out = 200
         except Exception as err:
-            mess_out = "Error"
+            mess_out = 500
             current_app.logger.exception("Failure Creating File! "+str(err))
     
     current_app.logger.info("Service File Create ended")
     # return the message and data string as response
-    return jsonify(message=mess_out, data=data_out)
+    return make_response(jsonify(data_out), mess_out)
 
 '''
 # API to modify a file
@@ -206,9 +215,10 @@ def file_Create(user_id):
 @fileManagerBlueprint.route('/api/filemodify', methods = ['GET', 'POST'])
 @authentication
 def file_Modify(user_id):
+    data_path, log_path = before_request_func()
     current_app.logger.info("Service File Modify initiated")
-    data_out = ''
-    mess_out = ''
+    data_out = {}
+    mess_out = 0
 
     if(request.method == 'POST'):
         # retrieve data inputs from the request
@@ -250,7 +260,7 @@ def file_Modify(user_id):
                 session.commit()
             # Continue either updating or saving the file
             else:
-                userperm = get_user_permissions(userid, docid) #W/R
+                userperm = get_user_permissions(userid, docid)
                 # User has write permission
                 if 'W' in userperm:
                     # get and create a new version for the document
@@ -293,15 +303,15 @@ def file_Modify(user_id):
             session.close()
 
             # building output data
-            data_out = json.dumps({'UserId':userid, 'DocId':docid, 'DocName':docname, 'Filepath': newfilepath})
-            mess_out = 'Success'
+            data_out = {"UserId":userid, "DocId":docid, "DocName":docname, "DocText":doctext, "Filepath": newfilepath}
+            mess_out = 200
         except Exception as err:
-            mess_out = "Error"
+            mess_out = 500
             current_app.logger.exception("Failure Modifying file! "+str(err))
     
     current_app.logger.info("Service File Modify ended")
     # return the message and data string as response
-    return jsonify(message=mess_out, data=data_out)
+    return make_response(jsonify(data_out), mess_out)
 
 '''
 # API to rename a file
@@ -318,9 +328,10 @@ def file_Modify(user_id):
 @fileManagerBlueprint.route('/api/filerename', methods = ['GET', 'POST'])
 @authentication
 def file_Rename(user_id):
+    data_path, log_path = before_request_func()
     current_app.logger.info("Service File Rename initiated")
-    data_out = ''
-    mess_out = ''
+    data_out = {}
+    mess_out = 0
 
     if(request.method == 'POST'):
         # retrieve data inputs from the request
@@ -328,6 +339,7 @@ def file_Rename(user_id):
         userid      = user_id
         docid       = content['DocId']
         docname     = content['DocName']
+        doctext     = content['DocText']
         sql_stmt    = ''
         
         # open db connection
@@ -337,6 +349,11 @@ def file_Rename(user_id):
             if ((docid == 0) or (docid == '')):
                 raise Exception('Document reference id not given. Cannot process!')
             
+            userperm = get_user_permissions(userid, docid)
+            # User has write permission
+            if 'W' not in userperm:
+                raise Exception('Uesr does not have Write access. Cannot process to rename!')
+            
             # check if the document exists
             sql_stmt = select(Document.DocId).where(Document.DocId == docid)
             sql_result = session.execute(sql_stmt)
@@ -345,46 +362,52 @@ def file_Rename(user_id):
             if (noofrecords == 0):
                 raise Exception('Document reference id not found. Cannot rename!')
             else:
-
-                file_paths_stmt = (select(DocumentHistory.FilePath).where(DocumentHistory.DocId==docid))
-                file_paths = session.execute(file_paths_stmt).all()
-                for path in file_paths:
-                    path = path[0]
-                    pattern = re.compile(r"/tmp/testdata/"+userid+r"/[a-zA-Z]+")
-                    replacement = r"/tmp/testdata/"+userid+r"/"+docname
-                    new_path = re.sub(pattern,replacement,path)
-                    os.rename(path, new_path)
-                    sql_stmt = sql_stmt = update(Document)\
+                mod_date = datetime.today()
+                # update Documents table with the latest version
+                sql_stmt = update(Document)\
                     .where(Document.DocId == docid)\
-                    .values({Document.DocName:docname, Document.ModifiedDate:mod_date, Document.ModifiedBy:userid, Document.FilePath:new_path})
-                    sql_stmt_2 = update (DocumentHistory)\
-                        .where (DocumentHistory.DocId == docid)\
-                            .values({DocumentHistory.DocName:docname, DocumentHistory.FilePath:new_path})
-                    session.execute(sql_stmt)
-                    session.execute(sql_stmt_2)
-                    session.commit()
-                    mod_date = datetime.today()
-                    # update Documents table with the latest version
+                    .values({Document.DocName:docname, Document.ModifiedDate:mod_date, Document.ModifiedBy:userid})
+                session.execute(sql_stmt)
+                session.commit()
+                
+                userhist_entry = UserHistory(userid, docid, datetime.today(), docname, 'rename')
+                session.add(userhist_entry)
+                session.flush()
+                session.commit()
+                session.close()
+                # file_paths_stmt = (select(DocumentHistory.FilePath).where(DocumentHistory.DocId==docid))
+                # file_paths = session.execute(file_paths_stmt).all()
+                # for path in file_paths:
+                #     path = path[0]
+                #     pattern = re.compile(r"/tmp/testdata/"+userid+r"/[a-zA-Z]+")
+                #     replacement = r"/tmp/testdata/"+userid+r"/"+docname
+                #     new_path = re.sub(pattern,replacement,path)
+                #     os.rename(path, new_path)
+                #     sql_stmt = sql_stmt = update(Document)\
+                #     .where(Document.DocId == docid)\
+                #     .values({Document.DocName:docname, Document.ModifiedDate:mod_date, Document.ModifiedBy:userid, Document.FilePath:new_path})
+                #     sql_stmt_2 = update (DocumentHistory)\
+                #         .where (DocumentHistory.DocId == docid)\
+                #             .values({DocumentHistory.DocName:docname, DocumentHistory.FilePath:new_path})
+                #     session.execute(sql_stmt)
+                #     session.execute(sql_stmt_2)
+                #     session.commit()
+                #     mod_date = datetime.today()
+                #     # update Documents table with the latest version
                     
-                    
-                    index = docname.index('.tex')
-                    docname = docname[:index]
-                    
-                    userhist_entry = UserHistory(userid, docid, datetime.today(), docname, 'rename')
-                    session.add(userhist_entry)
-                    session.flush()
-                    session.commit()
-                    session.close()
+                #     index = docname.index('.tex')
+                #     docname = docname[:index]
+            
                 # building output data
-                data_out = json.dumps({'UserId':userid, 'DocId':docid, 'DocName':docname})
-                mess_out = 'Success'
+                data_out = {"UserId":userid, "DocId":docid, "DocName":docname, "DocText":doctext}
+                mess_out = 200
         except Exception as err:
-            mess_out = a
+            mess_out = 500
             current_app.logger.exception("Failure Renaming file! "+str(err))
     
     current_app.logger.info("Service File Rename ended")
     # return the message and data string as response
-    return jsonify(message=mess_out, data=data_out)
+    return make_response(jsonify(data_out), mess_out)
 
 '''
 # API to get document list
@@ -399,9 +422,10 @@ def file_Rename(user_id):
 @fileManagerBlueprint.route('/api/filegetlist', methods = ['GET', 'POST'])
 @authentication
 def file_GetList(user_id):
+    data_path, log_path = before_request_func()
     current_app.logger.info("Service Get Document List initiated")
-    data_out = ''
-    mess_out = ''
+    data_out = {}
+    mess_out = 0
     docslist = []
 
     if(request.method == 'GET'):
@@ -418,46 +442,50 @@ def file_GetList(user_id):
             sql_result = session.execute(sql_stmt) 
         
             for row in sql_result:
-                json_str = {'DocId': row.DocId, \
-                    'DocName':row.DocName , \
-                    'FilePath': row.FilePath, \
-                    'Version': row.Version, \
-                    'LastModifiedOn': row.ModifiedDate, \
-                    'LastModifiedBy': row.ModifiedBy}
+                json_str = {"DocId": row.DocId, \
+                    "DocName":row.DocName , \
+                    "FilePath": row.FilePath, \
+                    "Version": row.Version, \
+                    "LastModifiedOn": row.ModifiedDate, \
+                    "LastModifiedBy": row.ModifiedBy}
                 
                 docslist.append(json_str)
             
             session.close()
             # json object with array of json documents list 
-            data_out = json.dumps({'Documents': docslist})
-            value={"message":"success"}
+            data_out = {"Documents": docslist}
+            mess_out = 200
         except Exception as err:
-            value={"message":"Error"}
+            mess_out = 500
             current_app.logger.exception("Failure getting the list of files! "+str(err))
     
     current_app.logger.info("Service Get Document List ended")
     # return the message and data string as response
-    return make_response(jsonify(value, data_out))
+    return make_response(jsonify(data_out), mess_out)
 
+'''
+Api to delete a file
+'''
 @fileManagerBlueprint.route('/api/file/delete', methods=['GET', 'POST'])
 @authentication
 def file_delete(user_id):
     userid   = ''
     docid    = ''
     filename = ''
-    data_out = ''
-    mess_out = ''
+    data_out = {}
+    mess_out = 0
 
     current_app.logger.info("Service file/delete initiated")
     if(request.method == 'POST'):
         content  = request.get_json(silent=True)
         userid   = user_id
         docid    = content['DocId']
+        
         userperm = get_user_permissions(userid, docid)
         try:
-            if 'W' in userperm:
+            if 'D' in userperm:
                 session = session_factory()
-                file_paths_stmt = (select(DocumentHistory.FilePath) .where(DocumentHistory.docid == docid))
+                file_paths_stmt = (select(DocumentHistory.FilePath).where(DocumentHistory.docid == docid))
                 file_paths = session.execute(file_paths_stmt).all()
                 sql_stmt = delete(DocumentHistory).where (DocumentHistory.DocId == docid)
                 sql_stmt_2 = delete(Document) .where(Document.DocId == docid)
@@ -474,129 +502,152 @@ def file_delete(user_id):
                         os.remove(file)
                     else:
                         current_app.logger.error("File does not exist at the path: ", file)
-                mess_out='success'
+                mess_out=200
             else:
                 raise Exception("Access to delete denied!")
         except Exception:
-            mess_out = 'fail'
+            mess_out=500
             current_app.logger.exception("Failure deleting file!")
     current_app.logger.info("Service file/delete ended")
-    return jsonify(message=mess_out)
+    return make_response(mess_out)
 
+'''
+Api to view a file
+'''
 @fileManagerBlueprint.route('/api/fileview', methods=['GET', 'POST'])
 @authentication
 def file_view(user_id):
-    userid = user_id
-    if request.method == "POST":
-        content  = request.get_json(silent=True)
+    userid   = user_id
+    data_out = {}
+    mess_out = 0
+
+    if(request.method == "POST"):
+        content = request.get_json(silent=True)
         docid   = content['DocId']
+
         userperm = get_user_permissions(userid, docid)
         try:
-            if('W' in userperm):
+            if('R' in userperm):
                 session = session_factory()
-                sql_stmt = (select(Document.FilePath).where(Document.DocId==docid))
+                sql_stmt = (select(Document.FilePath, Document.Version).where(Document.DocId==docid))
                 result = session.execute(sql_stmt).first()
                 session.close()
 
-                file_path = result[0]
+                #There will be 1 row only as we fetched using first()
+                for row in result:
+                    file_path = row.FilePath
+                    doc_ver = row.Version
+                
                 with open(file_path,'r') as f:
                     data = f.read()
-                data_out = {"file_content":data}
-                return jsonify(data_out)
-                print(data_out)
                 
+                data_out = {"UserId":user_id, "DocId":docid, "Version":doc_ver, "DocText":data}
+                mess_out = 200
         except:
-            print(x)
-            return jsonify(message="error")
-    return jsonify(message="Method not allowed")
+            mess_out = 500
+    return make_response(jsonify(data_out), mess_out)
 
+'''
+Api to mark a file as trash
+'''
 @fileManagerBlueprint.route('/api/filetrash', methods = ['GET', 'POST'])
 @authentication
 def file_trash(user_id):
     current_app.logger.info("Service file/move to trash initiated")
-    mess_out = ''
+    mess_out = 0
     
     if (request.method == 'POST'):
-        content   = request.get_json(silent=True)
+        content = request.get_json(silent=True)
         userid = user_id
-        docid     = content['DocId']
+        docid  = content['DocId']
+        
         try:
             userperm = get_user_permissions(userid, docid)
-            if 'W' in userperm:
+            if ('W' in userperm):
                 session = session_factory()
                 sql_stmt=update(Document).where(Document.DocId == docid) .values(IsTrash=1)
-                sql_stmt_2 = update(DocumentHistory) .where(DocumentHistory.DocId == docid).values(IsTrash = 1)
+                sql_stmt_2 = update(DocumentHistory).where(DocumentHistory.DocId == docid).values(IsTrash = 1)
                 sql_stmt_3 = select()
                 #("UPDATE Documents SET IsTrash=1 WHERE DocName = file_name,UserId=user_id")
                 session.execute(sql_stmt)
                 session.execute(sql_stmt_2)
                 session.commit()
                 session.close()
-                mess_out = 'success'
+                mess_out = 200
             else:
                 raise Exception("Permission to move to trash denied!")
             #return jsonify(message = "File moved to trash successfully")
         except Exception:
             #return jsonify(message='Oops! Something went wrong')
-            mess_out = 'fail'
+            mess_out = 500
             current_app.logger.exception("Failure moving file to trash!")
 
     current_app.logger.info("Service file/move to trash ended")
-    return jsonify(message=mess_out)
+    return make_response(mess_out)
 
+'''
+Api to mark a file as trash
+'''
 @fileManagerBlueprint.route('/api/fileretrive', methods = ['GET','POST'])
 @authentication
 def file_retrive(user_id):
     current_app.logger.info("Service file/retrieve from trash initiated")
-    mess_out = ''
+    mess_out = 0
+    
     if request.method == 'POST':
-        content   = request.get_json(silent=True)
-        userid    = user_id
-        docid     = content['DocId']
-        
-
+        content = request.get_json(silent=True)
+        userid  = user_id
+        docid   = content['DocId']
+         
         try:
             userperm = get_user_permissions(userid, docid)
-            if 'W' in userperm:
+            if ('W' in userperm):
                 session = session_factory()
                 sql_stmt=update(Document).where(Document.DocId == docid) .values(IsTrash=0)
-                sql_stmt_2 = update(DocumentHistory) .where(DocumentHistory.DocId == docid).values(IsTrash = 0)
+                sql_stmt_2 = update(DocumentHistory).where(DocumentHistory.DocId == docid).values(IsTrash = 0)
                 session.execute(sql_stmt)
                 session.execute(sql_stmt_2)
                 session.commit()
                 session.close()
-                mess_out = 'success'
+                
+                mess_out = 200
             else:
                 raise Exception("Permission to retrieve from trash denied!")
             #return jsonify(message = "File moved to trash successfully")
         except Exception:
             #return jsonify(message='Oops! Something went wrong')
-            mess_out = 'fail'
+            mess_out = 500
             current_app.logger.exception("Failure retrieving file from trash!")
 
     current_app.logger.info("Service file/retrieve from trash ended")
-    return jsonify(message=mess_out)
+    return make_response(mess_out)
 
+'''
+Api to get Trash list
+'''
 @fileManagerBlueprint.route('/api/getTrashList', methods=["GET","POST"])
 @authentication
 def gettrashlist(user_id):
     userid = user_id
-    mess_out = ''
-    data_out = ''
+    mess_out = 0
+    data_out = {}
     trashlist = []
+    
     try:
         session = session_factory()
-        sql_stmt = (select(Document.DocId, Document.DocName) .where(Document.UserId == userid, Document.IsTrash == 1))
+        sql_stmt = (select(Document.DocId, Document.DocName).where(Document.UserId == userid, Document.IsTrash == 1))
         result = session.execute(sql_stmt)
+        
         for row in result:
             json_str = {
                 "DocId":row.DocId,
                 "DocName":row.DocName
             }
             trashlist.append(json_str)
-            data_out = json.dumps({'Documents': trashlist})
-            mess_out = 'Success'
-    except Exception:
-        mess_out = 'Error'
+            data_out = {"Documents": trashlist}
+            mess_out = 200
+    except Exception as err:
+        mess_out = 500
         current_app.logger.exception("Failure getting the list of files! "+str(err))
-    return jsonify(message=mess_out, data=data_out)
+    
+    return make_response(jsonify(data_out), mess_out)
