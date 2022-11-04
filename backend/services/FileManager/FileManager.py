@@ -349,7 +349,7 @@ def file_Rename(user_id):
         userid      = user_id
         docid       = int(content['DocId'])
         docname     = content['DocName']
-        doctext     = content['DocText']
+        # doctext     = content['DocText']
         sql_stmt    = ''
         ver         = 0
         oldfilepath = ''
@@ -392,8 +392,8 @@ def file_Rename(user_id):
                 ver_obj.createNewVersionFile(userid, docname, ver, '')
                 newfilepath = ver_obj.v_file_path
                 # get the content of the latest version of the file if not sent from front end
-                if (doctext == ''):
-                    with open(oldfilepath, 'r') as file:
+                # if (doctext == ''):
+                with open(oldfilepath, 'r') as file:
                         doctext = file.read()
                 
                 # update the content to this new file created
@@ -479,7 +479,7 @@ def file_GetList(user_id):
         try:
             # check if the document exists
             sql_stmt = select(Document.DocId, Document.DocName, Document.FilePath, Document.Version, Document.ModifiedDate, Document.ModifiedBy)\
-                .where(Document.UserId == userid and Document.IsTrash == 0)
+                .where(Document.UserId == userid ,Document.IsTrash == 0)
             sql_result = session.execute(sql_stmt) 
         
             for row in sql_result:
@@ -625,6 +625,7 @@ def file_trash(user_id):
                 raise Exception("Permission to move to trash denied!")
             #return jsonify(message = "File moved to trash successfully")
         except Exception:
+            print(x)
             data_out = {"message":"fail"}
             #return jsonify(message='Oops! Something went wrong')
             mess_out = 500
@@ -680,23 +681,26 @@ def gettrashlist(user_id):
     mess_out = 0
     data_out = {}
     trashlist = []
-    
-    try:
-        session = session_factory()
-        sql_stmt = (select(Document.DocId, Document.DocName).where(Document.UserId == userid, Document.IsTrash == 1))
-        result = session.execute(sql_stmt)
-        
-        for row in result:
-            json_str = {
-                "DocId":row.DocId,
-                "DocName":row.DocName
-            }
-            trashlist.append(json_str)
+    if request.method == "GET":
+        try:
+            session = session_factory()
+            sql_stmt = (select(Document.DocId, Document.DocName).where(Document.UserId == userid, Document.IsTrash == 1))
+            result = session.execute(sql_stmt)
+            
+            for row in result:
+                json_str = {
+                    "DocId":row.DocId,
+                    "DocName":row.DocName
+                }
+                trashlist.append(json_str)
+            
             data_out = {"Documents": trashlist}
             mess_out = 200
-    except Exception as err:
-        data_out = {"message":"Unknown Exception caught. Check logs"}
-        mess_out = 500
-        current_app.logger.exception("Failure getting the list of files! "+str(err))
-    
+        except Exception as err:
+            data_out = {"message":"Unknown Exception caught. Check logs"}
+            mess_out = 500
+            current_app.logger.exception("Failure getting the list of files! "+str(err))
+    else:
+        data_out = {"message":"Method not allowed"}
+        mess_out = 404        
     return make_response(jsonify(data_out), mess_out)

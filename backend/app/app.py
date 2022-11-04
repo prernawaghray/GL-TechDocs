@@ -26,7 +26,7 @@ from services.ChangePassword.changepassword1 import changepassword_bp
 from services.ForgotPassword.mail import mail_bp
 from services.DocumentVersionManager.DocumentVersionManager import documentVersionManagerBlueprint
 from services.UserHistoryManager.UserHistoryManager import userHistoryManagerBlueprint
-# from services.RazorpayIntegration.razorPay import razorPayBlueprint
+from services.RazorpayIntegration.razorPay import razorPayBlueprint
 
 
 app= Flask(__name__)
@@ -45,7 +45,7 @@ app.register_blueprint(deletecode_bp)
 app.register_blueprint(forgotpassword_bp)
 app.register_blueprint(changepassword_bp)
 app.register_blueprint(mail_bp)
-# app.register_blueprint(razorPayBlueprint)
+app.register_blueprint(razorPayBlueprint)
 
 # This function get the hostname and IP deatils of server, required for microservices
 def fetchDetails():
@@ -56,7 +56,7 @@ def fetchDetails():
 # This is main / landing page API 
 @app.route("/")
 def hello_world():
-	return "<p> home page</p>"
+	return "<h3>TechDocs API server</h3>"
 
 # This is for endpoint "Health" to healthcheck the container health in microservices
 @app.route("/health")

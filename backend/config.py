@@ -16,10 +16,11 @@ class DevConfig(Config):
 
 class ProdConfig(Config):
     FLASK_ENV='production'
+    TESTING=True
     DEBUG=False
     SECRET=os.environ.get('SECRET')
     DIR_ROOT=os.environ.get('DIR_ROOT')
     DIR_DATA=os.environ.get('DIR_DATA')
     DIR_LOG=os.environ.get('DIR_LOG')
-    PGKEY_RID=os.environ.get('PGKEY_RID')
-    PGKEY_RKEY=os.environ.get('PGKEY_RKEY')
+    PGKEY_RID=os.environ.get('R_ID')
+    PGKEY_RKEY=os.environ.get('R_KEY')
