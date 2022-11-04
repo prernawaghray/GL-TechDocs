@@ -19,17 +19,20 @@ from orm_Tables import Document, Permission, DocumentHistory, UserHistory
 from flask import Flask, render_template, url_for, redirect, session, flash, request, jsonify, json, make_response
 from flask import Blueprint
 from flask import current_app
-#from Users import User
+from config import ProdConfig
 from ..UserAuthentication.JWTAuthentication import authentication
 from ..DocumentVersionManager.DocumentVersionManager import VersionManage
 from ..UserHistoryManager import *
 from ..Permissions.permissions import get_user_permissions
 
-
 # Suppress warnings
 warnings.filterwarnings("ignore")
 
 fileManagerBlueprint = Blueprint('fileManagerBlueprint', __name__)
+
+data_path = ProdConfig.DIR_ROOT + ProdConfig.DIR_DATA 
+log_path = ProdConfig.DIR_ROOT + ProdConfig.DIR_LOG
+logging.basicConfig(filename=log_path)
 
 # @fileManagerBlueprint.before_request
 # def before_request_func():
@@ -120,24 +123,32 @@ def file_Create(user_id):
         # request data
         content  = request.get_json(silent=True)
         userid   = user_id
-        docid    = content['DocId']
+        docid    = int(content['DocId'])
         docname  = content['DocName']
         doctext  = content['DocText']
-        isupload = content['IsUpload']
-        refdocid = content['RefDocId']
+        isupload = bool(content['IsUpload'])
+        refdocid = int(content['RefDocId'])
+        
+        docname_only = docname.split(".")[0]
         
         session  = session_factory()
         file_obj = FileManage()
         ver_obj  = VersionManage()
-    
+        
         # Save data into database
         try:
             # new file
             if ((docid == 0) or (docid == '')):
                 ver = 1
             else:
-                # return jsonify({"message":"Wrong service called. Create file is for new file only!"})
                 raise Exception("Wrong service called. Create file is for new file only!")
+            
+            # validate if User and document combination exists. Error out if so
+            sql_stmt = select(Document.DocId).where(Document.DocName == docname_only and Document.UserId == userid)
+            sql_result = session.execute(sql_stmt)
+            noofrecords = len(sql_result.all())
+            if (noofrecords > 0):
+                raise Exception("Wrong service called. Document name already exists with the user. Try using /api/filemodify service instead")
             
             # Method to create a new file path - object will store the values of filename, file path
             ver_obj.createNewVersionFile(userid, docname, ver, '')
@@ -192,6 +203,7 @@ def file_Create(user_id):
             data_out = {"UserId":userid, "DocId":docid_out, "DocName":docname, "DocText":doctext, "Filepath": newfilepath}
             mess_out = 200
         except Exception as err:
+            data_out = {"message":"Unknown Exception caught. Check logs"}
             mess_out = 500
             current_app.logger.exception("Failure Creating File! "+str(err))
     
@@ -223,7 +235,7 @@ def file_Modify(user_id):
         # retrieve data inputs from the request
         content     = request.get_json(silent=True)
         userid      = user_id
-        docid       = content['DocId']
+        docid       = int(content['DocId'])
         docname     = content['DocName']
         doctext     = content['DocText']
         sql_stmt    = ''
@@ -305,6 +317,7 @@ def file_Modify(user_id):
             data_out = {"UserId":userid, "DocId":docid, "DocName":docname, "DocText":doctext, "Filepath": newfilepath}
             mess_out = 200
         except Exception as err:
+            data_out = {"message":"Unknown Exception caught. Check logs"}
             mess_out = 500
             current_app.logger.exception("Failure Modifying file! "+str(err))
     
@@ -318,11 +331,10 @@ def file_Modify(user_id):
 # Input: {'DocId':'', 'DocName':'', 'DocText':''}
 # Processing: 
 # 1. Authenticate user
-# 2. Extract all input data 
-# 3. Process the request:
-# 3.a update the document name
-# 3.b files does not have to be renamed
-# 4. Output: UserId, DocId, DocName, FilePath
+# 2. Create a new file with the name
+# 3. If document content sent, copy the content else copy ethe previous version content
+# 4. Update respective tables - Documents, DocHistory, UserHistory
+# 5. Output: UserId, DocId, DocName
 '''
 @fileManagerBlueprint.route('/api/filerename', methods = ['GET', 'POST'])
 @authentication
@@ -335,13 +347,18 @@ def file_Rename(user_id):
         # retrieve data inputs from the request
         content     = request.get_json(silent=True)
         userid      = user_id
-        docid       = content['DocId']
+        docid       = int(content['DocId'])
         docname     = content['DocName']
-        # doctext     = content['DocText']
+        doctext     = content['DocText']
         sql_stmt    = ''
+        ver         = 0
+        oldfilepath = ''
+        newfilepath = ''
         
         # open db connection
         session  = session_factory()
+        file_obj = FileManage()
+        ver_obj  = VersionManage()
         
         try:
             if ((docid == 0) or (docid == '')):
@@ -360,23 +377,45 @@ def file_Rename(user_id):
             if (noofrecords == 0):
                 raise Exception('Document reference id not found. Cannot rename!')
             else:
-                #TODO Add an entry to documenthistory with new version
-                #TODO create new file with the new name and copy contents
                 mod_date = datetime.today()
-                # update Documents table with the latest version
+                # get and create a new version for the document
+                sql_stmt = (select(Document.Version, Document.FilePath).where(Document.DocId == docid))
+                sql_result = session.execute(sql_stmt)
+                # there is always only 1 row
+                for row in sql_result:
+                    oldfilepath = row[1]
+                    ver_row = row[0]
+                    file_obj.createNewVersion(ver_row)
+                    ver = file_obj.v_version
+                
+                # create a new file with new version
+                ver_obj.createNewVersionFile(userid, docname, ver, '')
+                newfilepath = ver_obj.v_file_path
+                # get the content of the latest version of the file if not sent from front end
+                if (doctext == ''):
+                    with open(oldfilepath, 'r') as file:
+                        doctext = file.read()
+                
+                # update the content to this new file created
+                file_obj.writeToFile(newfilepath, doctext) 
+                                
+                # update Documents table with the latest file name, document version and so on
                 sql_stmt = update(Document)\
                     .where(Document.DocId == docid)\
-                    .values({Document.DocName:docname, Document.ModifiedDate:mod_date, Document.ModifiedBy:userid})
+                    .values({Document.DocName:docname, Document.Version:ver, Document.ModifiedDate:mod_date, Document.ModifiedBy:userid})
                 session.execute(sql_stmt)
                 session.commit()
-                
+                #entry into DocumentHistory table
+                dochist_entry = DocumentHistory(userid, docid, datetime.today(), docname, newfilepath, ver)
+                session.add(dochist_entry)
+                session.flush()
+                session.commit()
+                #entry into user history table                
                 userhist_entry = UserHistory(userid, docid, datetime.today(), docname, 'rename')
                 session.add(userhist_entry)
                 session.flush()
                 session.commit()
                 session.close()
-
-                
                 # file_paths_stmt = (select(DocumentHistory.FilePath).where(DocumentHistory.DocId==docid))
                 # file_paths = session.execute(file_paths_stmt).all()
                 # for path in file_paths:
@@ -404,6 +443,7 @@ def file_Rename(user_id):
                 data_out = {"UserId":userid, "DocId":docid, "DocName":docname}
                 mess_out = 200
         except Exception as err:
+            data_out = {"message":"Unknown Exception caught. Check logs"}
             mess_out = 500
             current_app.logger.exception("Failure Renaming file! "+str(err))
     
@@ -439,7 +479,7 @@ def file_GetList(user_id):
         try:
             # check if the document exists
             sql_stmt = select(Document.DocId, Document.DocName, Document.FilePath, Document.Version, Document.ModifiedDate, Document.ModifiedBy)\
-                .where(Document.UserId == userid)
+                .where(Document.UserId == userid and Document.IsTrash == 0)
             sql_result = session.execute(sql_stmt) 
         
             for row in sql_result:
@@ -457,6 +497,7 @@ def file_GetList(user_id):
             data_out = {"Documents": docslist}
             mess_out = 200
         except Exception as err:
+            data_out = {"message":"Unknown Exception caught. Check logs"}
             mess_out = 500
             current_app.logger.exception("Failure getting the list of files! "+str(err))
     
@@ -480,7 +521,7 @@ def file_delete(user_id):
     if(request.method == 'POST'):
         content  = request.get_json(silent=True)
         userid   = user_id
-        docid    = content['DocId']
+        docid    = int(content['DocId'])
         
         userperm = get_user_permissions(userid, docid)
         try:
@@ -509,6 +550,7 @@ def file_delete(user_id):
             else:
                 raise Exception("Access to delete denied!")
         except Exception:
+            data_out = {"message":"Unknown Exception caught. Check logs"}
             mess_out=500
             current_app.logger.exception("Failure deleting file!")
     current_app.logger.info("Service file/delete ended")
@@ -526,7 +568,7 @@ def file_view(user_id):
 
     if(request.method == "POST"):
         content = request.get_json(silent=True)
-        docid   = content['DocId']
+        docid   = int(content['DocId'])
 
         userperm = get_user_permissions(userid, docid)
         try:
@@ -547,6 +589,7 @@ def file_view(user_id):
                 data_out = {"UserId":user_id, "DocId":docid, "Version":doc_ver, "DocText":data}
                 mess_out = 200
         except:
+            data_out = {"message":"Unknown Exception caught. Check logs"}
             mess_out = 500
     return make_response(jsonify(data_out), mess_out)
 
@@ -562,7 +605,7 @@ def file_trash(user_id):
     if (request.method == 'POST'):
         content = request.get_json(silent=True)
         userid = user_id
-        docid  = content['DocId']
+        docid  = int(content['DocId'])
         
         try:
             userperm = get_user_permissions(userid, docid)
@@ -602,7 +645,7 @@ def file_retrive(user_id):
     if request.method == 'POST':
         content = request.get_json(silent=True)
         userid  = user_id
-        docid   = content['DocId']
+        docid   = int(content['DocId'])
          
         try:
             userperm = get_user_permissions(userid, docid)
@@ -652,6 +695,7 @@ def gettrashlist(user_id):
             data_out = {"Documents": trashlist}
             mess_out = 200
     except Exception as err:
+        data_out = {"message":"Unknown Exception caught. Check logs"}
         mess_out = 500
         current_app.logger.exception("Failure getting the list of files! "+str(err))
     
