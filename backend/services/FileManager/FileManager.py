@@ -128,6 +128,7 @@ def file_Create(user_id):
         doctext  = content['DocText']
         isupload = bool(content['IsUpload'])
         refdocid = int(content['RefDocId'])
+        istrash = 0
         
         docname_only = docname.split(".")[0]
         
@@ -159,7 +160,7 @@ def file_Create(user_id):
             open(newfilepath, 'a').close()
         
             # entry into Documents table
-            doc_entry = Document(userid, docname, newfilepath, datetime.today(), ver, isupload)
+            doc_entry = Document(userid, docname, newfilepath, datetime.today(), ver, isupload, istrash)
             session.add(doc_entry)
             session.flush()
             docid_out = doc_entry.DocId
@@ -625,7 +626,6 @@ def file_trash(user_id):
                 raise Exception("Permission to move to trash denied!")
             #return jsonify(message = "File moved to trash successfully")
         except Exception:
-            print(x)
             data_out = {"message":"fail"}
             #return jsonify(message='Oops! Something went wrong')
             mess_out = 500

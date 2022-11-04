@@ -22,10 +22,11 @@ class Common(Base):
     
  
     #Constructor methods to insert data into Documents table
-    def __init__(self, UserId, DocName, Filepath, Datetime, Version, IsUpload):
+    def __init__(self, UserId, DocName, Filepath, Datetime, Version, IsUpload, IsTrash):
         self.UserId      = UserId
         self.DocName     = DocName
         self.FilePath    = Filepath
         self.CreatedDate = Datetime
         self.Version     = Version
         self.IsUpload    = IsUpload
+        self.IsTrash     = IsTrash

@@ -1,4 +1,3 @@
-from turtle import update
 from flask import make_response, jsonify, request, abort
 import getpass
 import json 
