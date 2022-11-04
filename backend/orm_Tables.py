@@ -32,13 +32,14 @@ class Document(Common):
     ModifiedBy      = Column(String(256))  
     User            = relationship('User')    
     
-    def __init__(self, UserId, DocName, Filepath, Datetime, Version, IsUpload):
+    def __init__(self, UserId, DocName, Filepath, Datetime, Version, IsUpload, IsTrash):
         self.UserId      = UserId
         self.DocName     = DocName
         self.FilePath    = Filepath
         self.CreatedDate = Datetime
         self.Version     = Version
         self.IsUpload    = IsUpload
+        self.IsTrash     = IsTrash
   
 #############################
 

@@ -128,6 +128,7 @@ def file_Create(user_id):
         doctext  = content['DocText']
         isupload = bool(content['IsUpload'])
         refdocid = int(content['RefDocId'])
+        istrash = 0
         
         docname_only = docname.split(".")[0]
         
@@ -159,7 +160,7 @@ def file_Create(user_id):
             open(newfilepath, 'a').close()
         
             # entry into Documents table
-            doc_entry = Document(userid, docname, newfilepath, datetime.today(), ver, isupload)
+            doc_entry = Document(userid, docname, newfilepath, datetime.today(), ver, isupload, istrash)
             session.add(doc_entry)
             session.flush()
             docid_out = doc_entry.DocId
