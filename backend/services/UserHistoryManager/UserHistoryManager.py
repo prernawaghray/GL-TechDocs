@@ -18,17 +18,8 @@ warnings.filterwarnings("ignore")
 import sys
 sys.path.append('../')
 
-# Get logging filepath
-with open('../config.yaml') as stream:
-    configs = yaml.safe_load(stream)
-
-# Initiate logging 
-log_path = configs['DIR_ROOT'] + configs['DIR_LOG']
-
-# Initiate logging 
-logging.basicConfig(filename=log_path)
-
 userHistoryManagerBlueprint = Blueprint('userHistoryManagerBlueprint', __name__)
+
 
 @userHistoryManagerBlueprint.route('/userhistorymanagerhealth')
 def filemanagerhealth():

@@ -2,18 +2,18 @@
 # Usage:
 # This script is used to configure tables on the dataabase
 # Ref_Task: 1.3.3
-# ----------------------------------------------------------------------------------
-# Pre requisites:
-# Database connection string, database name, userid & password are to be configured 
-#   as system environment variables 
-# These values are fetched from the environment variables
-# ----------------------------------------------------------------------------------
-# Revision history:
-## Author        Date       Comment
-## Shravan       20221005   Initial version
-# ----------------------------------------------------------------------------------
+# # ----------------------------------------------------------------------------------
+# # Pre requisites:
+# # Database connection string, database name, userid & password are to be configured 
+# #   as system environment variables 
+# # These values are fetched from the environment variables
+# # ----------------------------------------------------------------------------------
+# # Revision history:
+# ## Author        Date       Comment
+# ## Shravan       20221005   Initial version
+# # ----------------------------------------------------------------------------------
 
-# ToDo: Defining FK constraints later after the code for Users schema is uploaded
+# # ToDo: Defining FK constraints later after the code for Users schema is uploaded
 
 # Import all libraries
 import os
@@ -22,6 +22,8 @@ import os.path
 import logging
 import mysql.connector
 from mysql.connector import connect, errorcode
+import os
+from dotenv import load_dotenv
 
 
 ##
@@ -53,53 +55,7 @@ def defineTables():
         ")"
     )
 
-    # Table - UserPayments
-    # Stores the history of all payments of all users
-    # Col - PaymentMethod, possible values are 'card', 'netbank', 'UPI'
-    # Col - Status, possible values are 'success', 'failed'
-    tbl_array['UserPayments'] = (
-        "Create Table if not exists `UserPayments` ("
-        "   RecordId        int not null AUTO_INCREMENT,"
-        "   UserId          varchar(256),"
-        "   PaidDate        datetime,"
-        "   Amount          decimal(65,30),"
-        "   PayAccountId    int,"
-        "   PaymentMethod   varchar(128),"
-        "   Status          varchar(50),"
-        "   Notes           text,"
-        "   Version         int,"
-        "   s_Misc1         varchar(1024),"
-        "   s_Misc2         varchar(1024),"
-        "   n_Misc1         int,"
-        "   n_Misc2         int,"
-        "   PRIMARY KEY (RecordId),"
-        "   INDEX idx_UP_UserDate (UserId, PaidDate)"
-        ")"
-    )
-
-    # Table - UserSubscriptions
-    # Stores the User subscriptions info
-    # Col - Type, possible values are (F)ree, (PC) Paid Corporate
-    # Col - TypeDesc, possible values are 'Personal', 'Corporate'
-    # Col - Status, possible values are (A)ctive', (I)nactive
-    tbl_array['UserSubscriptions'] = (
-        "Create Table if not exists `UserSubscriptions` ("
-        "   RecordId        int not null AUTO_INCREMENT,"
-        "   UserId          varchar(256),"
-        "   Type            char(5),"
-        "   TypeDesc        varchar(128),"
-        "   Status          Char(1),"
-        "   ExpiryDate      datetime,"
-        "   Version         int,"
-        "   s_Misc1         varchar(1024),"
-        "   s_Misc2         varchar(1024),"
-        "   n_Misc1         int,"
-        "   n_Misc2         int,"
-        "   PRIMARY KEY (RecordId),"
-        "   INDEX idx_US_User (UserId)"
-        ")"
-    )
-
+    
     # Table - User
     # Store the credentials of the user
     tbl_array['User'] = (
@@ -212,6 +168,55 @@ def defineTables():
         "   INDEX idx_Perm_ByUserDoc (UserId, DocId)"
         ")"
     )
+    # Table - UserPayments
+    # Stores the history of all payments of all users
+    # Col - PaymentMethod, possible values are 'card', 'netbank', 'UPI'
+    # Col - Status, possible values are 'success', 'failed'
+    tbl_array['UserPayments'] = (
+        "Create Table if not exists `UserPayments` ("
+        "   RecordId        int not null AUTO_INCREMENT,"
+        "   UserId          varchar(256),"
+        "   PaidDate        datetime,"
+        "   Amount          decimal(65,30),"
+        "   PayAccountId    int,"
+        "   PaymentMethod   varchar(128),"
+        "   Status          varchar(50),"
+        "   Notes           text,"
+        "   Version         int,"
+        "   s_Misc1         varchar(1024),"
+        "   s_Misc2         varchar(1024),"
+        "   n_Misc1         int,"
+        "   n_Misc2         int,"
+        "   PRIMARY KEY (RecordId),"
+        "   FOREIGN KEY (UserId) REFERENCES User(UserId) ON DELETE CASCADE,"
+        "   INDEX idx_UP_UserDate (UserId, PaidDate)"
+        ")"
+    )
+
+    # Table - UserSubscriptions
+    # Stores the User subscriptions info
+    # Col - Type, possible values are (F)ree, (PC) Paid Corporate
+    # Col - TypeDesc, possible values are 'Personal', 'Corporate'
+    # Col - Status, possible values are (A)ctive', (I)nactive
+    tbl_array['UserSubscriptions'] = (
+        "Create Table if not exists `UserSubscriptions` ("
+        "   RecordId        int not null AUTO_INCREMENT,"
+        "   UserId          varchar(256),"
+        "   Type            char(5),"
+        "   TypeDesc        varchar(128),"
+        "   Status          Char(1),"
+        "   ExpiryDate      datetime,"
+        "   Version         int,"
+        "   s_Misc1         varchar(1024),"
+        "   s_Misc2         varchar(1024),"
+        "   n_Misc1         int,"
+        "   n_Misc2         int,"
+        "   PRIMARY KEY (RecordId),"
+        "   FOREIGN KEY (UserId) REFERENCES User(UserId) ON DELETE CASCADE,"
+        "   INDEX idx_US_User (UserId)"
+        ")"
+    )
+
 
     # Table - LinkedAccount
     # Store the details of Accounts to which the user is linked
@@ -227,6 +232,35 @@ def defineTables():
         ")"
     )
 
+    tbl_array['UserTransactions'] = (
+        " CREATE TABLE `UserTransactions` ( "
+        "    PaymentId          VARCHAR(255) NOT NULL,"
+        "    UserId             VARCHAR(255) NOT NULL,"
+        "    Type               VARCHAR(255) ,"
+        "    Amount             DECIMAL (6,2) NOT NULL,"
+        "    Currency           VARCHAR(10) ,"
+        "    Status             VARCHAR(255) ,"
+        "    Method             VARCHAR(255) ,"
+        "    CardType           VARCHAR(255) ,"
+        "    CardNetwork        VARCHAR(255) ,"
+        "    CardLast4          VARCHAR(255) ,"
+        "    CardIssuer         VARCHAR(255) ,"
+        "    CardInternational  VARCHAR(255) ,"
+        "    CardEmi            VARCHAR(255) ,"
+        "    CardSubType        VARCHAR(255) ,"
+        "    CardTokenIin       VARCHAR(255) ,"
+        "    OrderId            VARCHAR(255) ,"
+        "    Description        VARCHAR(255) ,"
+        "    RefundStatus       VARCHAR(255) ,"
+        "    AmountRefunded     DECIMAL (6,2) NOT NULL,"
+        "    Email              VARCHAR(255) ,"
+        "    Contact            VARCHAR(255) ,"
+        "    ErrorCode          VARCHAR(255) ,"
+        "    DateCreated        TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
+        "    PRIMARY KEY (PaymentId),"
+	    "    FOREIGN KEY (UserId) REFERENCES User(UserId) ON DELETE CASCADE"
+        "    )"
+    )
 
 ##
 # Method to run the table definitions defined in the earlier call in a loop
@@ -239,16 +273,19 @@ def createTables():
     # db_pass     = os.environ.get('MYSQL_PASS')
 
     # Get details from configuration file
-    with open(os.path.dirname(__file__) + '../config.yaml') as stream:
-        configs = yaml.safe_load(stream)
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    env = os.path.join(basedir,'../.env.local')
+    load_dotenv(env)
+    print(os.environ.get('DB_URL'))
+    
 
-    db_conn = configs['DB_CONN']
-    db_database = configs['DB_NAME']
-    db_user = configs['DB_USER']
-    db_pass = configs['DB_PASS']
-    log_path = configs['DIR_ROOT'] + configs['DIR_LOG']
-    # Initiate logging 
-    logging.basicConfig(filename=log_path)
+    db_conn = os.environ.get('DB_CONN')
+    db_database = os.environ.get('DB_NAME')
+    db_user = os.environ.get('DB_USER')
+    db_pass = os.environ.get('DB_PASS')
+    # log_path = os.environ.get('DIR_ROOT') + os.environ.get('DIR_LOG')
+    # # Initiate logging 
+    # logging.basicConfig(filename=log_path)
 
     try:
         cnx = mysql.connector.connect(
