@@ -121,6 +121,8 @@ def app_status():
     payment_details['amount_refunded'] = float(payment_details['amount_refunded']) / 100
     payment_details['created_at'] = datetime.fromtimestamp(payment_details['created_at'])
     payment_details['userId'] = user_id
+
+    sql = text()
     db_status = razorpayDB.insert_rec(**payment_details)
 
     if db_status == 0:
