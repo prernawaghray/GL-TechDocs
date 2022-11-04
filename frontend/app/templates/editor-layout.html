@@ -1,0 +1,289 @@
+{% extends "base.html" %}
+
+{% block layoutCss %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard-layout.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/editor-layout.css') }}">
+  <link rel="stylesheet" href="https://prismjs.com/themes/prism.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://prismjs.com/plugins/line-numbers/prism-line-numbers.css">
+  <link rel="stylesheet" href="https://live.prismjs.com/prism-live.css">
+  <style>
+    latex-js {
+      display: inline-block;
+      width: 40%;
+      border: 1px solid red;
+      margin-right: 2em;
+    }
+    
+    .re-flex .item, .re-flex div.prism-live, textarea{
+      width: calc(50% - 20px);
+      height: calc(100%);
+    }
+    .re-flex .item:last-child{
+      margin-left:15px;
+    }
+    @media (max-width: 800px) {
+      .container-x > aside, .container-x .resize-handle--x{
+        display:none;
+      }
+      .re-flex{
+        flex-direction: column-reverse;
+      }
+      .re-flex .item, .re-flex div.prism-live{
+        margin-bottom: 20px;
+        width:100%;
+        height: calc(59% - 100px);
+      }
+      .re-flex .item:last-child{
+        margin-left:0px;
+      }
+    }
+
+    .assets-menu li a{
+      padding:5px;
+      background-color: aliceblue;
+    }
+    .assets-menu li:hover{
+      cursor: pointer;
+      background-color: rgb(214, 234, 252);
+    }
+
+    #editor-text{
+      background-color: transparent;
+      color: transparent;
+    }
+    
+    code[class*="language-"], pre[class*="language-"] {
+      font-size: 16px;
+      color: white;
+      text-shadow: none;
+    }
+
+    :not(pre) > code[class*="language-"], pre[class*="language-"] {
+        background: #444;
+    }
+
+  </style>
+
+  {% block pageCss %}{% endblock%}
+{% endblock %}
+
+{% block layout %}
+
+
+<nav class="navbar navbar-expand-lg bd-navbar bg-light">
+  <div class="container-fluid">
+    
+    <a href="/dashboard" class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none">
+      <span class="header-text">
+        <i class="bi bi-house-door-fill"></i>
+      </span>
+    </a>
+    <button class="btn btn-outline"><i class="bi bi-fullscreen" id="f-icon"></i></buttom>
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <!-- MOBILE RESPONSIVE MENU -->
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasNavbarLabel"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body">
+        <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+          <li class="nav-item" ><a data-bs-toggle="offcanvas" href="#offcanvasAssets"  class="nav-link px-2 link-dark"><i class="bi bi-paperclip"></i> Assets</a></li>
+          <li class="nav-item"><a  data-bs-toggle="offcanvas" href="#offcanvasHistory" class="nav-link px-2 link-dark"><i class="bi bi-clock-history"></i> History</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-person-circle"></i> Account
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="{{url_for('profile')}}"">Account Settings</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item" href="#" onclick="logoutButtonClicked()">Logout</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <div class="offcanvas-footer text-center bg-light">
+        <div>&copy; TechDocs</div>
+      </div>
+    </div>
+
+    
+
+
+  </div>
+
+  
+
+</nav>
+
+<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasAssets" aria-labelledby="offcanvasExampleLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="offcanvasExampleLabel">Assets</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <div>
+      <ul class="assets-menu list-unstyled">
+        <li><a class="dropdown-item" href="#">Action</a></li>
+        <li><a class="dropdown-item" href="#">Another action</a></li>
+        <li><a class="dropdown-item" href="#">Something else here</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasHistory" aria-labelledby="offcanvasExampleLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="offcanvasExampleLabel">History</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <div>
+      <ul class="assets-menu list-unstyled">
+        <li><a class="dropdown-item" href="#"><b>Name one</b><br/><small>June 6th, 2022</small></a></li>
+        <li><a class="dropdown-item" href="#"><b>Name one</b><br/><small>June 6th, 2022</small></a></li>
+        <li><a class="dropdown-item" href="#"><b>Name one</b><br/><small>June 6th, 2022</small></a></li>
+        <li><a class="dropdown-item" href="#"><b>Name one</b><br/><small>June 6th, 2022</small></a></li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<div class="container-x">
+  <aside style="display: none !important;">
+    <p style="width:180px;">Assets</p>
+  </aside>
+  <div  style="display: none !important;" class="resize-handle--x" data-target="aside"></div>
+  <main class="container-fluid body-main mt-2 bg-light">
+    <div class="d-flex align-items-stretch flex-wrap re-flex" style="height: calc(100% - 63px)">
+      <textarea id="editor-text" class="form-control prism-live language-latex"></textarea>
+      <iframe id="html-preview" sandbox="allow-same-origin allow-scripts" srcdoc="" class="shadow p-3 bg-body rounded item">
+
+      </iframe>
+    </div>
+  </main>
+</div>
+
+
+
+
+
+{% endblock %}
+
+{% block layoutJS %}
+  <script src="https://prismjs.com/prism.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://prismjs.com/plugins/autoloader/prism-autoloader.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://live.prismjs.com/src/prism-live.js"  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://prismjs.com/components/prism-latex.min.js"></script>  
+  <script src="https://prismjs.com/plugins/line-numbers/prism-line-numbers.js"></script>  
+  
+  <script src="{{url_for('static',filename='js/node_modules/latex.js/dist/latex.js')}}"></script>  
+
+  <script>
+  
+    function refreshContent(){
+      var text = $editor.value;
+      var generator = new latexjs.HtmlGenerator({ hyphenate: false });
+      lDoc = latexjs.parse(text, { generator: generator }).htmlDocument('https://cdn.jsdelivr.net/npm/latex.js@0.12.4/dist/');
+      $('#html-preview').attr('srcDoc',lDoc.documentElement.outerHTML);
+    }
+    $(document).ready(function(){
+      $editor=document.getElementById('editor-text');
+      
+    
+      //document.head.appendChild(generator.stylesAndScripts("https://cdn.jsdelivr.net/npm/latex.js@0.12.4/dist/"))
+      $editor.addEventListener('keyup',function(event){
+        refreshContent();
+      });
+      
+      refreshContent();
+
+      $('#f-icon').click(function(){
+        $('#f-icon').toggleClass('bi-fullscreen');
+        $('#f-icon').toggleClass('bi-fullscreen-exit');
+
+      })
+      
+    });
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
+  <script>
+    const selectTarget = (fromElement, selector) => {
+      if (!(fromElement instanceof HTMLElement)) {
+        return null;
+      }
+
+      return fromElement.querySelector(selector);
+    };
+
+    const resizeData = {
+      tracking: false,
+      startWidth: null,
+      startCursorScreenX: null,
+      handleWidth: 5,
+      resizeTarget: null,
+      parentElement: null,
+      maxWidth: null,
+    };
+
+    $(document.body).on('mousedown', '.resize-handle--x', null, (event) => {
+      if (event.button !== 0) {
+        return;
+      }
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      const handleElement = event.currentTarget;
+      
+      if (!handleElement.parentElement) {
+        console.error(new Error("Parent element not found."));
+        return;
+      }
+      
+      // Use the target selector on the handle to get the resize target.
+      const targetSelector = handleElement.getAttribute('data-target');
+      const targetElement = selectTarget(handleElement.parentElement, targetSelector);
+
+      if (!targetElement) {
+        console.error(new Error("Resize target element not found."));
+        return;
+      }
+      
+      resizeData.startWidth = $(targetElement).outerWidth();
+      resizeData.startCursorScreenX = event.screenX;
+      resizeData.resizeTarget = targetElement;
+      resizeData.parentElement = handleElement.parentElement;
+      resizeData.maxWidth = $(handleElement.parentElement).innerWidth() - resizeData.handleWidth;
+      resizeData.tracking = true;
+
+      console.log('tracking started');
+    });
+
+    $(window).on('mousemove', null, null, _.debounce((event) => {
+      if (resizeData.tracking) {
+        const cursorScreenXDelta = event.screenX - resizeData.startCursorScreenX;
+        const newWidth = Math.min(resizeData.startWidth + cursorScreenXDelta, resizeData.maxWidth);
+        
+        $(resizeData.resizeTarget).outerWidth(newWidth);
+      }
+    }, 1));
+
+    $(window).on('mouseup', null, null, (event) => {
+      if (resizeData.tracking) {
+        resizeData.tracking = false;
+
+        console.log('tracking stopped');
+      }
+    });
+  </script>
+  {% block pageJS %}{% endblock%}
+
+{% endblock %}

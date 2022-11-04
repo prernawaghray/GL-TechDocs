@@ -1,0 +1,167 @@
+{% extends "dashboard-layout.html" %}
+
+{% block pageCss%}
+{% endblock %}
+
+{% block body %}
+
+<div class="row">
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+    <div style="height: 400px; width: 200px; position: fixed; top: 60%; left: 50%" id="filelist-error-message" class="errorMessage"></div>
+
+    <!-- PAGE HEADER AND SEARCH -->
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+     
+     
+      <div class="btn-group" role="group" aria-label="Basic outlined example">
+        <button title="New Document" type="button" onclick="window.location.href='{{url_for('latexEditor',id='new-document')}}'" class="btn btn-outline-primary">
+          <i class="bi bi-file-earmark-plus"></i>
+        </button>
+        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#UploadButton" data-bs-placement="bottom" title="Upload">
+          <i class="bi bi-upload"></i>
+        </button>
+        <button type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-bs-placement="bottom"
+        title="Share" class="btn btn-outline-primary"> 
+          <i class="bi bi-share"></i>
+        </button>
+
+  
+        <button type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-bs-placement="bottom"
+        title="Move to Trash" class="btn disabled">
+          <i class="bi bi-trash3"></i>
+        </button>
+
+        <!-- <a class="disabled" href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-bs-placement="bottom"
+          title="Archive">
+          <button type="button" class="btn disabled" style="height: 40px; width: 40px; padding: 0px;">
+            <i class="bi bi-file-earmark-zip" style="font-size: 25px;"></i>
+          </button>
+        </a>
+         -->
+
+         <!-- <a class="disabled" href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-bs-placement="bottom"
+          title="Copy">
+          <button type="button" class="btn disabled" style="height: 40px; width: 40px; padding: 0px;">
+            <i class="bi bi-files" style="font-size: 25px;"></i>
+          </button>
+        </a> -->
+      </div>
+
+      <form>
+        <div class="input-group">
+          
+          <input type="search" id="searchbar"  placeholder="Search file"  onkeyup="fileSearch()" class="form-control" aria-label="Search Files"">
+          <div class="input-group-text" id="btnGroupAddon"> <i class="bi bi-search"></i></div>
+        </div>
+      </form>
+    </div>
+    <!-- END OF PAGE HEADER AND SEARCH  -->
+
+    <!-- BUTTON MENU -->
+    <!-- New Button -->
+    
+    <!-- END OF BUTTON MENU -->
+
+    <!-- ALL MODALS FOR BUTTON MENU -->
+    <!-- Upload window -->
+    <div class="modal fade" id="UploadButton" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+      aria-labelledby="UploadButtonLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="UploadButtonLabel">Document Location</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="input-group mb-3">
+              <input type="file" class="form-control" aria-label="File path" aria-describedby="browse-button">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-primary">Submit</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- END OF MODALS -->
+
+    <!-- USER TABLE -->
+    <div class="table-responsive border-top">
+      <table class="table table-striped table-sm">
+        <thead id="thead">
+          <tr>
+            <td>
+              <input type="checkbox" id="selectall">
+            </td>
+
+            <th scope="col">Title</th>
+            <th scope="col">Version</th>
+            <th scope="col">Last Modified</th>
+            <th scope="col">Modified By</th>
+            <th scope="col">Actions</th>
+          </tr>
+
+        </thead>
+        <tbody id="tbody"></tbody>
+    </div>
+    <!-- END OF USER TABLE -->
+  </main>
+  <!-- ALL MODALS FOR ACTIONS MENU -->
+  <!-- SHARE BUTTON -->
+  <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Share Document</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" name="docId" value="">
+          <div class="form-floating">
+            <input type="email" class="form-control" name="email" id="email-input" placeholder="email" required>
+            <label for="email-input">Email address</label>
+          </div>
+          <select class="form-select form-select-lg mt-3" aria-label="Default select example">
+            <option selected>Permissions</option>
+            <option value="1">Can View</option>
+            <option value="2">Can Edit</option>
+            <option value="3">Revoke Permissions</option>
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Share</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE BUTTON -->
+<div class="modal fade" id="delmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title fs-5" id="exampleModalLabel">Do you want to delete this file?</h3>
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<!-- END OF MODALS -->
+
+{% endblock %}
+
+{% block pageJS%}
+
+<script src="js/dashboard.js"></script>
+
+{% endblock %}
