@@ -1,6 +1,6 @@
 var rootTestApiUrl = "http://localhost:9999/api/"
-var rootApiUrl = "http://localhost:5000/api/";
-var testing=true;
+var rootApiUrl = "http://44.199.204.184/api/";
+var testing=false;
 //56733
 //6622
 var rootFrontEndUrl = "/";
