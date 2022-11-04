@@ -626,7 +626,6 @@ def file_trash(user_id):
                 raise Exception("Permission to move to trash denied!")
             #return jsonify(message = "File moved to trash successfully")
         except Exception:
-            print(x)
             data_out = {"message":"fail"}
             #return jsonify(message='Oops! Something went wrong')
             mess_out = 500
