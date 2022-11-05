@@ -14,9 +14,15 @@
      
      
       <div class="btn-group" role="group" aria-label="Basic outlined example">
-        <button title="New Document" type="button" onclick="window.location.href='{{url_for('latexEditor',id='new-document')}}'" class="btn btn-outline-primary">
-          <i class="bi bi-file-earmark-plus"></i>
-        </button>
+        <div class="btn-group" role="group">
+          <button title="New Document" class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-file-earmark-plus"></i> New Document
+          </button>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item"  onclick="window.location.href='{{url_for('latexEditor',id='new-document')}}?template=resume'">Resume Template</a></li>
+            <li><a class="dropdown-item" onclick="window.location.href='{{url_for('latexEditor',id='new-document')}}?template=blank'">Blank Template</a></li>
+          </ul>
+        </div>
         <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#UploadButton" data-bs-placement="bottom" title="Upload">
           <i class="bi bi-upload"></i>
         </button>
