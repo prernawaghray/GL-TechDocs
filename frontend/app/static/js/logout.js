@@ -27,9 +27,7 @@ async function logoutButtonClicked()
     userToken = localStorage.getItem('userToken');
     sessionUser = sessionStorage.getItem('user');
     
-    if (sessionUser !== null){
-        clearSession()
-    }
+    clearSession()
     
     if (userToken !== null){
         localStorage.removeItem('userToken');
@@ -44,7 +42,7 @@ async function logoutButtonClicked()
         .then(response => { if(response.status == 400 || response.status == 401) {
                                 window.alert('bad request');
                             }})
-        // .then(data => {console.log(data))
+        .then(data => {console.log(data)})
         .catch(error => {console.log(error)})
     }
 
