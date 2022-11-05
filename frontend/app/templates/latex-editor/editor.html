@@ -9,7 +9,7 @@
 {% block body %}
 <main class="container-fluid body-main mt-2 bg-light">
     <div class="d-flex align-items-stretch flex-wrap re-flex" style="height: calc(100% - 63px)">
-      <textarea id="editor-text" class="form-control prism-live language-latex">{% if params['template']=='resume'%}
+      <textarea id="editor-text" class="form-control prism-live language-latex">{% if params['template']=='resume' %}
 \documentclass{article}
 \usepackage{comment, multicol}
 \usepackage{hyperref}
@@ -36,9 +36,7 @@ In the appendix, the API as well as the format of custom macro definitions in Ja
 \end{document}        
 {% endif %}
       </textarea>
-      <iframe id="html-preview" sandbox="allow-same-origin allow-scripts" srcdoc="" class="shadow p-3 bg-body rounded item">
-
-      </iframe>
+      <iframe id="html-preview" sandbox="allow-same-origin allow-scripts" srcdoc="" class="shadow p-3 bg-body rounded item"></iframe>
     </div>
   </main>
 {% endblock %}
