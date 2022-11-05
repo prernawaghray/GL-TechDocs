@@ -7,6 +7,7 @@ import timeago
 from datetime import datetime
 from flask import Flask, request, jsonify, json, Blueprint, current_app
 import sqlalchemy as db
+import jwt
 from DBConnect import session_factory
 from ..UserAuthentication.JWTAuthentication import authentication
 
@@ -30,7 +31,7 @@ logging.basicConfig(filename=log_path)
 
 userHistoryManagerBlueprint = Blueprint('userHistoryManagerBlueprint', __name__)
 
-@userHistoryManagerBlueprint.route('/userhistorymanagerhealth')
+@userHistoryManagerBlueprint.route('/api/userhistorymanagerhealth')
 def filemanagerhealth():
     print(current_app.config)
     return jsonify({'health':'good'}) 
@@ -77,7 +78,7 @@ def get_user_record_by_email(email):
 ##############################################################################
 # Home API for historymanager
 # Check on HistoryManager service
-@userHistoryManagerBlueprint.route('/history', methods = ['GET', 'POST'])
+@userHistoryManagerBlueprint.route('/api/history', methods = ['GET', 'POST'])
 def home():
     if(request.method == 'GET'):
         data = "HistoryManager home. Allowed endpoints are /history/get; /history/create;"
@@ -89,7 +90,7 @@ def home():
 # Processing: 
 # 1. Create an entry into UserHistory table
 # Output: UserHistoryId
-@userHistoryManagerBlueprint.route('/history/create', methods = ['GET', 'POST'])
+@userHistoryManagerBlueprint.route('/api/history/create', methods = ['GET', 'POST'])
 def create_user_history():
     data_out = ''
     mess_out = ''
@@ -152,7 +153,7 @@ def create_user_history():
 # 4. If action is share, get the shared email id
 # Output:
 # UserId, DocId, DocName, DocText
-@userHistoryManagerBlueprint.route('/history/get', methods = ['GET', 'POST'])
+@userHistoryManagerBlueprint.route('/api/history/get', methods = ['GET', 'POST'])
 @authentication
 def get_user_history():
     current_app.logger.info("Service history/get initiated")
@@ -163,8 +164,13 @@ def get_user_history():
     if(request.method == 'POST'):
         # retrieve data inputs from the request
         page_size = 50
+
+        token = request.headers['authToken']
+        key = current_app.config["SECRET"]
+        data= jwt.decode(token, key, algorithms=["HS256"])
+        user_email   = data['Email']
+
         content   = request.get_json(silent=True)
-        user_email   = content['Email']
         if 'PageNumber' in content:
             page_number = content['PageNumber']
         else: 

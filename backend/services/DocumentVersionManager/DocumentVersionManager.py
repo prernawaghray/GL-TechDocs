@@ -30,7 +30,7 @@ logging.basicConfig(filename=log_path)
 
 documentVersionManagerBlueprint = Blueprint('documentVersionManagerBlueprint', __name__)
 
-@documentVersionManagerBlueprint.route('/documentversionmanagerhealth')
+@documentVersionManagerBlueprint.route('/api/documentversionmanagerhealth')
 def filemanagerhealth():
     print(current_app.config)
     return jsonify({'health':'good'}) 
@@ -113,7 +113,7 @@ def get_latest_document_version_record(document_id):
 ##############################################################################
 # Home API for document_version_manager
 # Check on DocumentVersionManager service
-@documentVersionManagerBlueprint.route('/version', methods = ['GET', 'POST'])
+@documentVersionManagerBlueprint.route('/api/version', methods = ['GET', 'POST'])
 def home():
     if(request.method == 'GET'):
         data = "DocumentVersionManager home. Allowed endpoints are /version/create ; /version/get"
@@ -130,7 +130,7 @@ def home():
 # 5. Create an entry into Document version table
 # Output: UserId, DocId, DocName
 
-@documentVersionManagerBlueprint.route('/version/create', methods = ['GET', 'POST'])
+@documentVersionManagerBlueprint.route('/api/version/create', methods = ['GET', 'POST'])
 def create_document_version():
     
     current_app.logger.info("Service version/create initiated")
@@ -184,7 +184,7 @@ def create_document_version():
 # 1. Retrieves the latest document version for the given document id
 # Output:
 # Version
-@documentVersionManagerBlueprint.route('/version/get', methods = ['GET', 'POST'])
+@documentVersionManagerBlueprint.route('/api/version/get', methods = ['GET', 'POST'])
 def get_latest_document_version():
     current_app.logger.info("Service version/get initiated")
     data_out = ''
