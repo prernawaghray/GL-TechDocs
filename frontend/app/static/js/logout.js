@@ -12,7 +12,7 @@ async function logoutButtonClicked()
     
     if (userToken !== null){
         localStorage.removeItem('userToken');
-
+         localStorage.removeItem('email');
         await fetch(getApiUrl('signout'), {
             method: 'post',
             headers:{
