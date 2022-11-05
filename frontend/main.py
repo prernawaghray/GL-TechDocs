@@ -13,5 +13,5 @@ def add_header(r):
     r.headers['Cache-Control'] = 'public, max-age=0'
     return r
 
-if __name__ == '__main__':
-    app.run(debug=True, port=56733)
+# if __name__ == '__main__':
+#     app.run(debug=True, port=56733)
