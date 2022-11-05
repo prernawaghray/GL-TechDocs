@@ -48,12 +48,11 @@ function callLoginApi(loginFormData)
            success: function(data) {
             //In case of success the data contains the JSON
 
-            
+                
                 localStorage.setItem('userToken', data.userAuthToken);
+                //Saving email for further references for calling backend url.
+                localStorage.setItem('email', $('#email-input').val());
                 saveTokenInSession(data.userAuthToken);
-            
-            
-            
           },
           error:function(data) {
             // in case of error we need to read response from data.responseJSON

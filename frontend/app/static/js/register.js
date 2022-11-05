@@ -17,14 +17,14 @@ $(document).ready(function() {
 
 function registerButtonClicked() {
     registerFormData = {
-        loginType : "email",
-        FirstName : $('#firstname-input').val(),
-        LastName : $('#lastname-input').val(),
-        email : $('#email-input').val(),
-        password: $('#password-input').val(),
+        "loginType" : "email",
+        "FirstName" : $('#firstname-input').val(),
+        "LastName" : $('#lastname-input').val(),
+        "email" : $('#email-input').val(),
+        "password" : $('#password-input').val()
 //        confirmPassword: $('#password_confirm-input').val()
     };
-    console.log(registerFormData)
+    console.log(JSON.stringify(registerFormData))
     callLoginApi(registerFormData);
 }
 
@@ -32,14 +32,16 @@ function callLoginApi(registerFormData) {
     removeAlert('#register-errorMessage');
     try {
     $.ajax({
-        data : registerFormData,
+           data : JSON.stringify(registerFormData),
+           contentType:"application/json; charset=utf-8",
            type : 'POST',
+           dataType: "json",
            url : getApiUrl('register'),
            success: function(data) {
             //In case of success the data contains the JSON
             
             console.log("Registered successfully!!")
-            showAlert('#register-infoMessage', 'alert-info', $('#firstname-input').val()+",", "Your are registered successfully!!");
+            showAlert('#register-infoMessage', 'alert-info', "", "Your are registered successfully!!");
 
           },
           error:function(data) {
