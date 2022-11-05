@@ -2,11 +2,17 @@ import os
 from sqlalchemy.sql import text
 import sqlalchemy
 import yaml
-from flask import Blueprint
-
+from flask import Blueprint,request
+from ..UserAuthentication.JWTAuthentication import authentication
+from flask import request, jsonify
 #creating the Permissions Blueprint
 permissions_bp = Blueprint('permissionsBlueprint', __name__)
 from dotenv import load_dotenv
+import sqlalchemy as db
+from sqlalchemy import create_engine, select, update, delete
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+from DBConnect import session_factory
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 env = os.path.join(basedir,'../.env.local')
@@ -16,28 +22,50 @@ url = os.environ.get('DB_URL')
 engine = sqlalchemy.create_engine(url)
 connect = engine.connect()
 
-@permissions_bp.route('/api/get_permissions', methods=['GET'])
-def get_permissions(user_id, doc_id):
-    get_user_permissions(user_id, doc_id)
 
+@permissions_bp.route('/api/get_permissions', methods=['GET'])
+@authentication
+def get_permissions(user_id):
+    content = request.get_json(silent=True)
+    doc_id = content['DocId']
+    user_perm = get_user_permissions(user_id, doc_id)[0]
+    return jsonify(UP=user_perm)
 
 @permissions_bp.route('/api/set_permissions', methods=['POST'])
-def set_permissions(share_email, user_id, doc_name,permission_type):
+@authentication
+def set_permissions(user_id):
     '''
         This function takes share_email,user_id and doc_name as its input arguments.Fetches the
         userId of the sharing person and the DocId which is to be shared using the get_user_id and
         get_doc_id methods.This function helps to set the permissions by giving doc_id and share_user_id
         as inputs for the set permission methods.
     '''
+    content = request.get_json(silent=True)
+    share_email = content['share_email']
+    doc_id = content['DocId']
+    permission_type = content['permission_type']
     share_user_id = get_user_id(share_email)
-    doc_id = get_doc_id(user_id, doc_name)
-    if 'S' in get_user_permissions(user_id, doc_id):
-        if permission_type is "edit":
+    sql_query_1 = text("""SELECT PermissionId FROM Permissions WHERE UserId=:UID and DocId=:DID""")
+    param_1 = {"UID": share_user_id, "DID": doc_id}
+    permission_id = connect.execute(sql_query_1, **param_1).first()
+    if permission_id is None:
+        #insert into tabler(asdf,daf) values (123, 123)
+        sql_query_2 = text("""INSERT into Permissions(UserId,DocId) values (:UID,:DID)""")
+        connect.execute(sql_query_2,**param_1)
+    else:
+        return jsonify(message="User already has the (RWD) permission")
+
+    if 'S' in get_user_permissions(user_id, doc_id)[0]:
+        if permission_type == "edit":
             edit_permissions(share_user_id, doc_id)
         elif permission_type is "read":
             set_read_user_permission(share_user_id, doc_id)
         elif permission_type is "remove":
             remove_permissions(share_user_id, doc_id)
+    else:
+        return jsonify(message="Failed! Operation not allowed!")
+    return jsonify(message="Success, permission (RWD) added to the user")
+
 
 
 def get_user_id(user_email):
@@ -104,12 +132,14 @@ def set_read_user_permission(user_id, doc_id):
     param_2 = {"PID": permission_id[0]}
     user_permission = connect.execute(sql_query_2, **param_2).first()
     if user_permission[0] is None:
-        user_permission[0] = "R"
+        up = "R"
     else:
-        user_permission[0] += "R"
+        up = user_permission[0] 
+        up += "R"
+
     sql_query_3 = text("""UPDATE Permissions SET UserPermissions=:UP WHERE PermissionId=:PID""")
-    param_3 = {"UP": user_permission[0], "PID": permission_id[0]}
-    connect.execute(sql_query_3, **param_3).first()
+    param_3 = {"UP": up, "PID": permission_id[0]}
+    connect.execute(sql_query_3, **param_3)
 
 
 def set_write_user_permission(user_id, doc_id):
@@ -126,12 +156,13 @@ def set_write_user_permission(user_id, doc_id):
     param_2 = {"PID": permission_id[0]}
     user_permission = connect.execute(sql_query_2, **param_2).first()
     if user_permission[0] is None:
-        user_permission[0] = "W"
+        up = "W"
     else:
-        user_permission[0] += "W"
+        up = user_permission[0] 
+        up += "W"
     sql_query_3 = text("""UPDATE Permissions SET UserPermissions=:UP WHERE PermissionId=:PID""")
-    param_3 = {"UP": user_permission[0], "PID": permission_id[0]}
-    connect.execute(sql_query_3, **param_3).first()
+    param_3 = {"UP": up, "PID": permission_id[0]}
+    connect.execute(sql_query_3, **param_3)
 
 
 def set_share_user_permission(user_id, doc_id):
@@ -148,12 +179,13 @@ def set_share_user_permission(user_id, doc_id):
     param_2 = {"PID": permission_id[0]}
     user_permission = connect.execute(sql_query_2, **param_2).first()
     if user_permission[0] is None:
-        user_permission[0] = "S"
+        up = "S"
     else:
-        user_permission[0] += "S"
+        up = user_permission[0] 
+        up += "S" 
     sql_query_3 = text("""UPDATE Permissions SET UserPermissions=:UP WHERE PermissionId=:PID""")
-    param_3 = {"UP": user_permission[0], "PID": permission_id[0]}
-    connect.execute(sql_query_3, **param_3).first()
+    param_3 = {"UP": up, "PID": permission_id[0]}
+    connect.execute(sql_query_3, **param_3)
 
 
 def set_delete_user_permission(user_id, doc_id):
@@ -170,12 +202,13 @@ def set_delete_user_permission(user_id, doc_id):
     param_2 = {"PID": permission_id[0]}
     user_permission = connect.execute(sql_query_2, **param_2).first()
     if user_permission[0] is None:
-        user_permission[0] = "D"
+        up = "D"
     else:
-        user_permission[0] += "D"
+        up = user_permission[0] 
+        up += "D"
     sql_query_3 = text("""UPDATE Permissions SET UserPermissions=:UP WHERE PermissionId=:PID""")
-    param_3 = {"UP": user_permission[0], "PID": permission_id[0]}
-    connect.execute(sql_query_3, **param_3).first()
+    param_3 = {"UP": up, "PID": permission_id[0]}
+    connect.execute(sql_query_3, **param_3)
 
 
 def set_analytics_user_permission(user_id, doc_id):
@@ -192,12 +225,13 @@ def set_analytics_user_permission(user_id, doc_id):
     param_2 = {"PID": permission_id[0]}
     user_permission = connect.execute(sql_query_2, **param_2).first()
     if user_permission[0] is None:
-        user_permission[0] = "A"
+        up = "A"
     else:
-        user_permission[0] += "A"
+        up = user_permission[0] 
+        up += "A"
     sql_query_3 = text("""UPDATE Permissions SET UserPermissions=:UP WHERE PermissionId=:PID""")
-    param_3 = {"UP": user_permission[0], "PID": permission_id[0]}
-    connect.execute(sql_query_3, **param_3).first()
+    param_3 = {"UP": up, "PID": permission_id[0]}
+    connect.execute(sql_query_3, **param_3)
 
 
 # Group level permissions

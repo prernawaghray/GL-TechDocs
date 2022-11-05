@@ -27,7 +27,7 @@ from services.ForgotPassword.mail import mail_bp
 from services.DocumentVersionManager.DocumentVersionManager import documentVersionManagerBlueprint
 from services.UserHistoryManager.UserHistoryManager import userHistoryManagerBlueprint
 from services.RazorpayIntegration.razorPay import razorPayBlueprint
-
+from services.Permissions.permissions import permissions_bp
 
 app= Flask(__name__)
 CORS(app, resources={r"/*":{"origins":"*"}})
@@ -46,6 +46,7 @@ app.register_blueprint(forgotpassword_bp)
 app.register_blueprint(changepassword_bp)
 app.register_blueprint(mail_bp)
 app.register_blueprint(razorPayBlueprint)
+app.register_blueprint(permissions_bp)
 
 # This function get the hostname and IP deatils of server, required for microservices
 def fetchDetails():
