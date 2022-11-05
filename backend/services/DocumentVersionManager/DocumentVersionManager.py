@@ -5,10 +5,11 @@ import logging
 import yaml
 import requests
 from datetime import datetime
-from flask import request, jsonify, json, Blueprint, current_app
+from flask import request, jsonify, json, Blueprint, current_app,make_response
 from DBConnect import session_factory
-
+from ..UserAuthentication.JWTAuthentication import authentication
 from orm_Tables import Document, DocumentHistory, User
+
 
 # Suppress warnings
 warnings.filterwarnings("ignore")
@@ -16,21 +17,9 @@ warnings.filterwarnings("ignore")
 import sys
 sys.path.append('../')
 
-# Get logging filepath
-with open('../config.yaml') as stream:
-    configs = yaml.safe_load(stream)
-
-# Data folder 
-data_path = configs["DIR_ROOT"] + configs["DIR_DATA"] 
-
-# Initiate logging 
-log_path = configs['DIR_ROOT'] + configs['DIR_LOG']
-
-logging.basicConfig(filename=log_path)
-
 documentVersionManagerBlueprint = Blueprint('documentVersionManagerBlueprint', __name__)
 
-@documentVersionManagerBlueprint.route('/documentversionmanagerhealth')
+@documentVersionManagerBlueprint.route('/api/documentversionmanagerhealth')
 def filemanagerhealth():
     print(current_app.config)
     return jsonify({'health':'good'}) 
@@ -42,6 +31,10 @@ class VersionManage:
         
     @classmethod
     def createNewVersionFile(cls, user_id, document_name, version, current_file_path):
+
+        data_path = current_app.config["DIR_ROOT"] + current_app.config["DIR_DATA"] 
+        log_path = current_app.config['DIR_ROOT'] + current_app.config['DIR_LOG']
+        logging.basicConfig(filename=log_path)
         file_directory = data_path + '/' + str(user_id)
         if (document_name == ""):
             datestr  = datetime.today().strftime('%Y%m%d%H%M%S')
@@ -53,6 +46,8 @@ class VersionManage:
         file_path = file_directory + '/' + document_name + '_v_' + str(version) + '.tex'
 
         if not os.path.exists(file_directory):
+            print(file_path)
+            print(file_directory)
             os.makedirs(file_directory)
         
         if current_file_path == "":
@@ -113,7 +108,7 @@ def get_latest_document_version_record(document_id):
 ##############################################################################
 # Home API for document_version_manager
 # Check on DocumentVersionManager service
-@documentVersionManagerBlueprint.route('/version', methods = ['GET', 'POST'])
+@documentVersionManagerBlueprint.route('/api/version', methods = ['GET', 'POST'])
 def home():
     if(request.method == 'GET'):
         data = "DocumentVersionManager home. Allowed endpoints are /version/create ; /version/get"
@@ -130,7 +125,7 @@ def home():
 # 5. Create an entry into Document version table
 # Output: UserId, DocId, DocName
 
-@documentVersionManagerBlueprint.route('/version/create', methods = ['GET', 'POST'])
+@documentVersionManagerBlueprint.route('/api/versionCreate', methods = ['GET', 'POST'])
 def create_document_version():
     
     current_app.logger.info("Service version/create initiated")
@@ -184,8 +179,9 @@ def create_document_version():
 # 1. Retrieves the latest document version for the given document id
 # Output:
 # Version
-@documentVersionManagerBlueprint.route('/version/get', methods = ['GET', 'POST'])
-def get_latest_document_version():
+@documentVersionManagerBlueprint.route('/api/versionGet', methods = ['GET', 'POST'])
+@authentication
+def get_latest_document_version(user_id):
     current_app.logger.info("Service version/get initiated")
     data_out = ''
     mess_out = ''
@@ -193,7 +189,7 @@ def get_latest_document_version():
     if(request.method == 'POST'):
         # retrieve data inputs from the request
         content = request.get_json(silent=True)
-        document_id = content['DocumentId']
+        document_id = content['DocId']
         
         version_record = get_latest_document_version_record(document_id)
         if (not version_record):
@@ -201,9 +197,9 @@ def get_latest_document_version():
         else:
             version =  version_record.Version
     
-    data_out = json.dumps({'DocumentId':document_id, 'Version':version})
+    data_out = {'DocumentId':document_id, 'Version':version}
     current_app.logger.info("Service version/get ended")
-    return jsonify(message=mess_out, data=data_out)
+    return make_response(jsonify(data_out),200)
 
 #################
 # Main Call

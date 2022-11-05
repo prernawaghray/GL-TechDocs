@@ -1,14 +1,21 @@
 # Store this code in 'app.py' file
 import pathlib
 import stat
+import warnings
 
-from flask import Flask, request
+from flask import Flask, request, Blueprint
 import os, subprocess, platform
+import sys
 
-app = Flask(__name__)
+# Suppress warnings
+warnings.filterwarnings("ignore")
+
+sys.path.append('../')
+
+convertLatexToPdfBlueprint = Blueprint('convertLatexToPdfBlueprint', __name__)
 
 
-@app.route('/convert', methods=['GET'])
+@convertLatexToPdfBlueprint.route('/api/convertLatexToPdf', methods=['GET'])
 def convertToPdf():
     # TeX source filename
     tex_filename = request.args.get('filepath')
@@ -43,7 +50,3 @@ def convertToPdf():
         raise RuntimeError('Unknown operating system "{}"'.format(platform.system()))
 
     return pdf_filename
-
-
-if __name__ == "__main__":
-    app.run(host="127.0.0.1", port=8080, debug=True)
