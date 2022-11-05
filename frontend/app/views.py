@@ -101,10 +101,11 @@ def doregistration():
    return render_template('user-registration/registration.html')
 
 
-@app.route('/latex-editor/<id>')
+@app.route('/latex-editor/<id>', methods=['GET'])
 # @login_required
 def latexEditor(id=0):
-   return render_template('latex-editor/editor.html',doc_id=id)
+   args = request.args
+   return render_template('latex-editor/editor.html',doc_id=id,params=args)
 
 @app.route('/plans')
 def plans():
