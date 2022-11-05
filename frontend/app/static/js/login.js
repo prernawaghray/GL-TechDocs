@@ -34,12 +34,12 @@ function loginButtonClicked()
         password: $('#password-input').val(),
         rememberMe : $('#remember-me').prop("checked")?1:0
             };
-    callLoginApi(loginFormData);
+    callLoginApi(loginFormData,"#email-login-errorMessage");
 }
 
-function callLoginApi(loginFormData)
+function callLoginApi(loginFormData,errordiv)
 {
-    removeAlert('#email-login-errorMessage');
+    removeAlert(errordiv);
     try{
     $.ajax({
         data : loginFormData,
@@ -56,7 +56,7 @@ function callLoginApi(loginFormData)
           },
           error:function(data) {
             // in case of error we need to read response from data.responseJSON
-            showAlert('#email-login-errorMessage', 'alert-danger', "Login!!", getResponseMessage(data));
+            showAlert(errordiv, 'alert-danger', "Login!!", getResponseMessage(data));
 
             
           }
@@ -82,7 +82,7 @@ function handleGoogleAuthResponse(token) {
         password: "authenticated",
         rememberMe : 0
             };
-    callLoginApi(loginFormData);
+    callLoginApi(loginFormData,"#google-login-errorMessage");
     
   }
 
