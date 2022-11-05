@@ -80,7 +80,7 @@ def get_document_record(document_id):
 def get_user_record(user_id):
     try: 
         session = session_factory()
-        user_query = session.query(User).filter(User.Id == user_id).all()
+        user_query = session.query(User).filter(User.UserId == user_id).all()
         session.close()
         if len(user_query) > 0:
             return user_query[0]
@@ -96,7 +96,7 @@ def get_latest_document_version_record(document_id):
         document_version_query = session.query(DocumentHistory).filter(DocumentHistory.DocId==document_id).order_by(DocumentHistory.Version.desc()).first()
         session.close()
         if document_version_query:
-            return document_version_query[0]
+            return document_version_query
         current_app.logger.info("Document version for doc Id - " + str(document_id) + " doesn't exist")
         return False
     except Exception:
@@ -156,7 +156,7 @@ def create_document_version():
                 file_path = document.FilePath
             file_version_object = VersionManage()
             file_version_object.createNewVersionFile(user_id, document_name, document_version, file_path)
-            document_version_record = DocumentHistory(user, document, datetime.now(), file_version_object.v_file_name, file_version_object.v_file_path, document_version)
+            document_version_record = DocumentHistory(user.UserId, document.DocId, datetime.now(), file_version_object.v_file_name, file_version_object.v_file_path, document_version)
 
             session.add(document_version_record)
             session.commit()
