@@ -10,30 +10,30 @@
 <main class="container-fluid body-main mt-2 bg-light">
     <div class="d-flex align-items-stretch flex-wrap re-flex" style="height: calc(100% - 63px)">
       <textarea id="editor-text" class="form-control prism-live language-latex">{% if params['template']=='resume'%}
-        \documentclass{article}
-        \usepackage{comment, multicol}
-        \usepackage{hyperref}
-        \usepackage{calc,pict2e,picture}
-        \usepackage{textgreek,textcomp,gensymb,stix}
-        \setcounter{secnumdepth}{2}
-        \title{Person Fullname}
-        \author{}
-        \date{email@id.domain | 810xxxxxx3}
-        \begin{document}
-        \maketitle
-        This is a small intro about yourself, while at the same time being a gentle introduction to \LaTeX.
-        In the appendix, the API as well as the format of custom macro definitions in JavaScript will be explained.
-        \section{Experiences}
-        \begin{itemize}
-            \item Project one description followed by skills used
-            \item Project Two description followed by skills used
-            \item Project Three description followed by skills used
-        \end{itemize}
-        \bigskip
-        \section{Education}
-        \bigskip
-        \section{Personal Details}
-        \end{document}        
+\documentclass{article}
+\usepackage{comment, multicol}
+\usepackage{hyperref}
+\usepackage{calc,pict2e,picture}
+\usepackage{textgreek,textcomp,gensymb,stix}
+\setcounter{secnumdepth}{2}
+\title{Person Fullname}
+\author{}
+\date{email@id.domain | 810xxxxxx3}
+\begin{document}
+\maketitle
+This is a small intro about yourself, while at the same time being a gentle introduction to \LaTeX.
+In the appendix, the API as well as the format of custom macro definitions in JavaScript will be explained.
+\section{Experiences}
+\begin{itemize}
+    \item Project one description followed by skills used
+    \item Project Two description followed by skills used
+    \item Project Three description followed by skills used
+\end{itemize}
+\bigskip
+\section{Education}
+\bigskip
+\section{Personal Details}
+\end{document}        
 {% endif %}
       </textarea>
       <iframe id="html-preview" sandbox="allow-same-origin allow-scripts" srcdoc="" class="shadow p-3 bg-body rounded item">
