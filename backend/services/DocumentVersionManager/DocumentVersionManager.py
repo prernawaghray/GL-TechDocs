@@ -16,18 +16,6 @@ warnings.filterwarnings("ignore")
 import sys
 sys.path.append('../')
 
-# Get logging filepath
-with open('../config.yaml') as stream:
-    configs = yaml.safe_load(stream)
-
-# Data folder 
-data_path = configs["DIR_ROOT"] + configs["DIR_DATA"] 
-
-# Initiate logging 
-log_path = configs['DIR_ROOT'] + configs['DIR_LOG']
-
-logging.basicConfig(filename=log_path)
-
 documentVersionManagerBlueprint = Blueprint('documentVersionManagerBlueprint', __name__)
 
 @documentVersionManagerBlueprint.route('/documentversionmanagerhealth')
@@ -42,6 +30,10 @@ class VersionManage:
         
     @classmethod
     def createNewVersionFile(cls, user_id, document_name, version, current_file_path):
+
+        data_path = current_app.config["DIR_ROOT"] + current_app.config["DIR_DATA"] 
+        log_path = current_app.config['DIR_ROOT'] + current_app.config['DIR_LOG']
+        logging.basicConfig(filename=log_path)
         file_directory = data_path + '/' + str(user_id)
         if (document_name == ""):
             datestr  = datetime.today().strftime('%Y%m%d%H%M%S')
@@ -53,6 +45,8 @@ class VersionManage:
         file_path = file_directory + '/' + document_name + '_v_' + str(version) + '.tex'
 
         if not os.path.exists(file_directory):
+            print(file_path)
+            print(file_directory)
             os.makedirs(file_directory)
         
         if current_file_path == "":

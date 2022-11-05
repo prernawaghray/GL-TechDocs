@@ -1,4 +1,5 @@
-# TechDocs
+
+# TechDocs - Document Management System
 
 It is a dockerized, mobile-ready, offline-storage compatible, JS-powered Latex editor.
 
@@ -55,4 +56,3 @@ Techdocs fronted uses a number of open source projects
    [jQuery]: <http://jquery.com>
    [Python Flask]: <https://flask.palletsprojects.com/en/2.2.x/>
    [LatexJS]: <https://latex.js.org/>
-   

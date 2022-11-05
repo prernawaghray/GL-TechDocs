@@ -88,6 +88,19 @@ def dashboard():
 def registration():
    return render_template('user-registration/registration.html')
 
+@app.route('/doregistration', methods=['GET', 'POST'])
+def doregistration():
+   if request.method != 'POST':
+       return render_template('user-registration/registration.html')
+
+   if request.form['register'] == 'google':
+      print(request.form['register'])
+   else:
+      print(request.form['register'])
+
+   return render_template('user-registration/registration.html')
+
+
 @app.route('/latex-editor/<id>')
 # @login_required
 def latexEditor(id=0):
@@ -113,6 +126,30 @@ def clearSession():
    [session.pop(key) for key in list(session.keys())]
    return  make_response({'status':True}, 200)
 
+@app.route('/features/premium-features')
+def premium_features():
+   return render_template('Features/premium-features.html')
+
+@app.route('/features/forgroups')
+def group():
+   return render_template('Features/forgroups.html')
+
+@app.route('/features/forpublisher')
+def publisher():
+   return render_template('Features/forpublisher.html')
+
+@app.route('/features/forteaching')
+def teaching():
+   return render_template('Features/forteaching.html')
+
+@app.route('/features/foruniversity')
+def university():
+   return render_template('Features/foruniversity.html')
+
+@app.route('/features/forwriting')
+def writing():
+   return render_template('Features/forwriting.html')
+
 @app.route('/faq')
 def faq():
    return render_template('faq/faq.html')
@@ -129,7 +166,3 @@ def user_plans():
 # @login_required
 def latexHistory():
    return render_template('latex-history/history.html')
-
-@app.route('/premium-features')
-def premium_features():
-   return "PARKED"
