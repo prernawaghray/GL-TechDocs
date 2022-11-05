@@ -19,8 +19,8 @@
             <i class="bi bi-file-earmark-plus"></i> New Document
           </button>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item"  onclick="window.location.href='{{url_for('latexEditor',id='new-document?template=resume')}}'">Resume Template</a></li>
-            <li><a class="dropdown-item" onclick="window.location.href='{{url_for('latexEditor',id='new-document?template=blank')}}'">Blank Template</a></li>
+            <li><a class="dropdown-item"  onclick="window.location.href='{{url_for('latexEditor?template=resume',id='new-document')}}?template=resume'">Resume Template</a></li>
+            <li><a class="dropdown-item" onclick="window.location.href='{{url_for('latexEditor',id='new-document')}}?template=blank'">Blank Template</a></li>
           </ul>
         </div>
         <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#UploadButton" data-bs-placement="bottom" title="Upload">
