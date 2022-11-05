@@ -4,6 +4,10 @@ $(document).ready(function() {
     $('#register-form').on('submit', function(event) {
         console.log("register")
         event.preventDefault();
+        if ($('#password-input').val() != $('#password_confirm-input').val()) {
+           showAlert('#register-errorMessage', 'alert-danger', "Error:","Password and confirm password should match!!");
+           return;
+        }
        registerButtonClicked();
 // keeping this commented for now as Sreenivas sir is writing request response based implementation        
      
@@ -14,11 +18,11 @@ $(document).ready(function() {
 function registerButtonClicked() {
     registerFormData = {
         loginType : "email",
-        firstName : $('#firstname-input').val(),
-        lastName : $('#lastname-input').val(),
+        FirstName : $('#firstname-input').val(),
+        LastName : $('#lastname-input').val(),
         email : $('#email-input').val(),
         password: $('#password-input').val(),
-        confirmPassword: $('#password_confirm-input').val()
+//        confirmPassword: $('#password_confirm-input').val()
     };
     console.log(registerFormData)
     callLoginApi(registerFormData);
@@ -30,12 +34,13 @@ function callLoginApi(registerFormData) {
     $.ajax({
         data : registerFormData,
            type : 'POST',
-           url : getApiUrl('signin'),
+           url : getApiUrl('register'),
            success: function(data) {
             //In case of success the data contains the JSON
             
-            
-            
+            console.log("Registered successfully!!")
+            showAlert('#register-infoMessage', 'alert-info', $('#firstname-input').val()+",", "Your are registered successfully!!");
+
           },
           error:function(data) {
             // in case of error we need to read response from data.responseJSON
