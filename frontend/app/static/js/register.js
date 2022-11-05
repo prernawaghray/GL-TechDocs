@@ -4,6 +4,10 @@ $(document).ready(function() {
     $('#register-form').on('submit', function(event) {
         console.log("register")
         event.preventDefault();
+        if ($('#password-input').val() != $('#password_confirm-input').val()) {
+           showAlert('#register-errorMessage', 'alert-danger', "Error:","Password and confirm password should match!!");
+           return;
+        }
        registerButtonClicked();
 // keeping this commented for now as Sreenivas sir is writing request response based implementation        
      
@@ -13,14 +17,14 @@ $(document).ready(function() {
 
 function registerButtonClicked() {
     registerFormData = {
-        loginType : "email",
-        firstName : $('#firstname-input').val(),
-        lastName : $('#lastname-input').val(),
-        email : $('#email-input').val(),
-        password: $('#password-input').val(),
-        confirmPassword: $('#password_confirm-input').val()
+        "loginType" : "email",
+        "FirstName" : $('#firstname-input').val(),
+        "LastName" : $('#lastname-input').val(),
+        "email" : $('#email-input').val(),
+        "password" : $('#password-input').val()
+//        confirmPassword: $('#password_confirm-input').val()
     };
-    console.log(registerFormData)
+    console.log(JSON.stringify(registerFormData))
     callLoginApi(registerFormData);
 }
 
@@ -28,14 +32,17 @@ function callLoginApi(registerFormData) {
     removeAlert('#register-errorMessage');
     try {
     $.ajax({
-        data : registerFormData,
+           data : JSON.stringify(registerFormData),
+           contentType:"application/json; charset=utf-8",
            type : 'POST',
-           url : getApiUrl('signin'),
+           dataType: "json",
+           url : getApiUrl('register'),
            success: function(data) {
             //In case of success the data contains the JSON
             
-            
-            
+            console.log("Registered successfully!!")
+            showAlert('#register-infoMessage', 'alert-info', "", "Your are registered successfully!!");
+
           },
           error:function(data) {
             // in case of error we need to read response from data.responseJSON
