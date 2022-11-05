@@ -21,7 +21,7 @@ sys.path.append('../')
 userHistoryManagerBlueprint = Blueprint('userHistoryManagerBlueprint', __name__)
 
 
-@userHistoryManagerBlueprint.route('/userhistorymanagerhealth')
+@userHistoryManagerBlueprint.route('/api/userhistorymanagerhealth')
 def filemanagerhealth():
     print(current_app.config)
     return jsonify({'health':'good'}) 
@@ -68,7 +68,7 @@ def get_user_record_by_email(email):
 ##############################################################################
 # Home API for historymanager
 # Check on HistoryManager service
-@userHistoryManagerBlueprint.route('/history', methods = ['GET', 'POST'])
+@userHistoryManagerBlueprint.route('/api/userHistory', methods = ['GET', 'POST'])
 def home():
     if(request.method == 'GET'):
         data = "HistoryManager home. Allowed endpoints are /history/get; /history/create;"
@@ -80,7 +80,7 @@ def home():
 # Processing: 
 # 1. Create an entry into UserHistory table
 # Output: UserHistoryId
-@userHistoryManagerBlueprint.route('/history/create', methods = ['GET', 'POST'])
+@userHistoryManagerBlueprint.route('/api/historyCreate', methods = ['GET', 'POST'])
 def create_user_history():
     data_out = ''
     mess_out = ''
@@ -143,9 +143,9 @@ def create_user_history():
 # 4. If action is share, get the shared email id
 # Output:
 # UserId, DocId, DocName, DocText
-@userHistoryManagerBlueprint.route('/history/get', methods = ['GET', 'POST'])
+@userHistoryManagerBlueprint.route('/api/historyGet', methods = ['GET', 'POST'])
 @authentication
-def get_user_history():
+def get_user_history(user_id):
     current_app.logger.info("Service history/get initiated")
     data_out = ''
     mess_out = ''
@@ -155,11 +155,11 @@ def get_user_history():
         # retrieve data inputs from the request
         page_size = 50
         content   = request.get_json(silent=True)
-        user_email   = content['Email']
-        if 'PageNumber' in content:
-            page_number = content['PageNumber']
-        else: 
-            page_number = 0
+        user_email   = user_id
+        # if 'PageNumber' in content:
+        #     page_number = content['PageNumber']
+        # else: 
+        #     page_number = 0
 
         user_record = get_user_record_by_email(user_email)
         if not user_record:

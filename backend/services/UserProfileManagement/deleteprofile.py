@@ -75,10 +75,13 @@ def delete_account(user_id):
             #db.session.delete(user)
             #db.session.commit()
             session = session_factory()
-            sql_stmt = (delete(User).where(User.UserName == user_id))
-            result = session.execute(sql_stmt).first()
+            sql_stmt = (delete(User).where(User.UserId == user_id))
+            session.execute(sql_stmt)
+            session.commit()
+            check_stmt = (select(User).where(User.UserId == user_id))
+            check = session.execute(check_stmt).first()
             session.close()
-            if result:
+            if check is None:
                 data_sent = {"message": "User Deleted Successfully!!"}
                 return make_response((jsonify(data_sent), 200))
             else:
