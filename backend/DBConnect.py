@@ -2,12 +2,16 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import yaml
+import os
+from dotenv import load_dotenv
 
-with open('../config.yaml') as stream:
-    configs = yaml.safe_load(stream)
+basedir = os.path.abspath(os.path.dirname(__file__))
+env = os.path.join(basedir,'./.env.local')
+if os.path.exists(env):
+    load_dotenv(env)
 
 def get_connection():
-    return create_engine(url=configs['DB_URL'])
+    return create_engine(url=os.environ.get('DB_URL'))
 
 def session_factory():
     Base.metadata.create_all(engine)

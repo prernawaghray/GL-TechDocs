@@ -43,8 +43,8 @@ def delete_account(user_id):
                             sql_stmt = (delete(User).where(User.UserId == user_id))
                             session.execute(sql_stmt)
                             session.commit()
-                            check_stmt = (select(User).where(User.UserId == user_id)).first()
-                            check = session.execute(check_stmt)
+                            check_stmt = (select(User).where(User.UserId == user_id))
+                            check = session.execute(check_stmt).first()
                             session.close()
                             if check is None:
                                 data_sent = {"message": "User Deleted Successfully!!"}

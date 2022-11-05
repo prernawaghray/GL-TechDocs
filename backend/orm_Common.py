@@ -10,8 +10,8 @@ class Common(Base):
     DocId           = Column(Integer, primary_key=True, autoincrement=True)
     DocName         = Column(String(256))
     UserId          = Column(String(256))
-    IsUpload        = Column(Boolean)
-    IsTrash         = Column(Boolean)
+    IsUpload        = Column(Boolean, default=False)
+    IsTrash         = Column(Boolean, default=False)
     FilePath        = Column(Text)
     Version         = Column(Integer)
     CreatedDate     = Column(DateTime)
@@ -22,10 +22,11 @@ class Common(Base):
     
  
     #Constructor methods to insert data into Documents table
-    def __init__(self, UserId, DocName, Filepath, Datetime, Version, IsUpload):
+    def __init__(self, UserId, DocName, Filepath, Datetime, Version, IsUpload, IsTrash):
         self.UserId      = UserId
         self.DocName     = DocName
         self.FilePath    = Filepath
         self.CreatedDate = Datetime
         self.Version     = Version
         self.IsUpload    = IsUpload
+        self.IsTrash     = IsTrash
