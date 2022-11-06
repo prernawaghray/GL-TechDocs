@@ -23,7 +23,7 @@ window.onload = function getfilelist() {
                   //getdocid();
                   if(len > 0){
                       for(var i=0;i<len;i++){
-                        var documentURL = getFrontEndUrl('/latex-editor/'+data.Documents[i].DocId);
+                        var documentURL = getFrontEndUrl('latex-editor/'+data.Documents[i].DocId);
                   
                           if(data.Documents[i].DocName || data.Documents[i].Version || data.Documents[i].LastModifiedOn || data.Documents[i].LastModifiedBy){
                               txt += '<tr><td><input type="checkbox" class="case">'+"</td><td>"+
