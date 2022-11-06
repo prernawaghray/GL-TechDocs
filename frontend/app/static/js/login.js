@@ -3,7 +3,6 @@ $(document).ready(function() {
     $('#email-login').on('submit', function(event) {
        loginButtonClicked();
        event.preventDefault();
-// keeping this commented for now as Sreenivas sir is writing request response based implementation        
      
      });
 });
