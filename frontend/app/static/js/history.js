@@ -20,7 +20,7 @@
                    contentType:"application/json; charset=utf-8",
                    dataType: "json",
                    type : 'POST',
-                   url : getApiUrl('history/get'),
+                   url : getApiUrl('historyGet'),
                    success: function(data) {
                     //In case of success the data contains the JSON
                     console.log("History data !!", data)
@@ -29,7 +29,7 @@
                     let history = '';
                       $.each(data.items, function (key, value) { 
                         history += '<div class="card"><div class="card-body"><table class="table table-hover"><thead><tr><th>'+value.time+'</th></tr></thead><tbody>';
-                        history += '<tr><td>'+value.action+' '+value.doc_name+'</td></tr></tbody></table></div></div><br/>';
+                        history += '<tr><td>'+value.action+' file <b>'+value.doc_name+'</b></td></tr></tbody></table></div></div><br/>';
                       });
                       
                     $('#historyDetailsDiv').html(history);
