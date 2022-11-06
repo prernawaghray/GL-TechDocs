@@ -80,7 +80,7 @@ def logout():
 
 
 @app.route('/dashboard')
-# @login_required
+@login_required
 def dashboard():
    return render_template('user-dashboard/dashboard.html')
 
@@ -88,10 +88,25 @@ def dashboard():
 def registration():
    return render_template('user-registration/registration.html')
 
-@app.route('/latex-editor/<id>')
+@app.route('/doregistration', methods=['GET', 'POST'])
+def doregistration():
+   if request.method != 'POST':
+       return render_template('user-registration/registration.html')
+
+   if request.form['register'] == 'google':
+      print(request.form['register'])
+   else:
+      print(request.form['register'])
+
+   return render_template('user-registration/registration.html')
+
+
+@app.route('/latex-editor/<id>', methods=['GET'])
 # @login_required
 def latexEditor(id=0):
-   return render_template('latex-editor/editor.html',doc_id=id)
+   args = request.args
+   doc = fetchDocument(id,args)
+   return render_template('latex-editor/editor.html',doc_id=id,params=args,document=doc)
 
 @app.route('/plans')
 def plans():
@@ -113,6 +128,30 @@ def clearSession():
    [session.pop(key) for key in list(session.keys())]
    return  make_response({'status':True}, 200)
 
+@app.route('/features/premium-features')
+def premium_features():
+   return render_template('Features/premium-features.html')
+
+@app.route('/features/forgroups')
+def group():
+   return render_template('Features/forgroups.html')
+
+@app.route('/features/forpublisher')
+def publisher():
+   return render_template('Features/forpublisher.html')
+
+@app.route('/features/forteaching')
+def teaching():
+   return render_template('Features/forteaching.html')
+
+@app.route('/features/foruniversity')
+def university():
+   return render_template('Features/foruniversity.html')
+
+@app.route('/features/forwriting')
+def writing():
+   return render_template('Features/forwriting.html')
+
 @app.route('/faq')
 def faq():
    return render_template('faq/faq.html')
@@ -130,6 +169,16 @@ def user_plans():
 def latexHistory():
    return render_template('latex-history/history.html')
 
-@app.route('/premium-features')
-def premium_features():
-   return "PARKED"
+def fetchDocument(id,params):
+   document = {}
+   if id=='new-document' :
+      title=  'Untitled Resume' if params['template']=='resume' else 'Untitled Document'
+      document = {
+         "DocId": 0,
+         "DocName": title,
+         "DocText":"",
+         "IsUpload":0,
+         "RefDocId":0
+      }
+      
+   return document
