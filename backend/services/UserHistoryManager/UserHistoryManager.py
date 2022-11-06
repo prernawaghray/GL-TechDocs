@@ -5,7 +5,7 @@ import yaml
 import requests
 import timeago
 from datetime import datetime
-from flask import Flask, request, jsonify, json, Blueprint, current_app
+from flask import Flask, request, jsonify, json, Blueprint, current_app, make_response
 import sqlalchemy as db
 from DBConnect import session_factory
 from ..UserAuthentication.JWTAuthentication import authentication
@@ -21,7 +21,7 @@ sys.path.append('../')
 userHistoryManagerBlueprint = Blueprint('userHistoryManagerBlueprint', __name__)
 
 
-@userHistoryManagerBlueprint.route('/userhistorymanagerhealth')
+@userHistoryManagerBlueprint.route('/api/userhistorymanagerhealth')
 def filemanagerhealth():
     print(current_app.config)
     return jsonify({'health':'good'}) 
@@ -68,7 +68,7 @@ def get_user_record_by_email(email):
 ##############################################################################
 # Home API for historymanager
 # Check on HistoryManager service
-@userHistoryManagerBlueprint.route('/history', methods = ['GET', 'POST'])
+@userHistoryManagerBlueprint.route('/api/userHistory', methods = ['GET', 'POST'])
 def home():
     if(request.method == 'GET'):
         data = "HistoryManager home. Allowed endpoints are /history/get; /history/create;"
@@ -80,7 +80,7 @@ def home():
 # Processing: 
 # 1. Create an entry into UserHistory table
 # Output: UserHistoryId
-@userHistoryManagerBlueprint.route('/history/create', methods = ['GET', 'POST'])
+@userHistoryManagerBlueprint.route('/api/historyCreate', methods = ['GET', 'POST'])
 def create_user_history():
     data_out = ''
     mess_out = ''
@@ -143,9 +143,9 @@ def create_user_history():
 # 4. If action is share, get the shared email id
 # Output:
 # UserId, DocId, DocName, DocText
-@userHistoryManagerBlueprint.route('/history/get', methods = ['GET', 'POST'])
+@userHistoryManagerBlueprint.route('/api/historyGet', methods = ['GET', 'POST'])
 @authentication
-def get_user_history():
+def get_user_history(user_id):
     current_app.logger.info("Service history/get initiated")
     data_out = ''
     mess_out = ''
@@ -153,22 +153,15 @@ def get_user_history():
 
     if(request.method == 'POST'):
         # retrieve data inputs from the request
-        page_size = 50
+        page_size = 100
         content   = request.get_json(silent=True)
-        user_email   = content['Email']
-        if 'PageNumber' in content:
-            page_number = content['PageNumber']
-        else: 
-            page_number = 0
-
-        user_record = get_user_record_by_email(user_email)
-        if not user_record:
-            mess_out = "User record doesn't exist"
-            return jsonify(message=mess_out, data=data_out)
+        user_email   = user_id
+        page_number = 0
 
         try :
             session = session_factory()
-            user_history_query = session.query(UserHistory).filter(UserHistory.UserId == user_record.Id).order_by(UserHistory.CreatedDate.desc()).offset(page_number*page_size).limit(page_size).all()
+            # sql_stmt = (select(User.UserName).where(User.UserId == user_id))
+            user_history_query = session.query(UserHistory).filter(UserHistory.UserId == user_id).order_by(UserHistory.CreatedDate.desc()).offset(page_number*page_size).limit(page_size).all()
             session.close()
             for user_history_record in user_history_query:
                 action = user_history_record.Action
@@ -178,7 +171,6 @@ def get_user_history():
                 time_stamp = timeago.format(user_history_record.CreatedDate, datetime.now())
 
                 history_record = {
-                    "email": user_email,
                     "action": action.value,
                     "time": time_stamp,
                     "doc_name": document_name
@@ -187,14 +179,14 @@ def get_user_history():
                     history_record["shared_to"] = user_history_record.s_Misc1
                 history_records.append(history_record)
 
-            data_out = json.dumps({'items':history_records})
+            data_out = {'items':history_records}
             mess_out = "success"
 
         except Exception:
-            mess_out = "Failed to retrieve history"
+            mess_out = "failed to send"
     
     current_app.logger.info("Service history/get ended")
-    return jsonify(message=mess_out, data=data_out)
+    return make_response(jsonify(data_out),mess_out)
 
 #################
 # Main Call
