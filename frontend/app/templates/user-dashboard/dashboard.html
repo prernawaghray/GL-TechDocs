@@ -23,25 +23,27 @@
             <li><a class="dropdown-item" onclick="window.location.href='{{url_for('latexEditor',id='new-document')}}?template=blank'">Blank Template</a></li>
           </ul>
         </div>
-        <!-- <button type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-bs-placement="bottom"
-        title="Move to Trash" class="btn btn-outline-primary">
-          <i class="bi bi-trash3"></i>
-        </button> -->
+        <div>
+        <a href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-bs-placement="bottom"
+          title="Share">
+          <button type="button" class="btn btn-outline-primary" style="height: 40px; width: 40px; padding: 0px;">
+            <i class="bi bi-share" style="font-size: 25px;"></i>
+          </button>
+        </a>
 
-        <!-- <a class="disabled" href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-bs-placement="bottom"
+        <a href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-bs-placement="bottom"
           title="Archive">
-          <button type="button" class="btn disabled" style="height: 40px; width: 40px; padding: 0px;">
+          <button type="button" class="btn btn-outline-primary" style="height: 40px; width: 40px; padding: 0px;">
             <i class="bi bi-file-earmark-zip" style="font-size: 25px;"></i>
           </button>
         </a>
-         -->
 
-         <!-- <a class="disabled" href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-bs-placement="bottom"
-          title="Copy">
-          <button type="button" class="btn disabled" style="height: 40px; width: 40px; padding: 0px;">
-            <i class="bi bi-files" style="font-size: 25px;"></i>
-          </button>
-        </a> -->
+        <button type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-bs-placement="bottom"
+        title="Move to Trash" class="btn btn-outline-primary"style="height: 40px; width: 40px; padding: 0px;">
+          <i class="bi bi-trash3" style="font-size: 25px;"></i>
+        </button>
+
+         
       </div>
 
       <form>
