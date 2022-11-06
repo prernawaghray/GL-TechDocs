@@ -48,7 +48,7 @@ In the appendix, the API as well as the format of custom macro definitions in Ja
   var template = params.hasOwnProperty('template') ? params.template : '';
   var documentObject={
          "DocId": 0,
-         "DocName": (template=='resume' ? 'Untitled Resume' : 'Untitled Document'),
+         "DocName": "",
          "DocText":"",
          "IsUpload":0,
          "RefDocId":0
@@ -77,6 +77,7 @@ In the appendix, the API as well as the format of custom macro definitions in Ja
           $($editor).text(documentObject.DocText).trigger('keyup');
           //$($('pre')[0]).text(documentObject.DocText).trigger('keyup');
           $('#filename-input').val(documentObject.DocName);
+          $('#filename-input').prop('disabled',true);
         }
         else{
           showSyncStatus('bug-fill','Unable to Fetch File',false,true);
@@ -89,6 +90,7 @@ In the appendix, the API as well as the format of custom macro definitions in Ja
       
     }
     else if(documentObject.DocId==0){
+      $('#filename-input').attr('placeholder',(template=='resume' ? 'Untitled Resume' : 'Untitled Document'));
       generateHTMLContent('preview');
     }
       
@@ -97,17 +99,15 @@ In the appendix, the API as well as the format of custom macro definitions in Ja
   });
   
 
-  function saveFile(){
-   console.log('---savingfile-------',documentObject);
-   
-   
-   if(documentObject.DocId==0 && documentObject.DocText!=''){
+  function createFile(){
+    if(documentObject.DocId==0){
         showSyncStatus('arrow-repeat','Creating New File ...',true);
         // CREATE NEW FILE 
         //http://techdocs-api.previewbox.in/api/filecreate
 
         axios.post(getApiUrl('filecreate'),documentObject).then(function(response){
           documentObject.DocId=response.data.DocId;
+          $('#filename-input').prop('disabled',true);
           showSyncStatus('check','New Document Created',false,false);
         }).catch(function(error){
           showSyncStatus('bug-fill','Error While Creating File',false,true);
@@ -116,7 +116,14 @@ In the appendix, the API as well as the format of custom macro definitions in Ja
 
 
    }
-   else if(documentObject.DocId!=0){
+  }
+
+  function saveFile(){
+   console.log('---savingfile-------',documentObject);
+   
+   
+   
+   if(documentObject.DocId!=0){
         showSyncStatus('arrow-repeat','Updating File ...',true);
         // UPDATE FILE 
         //http://techdocs-api.previewbox.in/api/filemodify
