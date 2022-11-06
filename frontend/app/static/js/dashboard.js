@@ -1,6 +1,5 @@
 
 
-var doc_data = [];
 $(document).ready(function () {
 window.onload = function getfilelist() {
     try {
@@ -13,10 +12,13 @@ window.onload = function getfilelist() {
               if(data){
                   var len = Object.keys(data).length;
                   var txt = "";
+                  getdocid();
                   if(len > 0){
                       for(var i=0;i<len;i++){
                           if(data.Documents[i].DocName || data.Documents[i].Version || data.Documents[i].LastModifiedOn || data.Documents[i].LastModifiedBy){
-                              txt += '<tr><td><input type="checkbox" class="case">'+"</td><td>"+JSON.parse(JSON.stringify(data.Documents[i].DocName))+"</td><td>"+data.Documents[i].Version+ 
+                              txt += '<tr><td><input type="checkbox" class="case">'+"</td><td>"+
+                              '<a onclick="window.location.href='+"'{{url_for"+"('latexEditor',"+"id='doc_id')}}'"+'"'+ JSON.parse(JSON.stringify(data.Documents[i].DocName))+"</a>" +"</td><td>"+
+                              data.Documents[i].Version+ 
                               "</td><td>"+data.Documents[i].LastModifiedOn+"</td><td>"+data.Documents[i].LastModifiedBy + "</td>" +
                               '<td>' +
                               '<button type="button" id="rename" onclick="renamedata()" style="height: 25px; width: 25px; padding: 0px;" title="Rename" data-docid="2"' +
@@ -44,7 +46,13 @@ window.onload = function getfilelist() {
                       }
                       if(txt != ""){
                           $("#tbody").append(txt).removeClass("hidden");
-
+                          $(document).ready( function() {
+                            $('table tr').click( function getdocid() {
+                                index = $(this).index();
+                                doc_id = data.Documents[index].DocId;
+                                return doc_id;
+                            }); 
+                          });
                           // Add multiple select / deselect functionality
                           $("#selectall").click(function () {
                             $('.case').attr('checked', this.checked);
@@ -64,6 +72,8 @@ window.onload = function getfilelist() {
         console.log(err)
     }
 }
+
+// Search functionality
 function filterTable(event) {
   let filter = event.target.value.trim().toLowerCase();
   let rows = document.querySelector('#table tbody').rows;
@@ -105,12 +115,13 @@ document.querySelector('#search').addEventListener('keyup', filterTable, false);
 
 // Rename file
 $("#renamefile").click(function renamefile() {
+  getdocid();
   try {
       $.ajax({
           headers: {'authToken': getUserToken()},
           data: {
-            DocId: doc_data.Documents[$("#tbody").$(this).index()].DocId,
-            DocName: $('#rename').val()
+            DocId: doc_id,
+            DocName: $('#name').val()
           },
           type: 'POST',
           url: getApiUrl('filerename'),
@@ -131,11 +142,12 @@ $("#renamefile").click(function renamefile() {
 //Move to trash
 
 $("#delete").click(function trashfile() {
+  getdocid();
   try {
     $.ajax({
         headers: {'authToken': getUserToken()},
         data: {
-          DocId: doc_data.Documents[$("#tbody").$(this).index()].DocId,
+          DocId: doc_id
         },
         type: 'POST',
         url: getApiUrl('filetrash'),
