@@ -9,7 +9,7 @@
 {% block body %}
 <main class="container-fluid body-main mt-2 bg-light">
     <div class="d-flex align-items-stretch flex-wrap re-flex" style="height: calc(100% - 63px)">
-      <textarea id="editor-text" class="form-control prism-live language-latex">{% if params['template']=='resume' %}
+      <textarea id="editor-text" onkeyup="documentObject.DocText=this.value" class="form-control prism-live language-latex">{% if params['template']=='resume' %}
 \documentclass{article}
 \usepackage{comment, multicol}
 \usepackage{hyperref}
@@ -42,6 +42,52 @@ In the appendix, the API as well as the format of custom macro definitions in Ja
 {% endblock %}
 
 {% block pageJS%}
+<script src="{{url_for('static',filename="js/clientStorage.js")}}"></script>
+<script>
+   var documentObject = {{ document|tojson|safe }};
+  $(document).ready(function(){
+    
+    window.$editor=document.getElementById('editor-text');
+    window.$htmlPreview=document.getElementById('html-preview');
+   
 
+    $editor.addEventListener('keyup',_.debounce(function(event){
+      generateHTMLContent('preview');
+    },300));
+    
+    generateHTMLContent('preview');
+
+  });
+
+  function saveFile(){
+   console.log('---savingfile-------');
+   showSyncStatus('arrow-repeat','Saving File ...',true);
+   //http://techdocs-api.previewbox.in/api/filecreate
+
+  }
+
+
+  function generateHTMLContent(type){
+      console.log('---generating-html-content---');
+      var text = $editor.value;
+      var generator = new latexjs.HtmlGenerator({ hyphenate: false });
+      lDoc = latexjs.parse(text, { generator: generator }).htmlDocument('https://cdn.jsdelivr.net/npm/latex.js@0.12.4/dist/');
+      
+      $($htmlPreview).attr('srcDoc',lDoc.documentElement.outerHTML);
+      
+      if(type=='print'){
+        $htmlPreview.onload= function() {
+          var mywindow = window.open('', documentObject.DocName, 'height=400,width=600');
+          mywindow.document.write(lDoc.documentElement.outerHTML);
+          mywindow.print();
+          mywindow.close();
+          $htmlPreview.onload=function(){};
+        };
+      }
+      else saveFile()
+      
+    }
+
+</script>
 
 {% endblock %}

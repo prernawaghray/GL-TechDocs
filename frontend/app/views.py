@@ -80,7 +80,7 @@ def logout():
 
 
 @app.route('/dashboard')
-# @login_required
+@login_required
 def dashboard():
    return render_template('user-dashboard/dashboard.html')
 
@@ -105,7 +105,8 @@ def doregistration():
 # @login_required
 def latexEditor(id=0):
    args = request.args
-   return render_template('latex-editor/editor.html',doc_id=id,params=args)
+   doc = fetchDocument(id,args)
+   return render_template('latex-editor/editor.html',doc_id=id,params=args,document=doc)
 
 @app.route('/plans')
 def plans():
@@ -167,3 +168,17 @@ def user_plans():
 # @login_required
 def latexHistory():
    return render_template('latex-history/history.html')
+
+def fetchDocument(id,params):
+   document = {}
+   if id=='new-document' :
+      title=  'Untitled Resume' if params['template']=='resume' else 'Untitled Document'
+      document = {
+         "DocId": 0,
+         "DocName": title,
+         "DocText":"",
+         "IsUpload":0,
+         "RefDocId":0
+      }
+      
+   return document
