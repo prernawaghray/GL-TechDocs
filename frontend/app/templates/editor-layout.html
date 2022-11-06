@@ -46,7 +46,7 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="form-floating">
-      <input type="text" class="form-control" name="filename" value="{{document['DocName']}}" onkeyup="documentObject.DocName=this.value" id="filename-input" placeholder="Filename" required>
+      <input type="text" class="form-control" name="filename" value="{{document['DocName']}}" id="filename-input" placeholder="Filename" required>
       <label for="email-input">Filename</label>
     </div>
     <div id="sync-status" style="font-size:11px; color:rgb(122, 122, 122);padding-left:8px;opacity:0;">
@@ -166,9 +166,16 @@
         $('#f-icon').toggleClass('bi-fullscreen-exit');
       });
       
+
+      $('#filename-input').on('keyup',_.debounce(function(event){
+        documentObject.DocName=$('#filename-input').val();
+        saveFile();
+      },300));
+
     });
     
     function showSyncStatus(icon,status,spin,error=false){
+      console.log('-------',status,'--------');
       $syncStatus=document.getElementById('sync-status');
       $syncText=document.getElementById('sync-text');
       $syncIcon=document.getElementById('sync-icon');
@@ -185,6 +192,7 @@
     function hideSyncStatus(){
       $syncStatus.style.opacity=0;
     }
+
   </script>
   <script src="../js/history.js"></script>
 
