@@ -137,8 +137,12 @@ html {
     .re-flex .item:last-child{
       margin-left:0px;
     }
-    #filename-input{
+    #filename-input,#filename-input-wrapper{
       width: 100%;
+      margin-top: 5px;
+    }
+    #sync-status{
+      margin-top:5px;
     }
   }
 
