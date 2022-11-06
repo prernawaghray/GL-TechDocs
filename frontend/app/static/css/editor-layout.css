@@ -137,6 +137,9 @@ html {
     .re-flex .item:last-child{
       margin-left:0px;
     }
+    #filename-input{
+      width: 100%;
+    }
   }
 
   .assets-menu li a{
