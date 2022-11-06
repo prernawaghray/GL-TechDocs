@@ -2,6 +2,7 @@
 
 $(document).ready(function () {
 window.onload = function getfilelist() {
+  var baseURL = "http://techdocs.previewbox.in";
     try {
         $.ajax({
             headers: {'authToken': getUserToken()},
@@ -12,12 +13,12 @@ window.onload = function getfilelist() {
               if(data){
                   var len = Object.keys(data).length;
                   var txt = "";
-      
+                  getdocid();
                   if(len > 0){
                       for(var i=0;i<len;i++){
                           if(data.Documents[i].DocName || data.Documents[i].Version || data.Documents[i].LastModifiedOn || data.Documents[i].LastModifiedBy){
                               txt += '<tr><td><input type="checkbox" class="case">'+"</td><td>"+
-                              '<a onclick="window.location.href='+"'{{url_for"+"('latexEditor',"+"id='doc_id')}}'"+'"'+ JSON.parse(JSON.stringify(data.Documents[i].DocName))+"</a>" +"</td><td>"+
+                              '<a onclick="window.location.href=\''+baseURL+'/latexEditor/'+data.Documents[i].DocId+'\'">'+ (data.Documents[i].DocName)+"</a>" +"</td><td>"+
                               data.Documents[i].Version+ 
                               "</td><td>"+data.Documents[i].LastModifiedOn+"</td><td>"+data.Documents[i].LastModifiedBy + "</td>" +
                               '<td>' +
