@@ -168,7 +168,7 @@
       
     });
     
-    function showSyncStatus(icon,status,spin){
+    function showSyncStatus(icon,status,spin,error=false){
       $syncStatus=document.getElementById('sync-status');
       $syncText=document.getElementById('sync-text');
       $syncIcon=document.getElementById('sync-icon');
@@ -179,6 +179,7 @@
       $isSpin.classList.value=(spin?'animate-spin':'');
 
       $syncStatus.style.opacity=1;
+      $syncStatus.classList.value=(error?'text-danger':'');
     }
 
     function hideSyncStatus(){
