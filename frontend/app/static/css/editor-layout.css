@@ -137,7 +137,7 @@ html {
     .re-flex .item:last-child{
       margin-left:0px;
     }
-    #filename-input,#filename-input-wrapper{
+    #filename-input-wrapper{
       width: 100%;
       margin-top: 5px;
     }
@@ -146,6 +146,9 @@ html {
     }
   }
 
+  #filename-input-wrapper{
+    max-width:450px;
+  }
   .assets-menu li a{
     padding:5px;
     background-color: aliceblue;
