@@ -9,7 +9,6 @@ $(document).ready(function() {
            return;
         }
        registerButtonClicked();
-// keeping this commented for now as Sreenivas sir is writing request response based implementation        
      
      });
 });
