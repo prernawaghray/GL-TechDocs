@@ -8,9 +8,17 @@ from sqlalchemy import create_engine, select, update
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from collections import namedtuple
 from urllib.parse import urljoin, urlencode, urlparse, urlunparse
+import os
+from dotenv import load_dotenv
+
 
 mail_bp = Blueprint("mail_bp", __name__)
 
+basedir = os.path.abspath(os.path.dirname(__file__))
+env = os.path.join(basedir,'../.env.local')
+if os.path.exists(env):
+    load_dotenv(env)
+fe_url = os.environ.get('FE_URL')
 # namedtuple to match the internal signature of urlunparse
 Components = namedtuple(
     typename='Components',
@@ -34,8 +42,8 @@ def send_reset_email(user_id, email):
 
   url = urlunparse(
     Components(
-      scheme='https',
-      netloc='localhost:56733/password_reset',
+      scheme='http',
+      netloc=fe_url,
       query=urlencode(query_params),
       path='',
       url='',
