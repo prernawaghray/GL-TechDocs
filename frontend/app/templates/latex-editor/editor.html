@@ -75,7 +75,7 @@ In the appendix, the API as well as the format of custom macro definitions in Ja
         showSyncStatus('check','Document Retrived',false,false);
         if(documentObject.hasOwnProperty('DocText')){
           $($editor).text(documentObject.DocText).trigger('keyup');
-          $($('pre')[0]).text(documentObject.DocText).trigger('keyup');
+          //$($('pre')[0]).text(documentObject.DocText).trigger('keyup');
           $('#filename-input').val(documentObject.DocName);
         }
         else{
