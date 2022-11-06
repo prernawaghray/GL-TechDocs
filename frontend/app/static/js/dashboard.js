@@ -1,3 +1,16 @@
+const links = document.querySelectorAll('.nav-link');
+    
+if (links.length) {
+  links.forEach((link) => {
+    link.addEventListener('click', (e) => {
+      links.forEach((link) => {
+          link.classList.remove('active');
+      });
+      e.preventDefault();
+      link.classList.add('active');
+    });
+  });
+}
 $(document).ready( function() {
   $('table tr').click( function getdocid() {
       index = $(this).index();
@@ -27,7 +40,7 @@ window.onload = function getfilelist() {
                   
                           if(data.Documents[i].DocName || data.Documents[i].Version || data.Documents[i].LastModifiedOn || data.Documents[i].LastModifiedBy){
                               txt += '<tr><td><input type="checkbox" class="case">'+"</td><td>"+
-                              '<a onclick="window.location.href=\''+documentURL+' \'">'+data.Documents[i].DocName+'</a>'+"</td><td>"+
+                              '<a class="input" onclick="window.location.href=\''+documentURL+' \'">'+data.Documents[i].DocName+'</a>'+"</td><td>"+
                               data.Documents[i].Version+ 
                               "</td><td>"+data.Documents[i].LastModifiedOn+"</td><td>"+data.Documents[i].LastModifiedBy + "</td>" +
                               '<td>' +
@@ -174,3 +187,23 @@ catch (err) {
 }
 }) */
           
+//Get Trash List
+$('#trashed').click( function trashlist() {
+  try {
+    $.ajax({
+        headers: {'authToken': getUserToken()},
+        type: 'GET',
+        url: getApiUrl('getTrashList'),
+        success: function(data){
+
+        },
+        error: function (data) {
+            // in case of error we need to read response from data.responseJSON
+            showAlert('#filelist-error-message', 'alert-danger', "", getResponseMessage(data));
+        }
+    });
+}
+catch (err) {
+    console.log(err)
+}
+})
