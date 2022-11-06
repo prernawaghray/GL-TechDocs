@@ -11,7 +11,7 @@ if os.path.exists(env):
     load_dotenv(env)
 
 def get_connection():
-    return create_engine(url=os.environ.get('DB_URL'))
+    return create_engine(url=os.environ.get('DB_URL'), pool_size=20, max_overflow=0)
 
 def session_factory():
     Base.metadata.create_all(engine)
