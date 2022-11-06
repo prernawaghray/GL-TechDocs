@@ -7,12 +7,118 @@
 {% endblock %}
 
 {% block body %}
- <div>
-  
- </div>
+<main class="container-fluid body-main mt-2 bg-light">
+    <div class="d-flex align-items-stretch flex-wrap re-flex" style="height: calc(100% - 63px)">
+      <textarea id="editor-text" onkeyup="documentObject.DocText=this.value" class="form-control prism-live language-latex">{% if params['template']=='resume' %}
+\documentclass{article}
+\usepackage{comment, multicol}
+\usepackage{hyperref}
+\usepackage{calc,pict2e,picture}
+\usepackage{textgreek,textcomp,gensymb,stix}
+\setcounter{secnumdepth}{2}
+\title{Person Fullname}
+\author{}
+\date{email@id.domain | 810xxxxxx3}
+\begin{document}
+\maketitle
+This is a small intro about yourself, while at the same time being a gentle introduction to \LaTeX.
+In the appendix, the API as well as the format of custom macro definitions in JavaScript will be explained.
+\section{Experiences}
+\begin{itemize}
+    \item Project one description followed by skills used
+    \item Project Two description followed by skills used
+    \item Project Three description followed by skills used
+\end{itemize}
+\bigskip
+\section{Education}
+\bigskip
+\section{Personal Details}
+\end{document}        
+{% endif %}
+      </textarea>
+      <iframe id="html-preview" sandbox="allow-same-origin allow-scripts" srcdoc="" class="shadow p-3 bg-body rounded item"></iframe>
+    </div>
+  </main>
 {% endblock %}
 
 {% block pageJS%}
+<script src="{{url_for('static',filename="js/clientStorage.js")}}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.1.3/axios.min.js" integrity="sha512-0qU9M9jfqPw6FKkPafM3gy2CBAvUWnYVOfNPDYKVuRTel1PrciTj+a9P3loJB+j0QmN2Y0JYQmkBBS8W+mbezg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+  var documentObject = {{ document|tojson|safe }};
+  $(document).ready(function(){
+    axios.defaults.headers.common['authToken'] = getUserToken();
+    axios.defaults.headers.post['Content-Type'] = 'application/json';
 
+    window.$editor=document.getElementById('editor-text');
+    window.$htmlPreview=document.getElementById('html-preview');
+    documentObject.DocText=$editor.textContent;
+
+    $editor.addEventListener('keyup',_.debounce(function(event){
+      generateHTMLContent('preview');
+    },300));
+    
+    generateHTMLContent('preview');
+
+  });
+
+  function saveFile(){
+   console.log('---savingfile-------',documentObject);
+   
+   
+   if(documentObject.DocId==0 && documentObject.DocText!=''){
+        showSyncStatus('arrow-repeat','Creating New File ...',true);
+        // CREATE NEW FILE 
+        //http://techdocs-api.previewbox.in/api/filecreate
+
+        axios.post(getApiUrl('filecreate'),documentObject).then(function(response){
+          documentObject.DocId=response.data.DocId;
+        }).catch(function(error){
+          showSyncStatus('bug-fill','Error While Creating File',false,true);
+          
+        });
+
+
+   }
+   else if(documentObject.DocId!=0){
+        showSyncStatus('arrow-repeat','Updating File ...',true);
+        // UPDATE FILE 
+        //http://techdocs-api.previewbox.in/api/filemodify
+
+        axios.post(getApiUrl('filemodify'),documentObject).then(function(response){
+          documentObject.DocId=response.data.DocId;
+        }).catch(function(error){
+          showSyncStatus('bug-fill','Error While Updating File',false,true);
+          
+        });
+   }
+ 
+    
+
+  }
+
+
+  function generateHTMLContent(type){
+      console.log('---generating-html-content---');
+      var text = $editor.value;
+      var generator = new latexjs.HtmlGenerator({ hyphenate: false });
+      lDoc = latexjs.parse(text, { generator: generator }).htmlDocument('https://cdn.jsdelivr.net/npm/latex.js@0.12.4/dist/');
+      
+      $($htmlPreview).attr('srcDoc',lDoc.documentElement.outerHTML);
+      
+      if(type=='print'){
+        $htmlPreview.onload= function() {
+          var mywindow = window.open('', documentObject.DocName, 'height=400,width=600');
+          mywindow.document.write(lDoc.documentElement.outerHTML);
+          mywindow.print();
+          mywindow.close();
+          $htmlPreview.onload=function(){};
+        };
+      }
+      else saveFile()
+      
+    }
+
+</script>
 
 {% endblock %}

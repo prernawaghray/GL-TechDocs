@@ -1,129 +1,89 @@
 {% extends "marketing-layout.html" %}
 
 {% block pageCss%}
-<style>
-    .navbar-brand{ 
-        font-size:14px !important;
+  <style>
+    #login-container{
+      max-width:380px;
+      margin:auto;
+      text-align: center;
     }
-</style>
+    a{text-decoration: none;}
+  </style>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
 {% endblock %}
+
 
 {% block body %}
-
-   
-    <!-- <span>A placeholder page</span>
-    <p>This page is from templates/home-page/home.html which extends templates/marketing-layout.html </p> -->
-    <div class="container mt-5 text-center">
-      <h2 class="text-center">User Registration</h2>
-     
-
-    <div id="registerWithEmail" class="text-center mt-5" style="display:block;margin:auto; width:360px;">
-     
-      <div class="form-floating">
-        <input class="form-control" id="full-name" placeholder="Full name" type="text" name="fullname" required/>
-        <label for="full-name">Full Name</label>
-      </div>
-
-      <div class="form-floating mt-2">
-        <input type="email" class="form-control" name="username" placeholder="Email ID" id="email-input"  required/>
-        <label for="email-input">Email ID</label>
-      </div>
-
-      <div class="form-floating mt-2">
-        <input type="password" class="form-control" name="password" id="password-input" placeholder="password" required/>
-        <label for="password-input">Password</label>
-      </div>
-      
-      <div class="form-floating mt-2">
-        <input type="password" class="form-control" name="verifypassword" id="verify-password-input" placeholder="Verify Password" required/>
-        <label for="verify-password-input">Verify Password</label>
-      </div>
-
-      <div class="d-grid mt-2">
-      <button type="submit" class="btn btn-primary d-flex justify-content-start"><span><i class="bi bi-envelope-fill flex-fill"></i></span><span class="flex-fill"><b>Sign up with Email</b></span></button>   
-      </div>
-
-      <div class="d-flex mt-3 mb-3">
-            <div class="flex-fill"><hr/></div>
-            <div class="flex-fill">OR</div>
-            <div class="flex-fill"><hr/></div>
-      </div>
-    </div>
+<script src="js/register.js"></script>
     
-    <img style="height:48px;" src="{{ url_for('static',filename='images/icons/signupwithgoogle.png') }}"/>
-   
+<div id="login-container" class="mt-3">
+      <h2 style="margin-bottom: 0px;">User Registration</h2>
+      <br> 
+      
+      <form action="" method="post" name="register-form" id="register-form" enctype="multipart/form-data">
+        <div class="form-floating  mt-2">
+          <input type="text" class="form-control" name="firstname" id="firstname-input" placeholder="First Name" required>
+          <label for="firstname-input">First Name</label>
+        </div>
+        <div class="form-floating  mt-2">
+          <input type="text" class="form-control" name="lastname" id="lastname-input" placeholder="Last Name" required>
+          <label for="email-input">Last Name</label>
+        </div> 
+        <div class="form-floating  mt-2">
+          <input type="email" class="form-control" name="email" id="email-input" placeholder="email" required>
+          <label for="email-input">Email address</label>
+        </div>
+        
+        <div class="form-floating mt-2">
+          <input type="password" class="form-control" name="password" id="password-input" placeholder="password" required>
+          <label for="password-input">Password</label>
+        </div>
+        <div class="form-floating mt-2">
+          <input type="password" class="form-control" name="password_confirm" id="password_confirm-input" placeholder="Confirm password" required><br>
+          <label for="password-input">Confirm Password</label>
+        </div>
+          
+        <div class="d-grid mt-1">
+          <span id="register-errorMessage" class="errorMessage"></span><br>
+          <span id="register-infoMessage" class="infoMessage"></span><br>
+
+          <button type="submit" class="btn btn-primary" name="register" value="register" id="register">Register</button>   
+        </div>
+       
+      </form>
+      
+      
+      
+      <!--form action="{{url_for('login')}}" method="post" id="other-login"-->
+        <div class=" mt-2">
+          <p class="text-center">Else, Register With</p>
+          <!--div class="d-grid gap-2 mt-3">
+            <button type="submit" name="login_method" class="btn btn-outline-primary" value="google" id="login-btn">
+              <i class="bi bi-google"></i>oogle
+            </button-->
+          
+          <div id="googleLogin"></div>
+          <!--div id="g_id_onload"
+                data-client_id=getClientSecret()
+                data-callback="handleGoogleAuthResponse">
+          </div>
+          <div class="g_id_signin" 
+          data-type="standard"  
+          data-shape="rectangular"
+          data-theme="filled_blue"
+          data-text="signin_with"
+          data-size="large"
+          data-logo_alignment="left"
+          data-width="400px"></div-->      
+            
+          <!-- <button type="submit" name="login_method" value="ieee" id="login-btn">IEEE</button> -->
+          </div>
+          <p class="mt-3">Already a User?  <a href="{{url_for('login')}}">Login Here</a></p>
+       </div>
+      <!--/form-->
+      
+      
 </div>
 
-{% endblock %}
-
-{% block pageJS%}
-<script src="https://apis.google.com/js/client:platform.js?onload=renderButton" async defer></script>
-<meta name="google-signin-client_id" content="YOUR_CLIENT_ID.apps.googleusercontent.com">
-<script>
-
-    let text= 'Placeholder JS';
-    $("#clickGmail").click(function(){
-       $("#gmailDiv").show();
-       $("#registerWithEmail").hide();
-      }); 
-
-      $("#clickEmail").click(function(){
-       $("#gmailDiv").hide();
-       $("#registerWithEmail").show();
-      }); 
-
-      // Render Google Sign-in button
-      function renderButton() {
-          gapi.signin2.render('gSignIn', {
-              'scope': 'profile email',
-              'width': 240,
-              'height': 50,
-              'longtitle': true,
-              'theme': 'dark',
-              'onsuccess': onSuccess,
-              'onfailure': onFailure
-          });
-      }
-
-      // Sign-in success callback
-      function onSuccess(googleUser) {
-          // Get the Google profile data (basic)
-          //var profile = googleUser.getBasicProfile();
-          
-          // Retrieve the Google account data
-          gapi.client.load('oauth2', 'v2', function () {
-              var request = gapi.client.oauth2.userinfo.get({
-                  'userId': 'me'
-              });
-              request.execute(function (resp) {
-                  // Display the user details
-                  var profileHTML = '<h3>Welcome '+resp.given_name+'! <a href="javascript:void(0);" onclick="signOut();">Sign out</a></h3>';
-                  profileHTML += '<img src="'+resp.picture+'"/><p><b>Google ID: </b>'+resp.id+'</p><p><b>Name: </b>'+resp.name+'</p><p><b>Email: </b>'+resp.email+'</p><p><b>Gender: </b>'+resp.gender+'</p><p><b>Locale: </b>'+resp.locale+'</p><p><b>Google Profile:</b> <a target="_blank" href="'+resp.link+'">click to view profile</a></p>';
-                  document.getElementsByClassName("userContent")[0].innerHTML = profileHTML;
-                  
-                  document.getElementById("gSignIn").style.display = "none";
-                  document.getElementsByClassName("userContent")[0].style.display = "block";
-              });
-          });
-      }
-
-      // Sign-in failure callback
-      function onFailure(error) {
-          alert(error);
-      }
-
-      // Sign out the user
-      function signOut() {
-          var auth2 = gapi.auth2.getAuthInstance();
-          auth2.signOut().then(function () {
-              document.getElementsByClassName("userContent")[0].innerHTML = '';
-              document.getElementsByClassName("userContent")[0].style.display = "none";
-              document.getElementById("gSignIn").style.display = "block";
-          });
-          
-          auth2.disconnect();
-      }
-</script>
 
 {% endblock %}
-

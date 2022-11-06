@@ -3,7 +3,6 @@ $(document).ready(function() {
     $('#email-login').on('submit', function(event) {
        loginButtonClicked();
        event.preventDefault();
-// keeping this commented for now as Sreenivas sir is writing request response based implementation        
      
      });
 });
@@ -34,12 +33,12 @@ function loginButtonClicked()
         password: $('#password-input').val(),
         rememberMe : $('#remember-me').prop("checked")?1:0
             };
-    callLoginApi(loginFormData);
+    callLoginApi(loginFormData,"#email-login-errorMessage");
 }
 
-function callLoginApi(loginFormData)
+function callLoginApi(loginFormData,errordiv)
 {
-    removeAlert('#email-login-errorMessage');
+    removeAlert(errordiv);
     try{
     $.ajax({
         data : loginFormData,
@@ -48,16 +47,15 @@ function callLoginApi(loginFormData)
            success: function(data) {
             //In case of success the data contains the JSON
 
-            
+                
                 localStorage.setItem('userToken', data.userAuthToken);
+                //Saving email for further references for calling backend url.
+                localStorage.setItem('email', $('#email-input').val());
                 saveTokenInSession(data.userAuthToken);
-            
-            
-            
           },
           error:function(data) {
             // in case of error we need to read response from data.responseJSON
-            showAlert('#email-login-errorMessage', 'alert-danger', "Login!!", getResponseMessage(data));
+            showAlert(errordiv, 'alert-danger', "Login!!", getResponseMessage(data));
 
             
           }
@@ -83,7 +81,7 @@ function handleGoogleAuthResponse(token) {
         password: "authenticated",
         rememberMe : 0
             };
-    callLoginApi(loginFormData);
+    callLoginApi(loginFormData,"#google-login-errorMessage");
     
   }
 
