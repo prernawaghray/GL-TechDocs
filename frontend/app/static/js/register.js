@@ -2,7 +2,8 @@
 $(document).ready(function() {
   console.log("ready")
     $('#register-form').on('submit', function(event) {
-        console.log("register")
+        console.log("register");
+        $('#register').prop('disabled', true);
         event.preventDefault();
         if ($('#password-input').val() != $('#password_confirm-input').val()) {
            showAlert('#register-errorMessage', 'alert-danger', "Error:","Password and confirm password should match!!");
@@ -41,14 +42,14 @@ function callLoginApi(registerFormData) {
             //In case of success the data contains the JSON
             
             console.log("Registered successfully!!")
-            showAlert('#register-infoMessage', 'alert-info', "", "Your are registered successfully!!");
+            showAlert('#register-infoMessage', 'alert-success', "", "Your are registered successfully!!");
+            $('#register').prop('disabled', false);
 
           },
           error:function(data) {
             // in case of error we need to read response from data.responseJSON
             showAlert('#register-errorMessage', 'alert-danger', "Register!!", getResponseMessage(data));
-
-            
+            $('#register').prop('disabled', false);
           }
         });
     } catch(e) {
