@@ -21,9 +21,10 @@ window.onload = function getfilelist() {
                   var len = Object.keys(data).length;
                   var txt = "";
                   //getdocid();
-                  var documentURL = getFrontEndUrl('/latex-editor/'+data.Documents[i].DocId);
                   if(len > 0){
                       for(var i=0;i<len;i++){
+                        var documentURL = getFrontEndUrl('/latex-editor/'+data.Documents[i].DocId);
+                  
                           if(data.Documents[i].DocName || data.Documents[i].Version || data.Documents[i].LastModifiedOn || data.Documents[i].LastModifiedBy){
                               txt += '<tr><td><input type="checkbox" class="case">'+"</td><td>"+
                               '<a onclick="window.location.href=\''+documentURL+' \'">'+data.Documents[i].DocName+'</a>'+"</td><td>"+
