@@ -44,7 +44,7 @@ window.onload = function getfilelist() {
                               data.Documents[i].Version+ 
                               "</td><td>"+data.Documents[i].LastModifiedOn+"</td><td>"+data.Documents[i].LastModifiedBy + "</td>" +
                               '<td>' +
-                              '<button type="button" id="rename" onclick="renamedata()" style="height: 25px; width: 25px; padding: 0px;" title="Rename" data-docid="2"' +
+                              '<button type="button" id="rename" onclick="renamedata()" style="height: 25px; width: 25px; padding: 0px;" title="Rename"' +
                                 'data-bs-toggle="modal" data-bs-target="#renameModal" class="btn btn-outline-dark">' +
                                 '<i class="bi bi-input-cursor-text" style="font-size: 16px;"></i>' +
                               '</button>' +
@@ -54,12 +54,17 @@ window.onload = function getfilelist() {
                               '<i class="bi bi-share" style="font-size: 16px;"></i>' +
                               '</button>' +
 
-                              '<button type="button" style="height: 25px; width: 25px; padding: 0px;" title="Download"' +
+                              '<button type="button" id="download" style="height: 25px; width: 25px; padding: 0px;" title="Download"' +
                                 'class="btn btn-outline-dark">' +
                                 '<i class="bi bi-download" style="font-size: 16px;"></i>' +
                               '</button>' +
 
-                              '<button type="button" id="delete" onclick="deletedata()" style="height: 25px; width: 25px; padding: 0px;" title="Move to Trash" data-docid="2"' +
+                              '<button type="button" id="archive" style="height: 25px; width: 25px; padding: 0px;" title="Archive"' +
+                                'class="btn btn-outline-dark">' +
+                                '<i class="bi bi-file-earmark-zip" style="font-size: 16px;"></i>' +
+                              '</button>' +
+
+                              '<button type="button" id="delete" onclick="deletedata()" style="height: 25px; width: 25px; padding: 0px;" title="Move to Trash"' +
                                 'data-bs-toggle="modal" data-bs-target="#delModal" class="btn btn-outline-dark">' +
                                 '<i class="bi bi-trash3" style="font-size: 16px;"></i>' +
                               '</button>' +
@@ -158,7 +163,7 @@ $("#renamefile").click(function renamefile() {
 
 //Move to trash
 
-$("#delete").click(function trashfile() {
+/* $("#delete").click(function trashfile() {
  
   try {
     $.ajax({
@@ -180,7 +185,7 @@ $("#delete").click(function trashfile() {
 catch (err) {
     console.log(err)
 }
-})
+}) */
           
 //Get Trash List
 $('#trashed').click( function trashlist() {
