@@ -39,9 +39,9 @@ class VersionManage:
         if (document_name == ""):
             datestr  = datetime.today().strftime('%Y%m%d%H%M%S')
             document_name = 'untitled_' + datestr + 'v_' + str(version) + '.tex'
-        else :
-            index = document_name.index('.tex')
-            document_name = document_name[:index]
+        # else :
+        #     index = document_name.index('.tex')
+        #     document_name = document_name[:index]
 
         file_path = file_directory + '/' + document_name + '_v_' + str(version) + '.tex'
 
