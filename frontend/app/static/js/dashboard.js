@@ -1,57 +1,59 @@
-function getfirstname(data) {
-  userData = data.userData;
-  usageStats = data.usageStats;
-  firstName = userData.firstName;
-  document.getElementsByClassName('page-header').innerHTML = header;
-}
-
-function getusername() {
-  try {
-      $.ajax({
-          data: {
-              user_id: getUserToken()
-          },
-          type: 'POST',
-          url: getApiUrl('getProfile'),
-          success: function (data) {
-              //In case of success the data contains the JSON
-
-                  getfirstname(data);
-
-          },
-      });
-  }
-  catch (err) {
-      console.log(err)
-  }
-}
-
-function pageHeader() {
-  let header = '';
-  header += 'Welcome' + firstName + '!';
-}
 
 
-function updatefilelist(data) {
-    userid = data.userid;
-    json_str = data.json_str;
-}
-
-
-function getfilelist() {
+var doc_data = [];
+$(document).ready(function () {
+window.onload = function getfilelist() {
     try {
         $.ajax({
-            data: {
-                user_id: getUserToken()
-            },
+            headers: {'authToken': getUserToken()},
             type: 'GET',
-            url: getApiUrl('file_GetList'),
-            success: function (data) {
-                //In case of success the data contains the JSON
+            url: getApiUrl('filegetlist'),
+            success: function(data){
+              doc_data = JSON.stringify(data); 
+              if(data){
+                  var len = Object.keys(data).length;
+                  var txt = "";
+                  if(len > 0){
+                      for(var i=0;i<len;i++){
+                          if(data.Documents[i].DocName || data.Documents[i].Version || data.Documents[i].LastModifiedOn || data.Documents[i].LastModifiedBy){
+                              txt += '<tr><td><input type="checkbox" class="case">'+"</td><td>"+JSON.parse(JSON.stringify(data.Documents[i].DocName))+"</td><td>"+data.Documents[i].Version+ 
+                              "</td><td>"+data.Documents[i].LastModifiedOn+"</td><td>"+data.Documents[i].LastModifiedBy + "</td>" +
+                              '<td>' +
+                              '<button type="button" id="rename" onclick="renamedata()" style="height: 25px; width: 25px; padding: 0px;" title="Rename" data-docid="2"' +
+                                'data-bs-toggle="modal" data-bs-target="#renameModal" class="btn btn-outline-dark">' +
+                                '<i class="bi bi-input-cursor-text" style="font-size: 16px;"></i>' +
+                              '</button>' +
 
-                    updatefilelist(data);
- 
-            },
+                              '<button type="button" style="height: 25px; width: 25px; padding: 0px;" title="Share" data-docid="2" data-bs-toggle="modal"' + 
+                              'data-bs-target="#shareModal" title="Share" class="btn btn-outline-dark">' + 
+                              '<i class="bi bi-share" style="font-size: 16px;"></i>' +
+                              '</button>' +
+
+                              '<button type="button" style="height: 25px; width: 25px; padding: 0px;" title="Download"' +
+                                'class="btn btn-outline-dark">' +
+                                '<i class="bi bi-download" style="font-size: 16px;"></i>' +
+                              '</button>' +
+
+                              '<button type="button" id="delete" onclick="deletedata()" style="height: 25px; width: 25px; padding: 0px;" title="Move to Trash" data-docid="2"' +
+                                'data-bs-toggle="modal" data-bs-target="#delModal" class="btn btn-outline-dark">' +
+                                '<i class="bi bi-trash3" style="font-size: 16px;"></i>' +
+                              '</button>' +
+                            
+                              "</td></tr>";
+                          }
+                      }
+                      if(txt != ""){
+                          $("#tbody").append(txt).removeClass("hidden");
+
+                          // Add multiple select / deselect functionality
+                          $("#selectall").click(function () {
+                            $('.case').attr('checked', this.checked);
+                              })
+                          
+                      }
+                  }
+              }
+          },
             error: function (data) {
                 // in case of error we need to read response from data.responseJSON
                 showAlert('#filelist-error-message', 'alert-danger', "", getResponseMessage(data));
@@ -62,95 +64,58 @@ function getfilelist() {
         console.log(err)
     }
 }
-
-  
-// FETCHING DATA FROM JSON
-        var doc = '';
-
-        // ITERATING THROUGH OBJECTS
-        json_str.forEach(file_List);
-        document.getElementById("tbody").innerHTML = doc;
-            //CONSTRUCTION OF ROWS HAVING
-            // DATA FROM JSON OBJECT
-        function file_List(value, key) {
-            doc += '<tr>';
-            doc += '<td>'+
-                '<input type="checkbox" class="case">' +
-                '</td>';
-            doc += '<td scope="col">' + 
-                value.DocName + '</td>';
-
-            doc += '<td scope="col">' + 
-                value.Version + '</td>';
-
-            doc += '<td scope="col">' + 
-                value.LastModifiedOn + '</td>';
-
-            doc += '<td scope="col">' + 
-                value.LastModifiedBy + '</td>';
-
-            doc += '<td>' + 
-                '<button type="button" id="edit" style="height: 25px; width: 25px; padding: 0px;" title="Edit"' +
-                  'class="btn btn-outline-dark"' +
-                  'onclick="window.location.href="{{url_for("latexEditor",id="edit-document")}}"">' +
-                  '<i class="bi bi-pencil-square"></i>' +
-                '</button>' +
-
-                '<button type="button" style="height: 25px; width: 25px; padding: 0px;" title="Share" data-docid="2"' +
-                  'data-bs-toggle="modal" data-bs-target="#shareModal" class="btn btn-outline-dark">' +
-                  '<i class="bi bi-share" style="font-size: 16px;"></i>' +
-                '</button>' +
-
-                '<button type="button" id="rename" onclick="renamedata()" style="height: 25px; width: 25px; padding: 0px;" title="Rename" data-docid="4"' +
-                  'data-bs-toggle="modal" data-bs-target="#renameModal" class="btn btn-outline-dark">' +
-                  '<i class="bi bi-input-cursor-text" style="font-size: 16px;"></i>' +
-                '</button>' +
-
-                '<button type="button" style="height: 25px; width: 25px; padding: 0px;" title="Download"' +
-                  'class="btn btn-outline-dark">' +
-                  '<i class="bi bi-download" style="font-size: 16px;"></i>' +
-                '</button>' +
-
-                '<button type="button" id="delete" onclick="deletedata()" style="height: 25px; width: 25px; padding: 0px;" title="Delete" data-docid="2"' +
-                  'data-bs-toggle="modal" data-bs-target="#delmodal" class="btn btn-outline-dark">' +
-                  '<i class="bi bi-trash3" style="font-size: 16px;"></i>' +
-                '</button>' +
-              '</td>';
-
-            doc += '</tr>';
-        };
-        
-function fileSearch() {
-  let input = document.getElementById("searchbar").value
-  input = input.toLowerCase();
-  let x = document.getElementsByClassName("DocName");
-
-  for (i=0; i<x.length; i++) {
-    if (!x[i].innerHTML.toLowerCase().includes(input)) {
-      x[i].style.display = 'none';
+function filterTable(event) {
+  let filter = event.target.value.trim().toLowerCase();
+  let rows = document.querySelector('#table tbody').rows;
+  for (let i = 0; i < rows.length; i++) {
+    let row = rows[i], show = false;
+    if (filter.length > 0) {
+      for (let j = 0; j < row.children.length; j++) {
+        let col = row.children[j], text = col.textContent.toLowerCase();
+        if (text.indexOf(filter) > -1) {
+          show = true;
+          continue;
+        }
+      }
+    } else {
+      show = true;
     }
-    else {
-      x[i].style.display = 'table-cell'
-    }
+    toggleClass(row, 'hidden-row', !show);
   }
-};
-
-function renamedata() {
-  renameData = {
-    user_id : getUserToken(),
-    doc_id : json_str[$("#tbody").$(this).index()].DocId,
-    doc_name: $('#renameFile').val(),
-        };
-renamefile(renameData);
 }
 
-function renamefile(renameData) {
+function toggleClass(el, className, state) {
+  if (el.classList) el.classList.toggle(className, state);
+  else {
+    var classes = el.className.split(' ');
+    var existingIndex = classes.indexOf(className);
+    if (state === undefined) {
+      if (existingIndex > -1) classes.splice(existingIndex, 1)
+      else classes.push(existingIndex);
+    } else {
+      if (!state) classes.splice(existingIndex, 1)
+      else classes.push(existingIndex);
+    }
+    el.className = classes.join(' ');
+  }
+}
+
+document.querySelector('#search').addEventListener('keyup', filterTable, false);
+})
+
+// Rename file
+$("#renamefile").click(function renamefile() {
   try {
       $.ajax({
-          data: renameData,
+          headers: {'authToken': getUserToken()},
+          data: {
+            DocId: doc_data.Documents[$("#tbody").$(this).index()].DocId,
+            DocName: $('#rename').val()
+          },
           type: 'POST',
-          url: getApiUrl('file_Rename'),
+          url: getApiUrl('filerename'),
           success: function (data) {
+            alert(data);
           },
           error: function (data) {
               // in case of error we need to read response from data.responseJSON
@@ -161,23 +126,21 @@ function renamefile(renameData) {
   catch (err) {
       console.log(err)
   }
-}
+})
 
-function deletedata() {
-  deleteData = {
-    user_id : getUserToken(),
-    doc_id : json_str[$("#tbody").$(this).index()].DocId,
-        };
-deletefile(deleteData);
-}
+//Move to trash
 
-function deletefile(deleteData) {
+$("#delete").click(function trashfile() {
   try {
     $.ajax({
-        data: renameData,
+        headers: {'authToken': getUserToken()},
+        data: {
+          DocId: doc_data.Documents[$("#tbody").$(this).index()].DocId,
+        },
         type: 'POST',
-        url: getApiUrl('file_delete'),
+        url: getApiUrl('filetrash'),
         success: function (data) {
+          alert("File moved to trash");
         },
         error: function (data) {
             // in case of error we need to read response from data.responseJSON
@@ -188,40 +151,5 @@ function deletefile(deleteData) {
 catch (err) {
     console.log(err)
 }
-}
-
-// File Upload
-document.querySelector('.custom-file-input').addEventListener('change', function (e) {
-var name = document.getElementById("customFileInput").files[0].name;
-var nextSibling = e.target.nextElementSibling
-nextSibling.innerText = name
 })
-
-
-// Add multiple select / deselect functionality
-$(document).ready(function () {
-    $("#selectall").click(function () {
-    $('.case').attr('checked', this.checked);
-      });
           
-// If all checkboxes are selected, check the selectall checkbox also        
-$(".case").click(function () {
-if ($(".case").length == $(".case:checked").length) {
-    $("#selectall").attr("checked", "checked");
-    }
-else {
-    $("#selectall").removeAttr("checked");
-    }
-  });
-  });
-
-
-
-/* var rowCount = $("#myTable tr").length - 1;
-if (rowCount <= 0) {
-  $('#selectall').attr('disabled', true);
-}
-else {
-
-  $('#selectall').attr('disabled', false);
-} */
