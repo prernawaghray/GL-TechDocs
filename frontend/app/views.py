@@ -135,7 +135,7 @@ def faq():
 def payments_summary():
    return render_template('payments/summary.html')
 
-@app.route('/user-plans')
+@app.route('/user_plans')
 def user_plans():
    return render_template('plans-and-subscriptions/user-plan.html')
 
