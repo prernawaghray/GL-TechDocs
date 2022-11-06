@@ -18,7 +18,7 @@ window.onload = function getfilelist() {
             success: function(data){
               doc_data = JSON.stringify(data); 
               if(data){
-                  var len = Object.keys(data).length;
+                  var len = Object.keys(data.Documents).length;
                   var txt = "";
                   //getdocid();
                   if(len > 0){
