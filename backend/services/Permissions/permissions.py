@@ -45,12 +45,11 @@ def set_permissions(user_id):
     doc_id = content['DocId']
     permission_type = content['permission_type']
     share_user_id = get_user_id(share_email)
-    share_user_id = str(share_user_id)
-    user_id = str(user_id)
     sql_query_1 = text("""SELECT PermissionId FROM Permissions WHERE UserId=:UID and DocId=:DID""")
-    param_1 = {"UID": str(share_user_id), "DID": doc_id}
+    param_1 = {"UID": share_user_id, "DID": doc_id}
     permission_id = connect.execute(sql_query_1, **param_1).first()
     if permission_id is None:
+        #insert into tabler(asdf,daf) values (123, 123)
         sql_query_2 = text("""INSERT into Permissions(UserId,DocId) values (:UID,:DID)""")
         connect.execute(sql_query_2,**param_1)
     else:
@@ -465,7 +464,7 @@ def get_user_permissions(user_id, doc_id):
         This function returns the UserPermissions set to the user.
     '''
     sql_query_1 = text("""SELECT PermissionId FROM Permissions WHERE UserId=:UID and DocId=:DID""")
-    param_1 = {"UID": str(user_id), "DID": doc_id}
+    param_1 = {"UID": user_id, "DID": doc_id}
     permission_id = connect.execute(sql_query_1, **param_1).first()
     sql_query_2 = text("""SELECT UserPermissions from Permissions WHERE PermissionId=:PID""")
     param_2 = {"PID": permission_id[0]}
