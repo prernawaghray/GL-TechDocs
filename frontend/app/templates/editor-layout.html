@@ -6,6 +6,26 @@
   <link rel="stylesheet" href="https://prismjs.com/plugins/line-numbers/prism-line-numbers.css">
   <link rel="stylesheet" href="https://live.prismjs.com/prism-live.css">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/editor-layout.css') }}">
+  <style>
+    .animate-spin{
+      display: inline-block;
+      animation-name: spin;
+      animation-duration: 1000ms;
+      animation-iteration-count: infinite;
+      animation-timing-function: linear; 
+    }
+    @keyframes spin {
+        from {
+            transform:rotate(0deg);
+        }
+        to {
+            transform:rotate(360deg);
+        }
+    }
+    .nav-link{
+      cursor: pointer;
+    }
+  </style>
   {% block pageCss %}{% endblock%}
 {% endblock %}
 
@@ -25,6 +45,13 @@
     <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
       <span class="navbar-toggler-icon"></span>
     </button>
+    <div class="form-floating">
+      <input type="text" class="form-control" name="filename" value="{{document['DocName']}}" onkeyup="documentObject.DocName=this.value" id="filename-input" placeholder="Filename" required>
+      <label for="email-input">Filename</label>
+    </div>
+    <div id="sync-status" style="font-size:11px; color:rgb(122, 122, 122);padding-left:8px;opacity:0;">
+     <span id="is-spin" class="animate-spin"> <i id="sync-icon" class="bi bi-arrow-repeat"></i> </span> <span style="margin-left:3px;" id="sync-text">Saving File</span>
+    </div>
     <!-- MOBILE RESPONSIVE MENU -->
     <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
       <div class="offcanvas-header">
@@ -33,7 +60,7 @@
       </div>
       <div class="offcanvas-body">
         <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-          <li class="nav-item" ><a data-bs-toggle="offcanvas" href="#" id="button-pdf" class="nav-link px-2 link-dark"><i class="bi bi-download"></i> Download as PDF</a></li>
+          <li class="nav-item" ><a id="button-pdf" class="nav-link px-2 link-dark"><i class="bi bi-download"></i> Download as PDF</a></li>
           <li class="nav-item" ><a data-bs-toggle="offcanvas" href="#offcanvasAssets"  class="nav-link px-2 link-dark"><i class="bi bi-paperclip"></i> Assets</a></li>
           <li class="nav-item"><a id="historyClick" data-bs-toggle="offcanvas" href="#offcanvasHistory" class="nav-link px-2 link-dark"><i class="bi bi-clock-history"></i> History</a></li>
           <li class="nav-item dropdown">
@@ -126,42 +153,12 @@
   <script src="{{url_for('static',filename='js/node_modules/latex.js/dist/latex.js')}}"></script>  
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
 
-  <script>
-    var htmlToPdf;
-    function generateHTMLContent(type){
-      var text = $editor.value;
-      var generator = new latexjs.HtmlGenerator({ hyphenate: false });
-      lDoc = latexjs.parse(text, { generator: generator }).htmlDocument('https://cdn.jsdelivr.net/npm/latex.js@0.12.4/dist/');
-      
-      $('#html-preview').attr('srcDoc',lDoc.documentElement.outerHTML);
-     
-      if(type=='print'){
-        $('#html-preview')[0].contentWindow.print();
-      }
-      
-      htmlToPdf = lDoc.documentElement.outerHTML;
-    }
-   
+  <script> 
     $(document).ready(function(){
-      $editor=document.getElementById('editor-text');
-    
-      //document.head.appendChild(generator.stylesAndScripts("https://cdn.jsdelivr.net/npm/latex.js@0.12.4/dist/"))
-      $editor.addEventListener('keyup',_.debounce(function(event){
-        generateHTMLContent('preview');
-      },300));
-      
-      generateHTMLContent('preview');
 
       var downloadPdfBtn = document.getElementById("button-pdf");
       downloadPdfBtn.addEventListener("click", function () {
-        var mywindow = window.open("", "PRINT", "height=1123, width=794");
-        mywindow.document.write(htmlToPdf);
-        mywindow.document.close();
-        mywindow.focus();
-        mywindow.print();
-        mywindow.close();
-
-        return true;
+       generateHTMLContent('print');
       });
 
       $('#f-icon').click(function(){
@@ -170,75 +167,23 @@
       });
       
     });
- 
-    const selectTarget = (fromElement, selector) => {
-      if (!(fromElement instanceof HTMLElement)) {
-        return null;
-      }
+    
+    function showSyncStatus(icon,status,spin){
+      $syncStatus=document.getElementById('sync-status');
+      $syncText=document.getElementById('sync-text');
+      $syncIcon=document.getElementById('sync-icon');
+      $isSpin=document.getElementById('is-spin');
 
-      return fromElement.querySelector(selector);
-    };
+      $syncIcon.classList.value='bi bi-'+icon;
+      $syncText.innerHTML=status;
+      $isSpin.classList.value=(spin?'animate-spin':'');
 
-    const resizeData = {
-      tracking: false,
-      startWidth: null,
-      startCursorScreenX: null,
-      handleWidth: 5,
-      resizeTarget: null,
-      parentElement: null,
-      maxWidth: null,
-    };
+      $syncStatus.style.opacity=1;
+    }
 
-    $(document.body).on('mousedown', '.resize-handle--x', null, (event) => {
-      if (event.button !== 0) {
-        return;
-      }
-
-      event.preventDefault();
-      event.stopPropagation();
-
-      const handleElement = event.currentTarget;
-      
-      if (!handleElement.parentElement) {
-        console.error(new Error("Parent element not found."));
-        return;
-      }
-      
-      // Use the target selector on the handle to get the resize target.
-      const targetSelector = handleElement.getAttribute('data-target');
-      const targetElement = selectTarget(handleElement.parentElement, targetSelector);
-
-      if (!targetElement) {
-        console.error(new Error("Resize target element not found."));
-        return;
-      }
-      
-      resizeData.startWidth = $(targetElement).outerWidth();
-      resizeData.startCursorScreenX = event.screenX;
-      resizeData.resizeTarget = targetElement;
-      resizeData.parentElement = handleElement.parentElement;
-      resizeData.maxWidth = $(handleElement.parentElement).innerWidth() - resizeData.handleWidth;
-      resizeData.tracking = true;
-
-      console.log('tracking started');
-    });
-
-    $(window).on('mousemove', null, null, _.debounce((event) => {
-      if (resizeData.tracking) {
-        const cursorScreenXDelta = event.screenX - resizeData.startCursorScreenX;
-        const newWidth = Math.min(resizeData.startWidth + cursorScreenXDelta, resizeData.maxWidth);
-        
-        $(resizeData.resizeTarget).outerWidth(newWidth);
-      }
-    }, 1));
-
-    $(window).on('mouseup', null, null, (event) => {
-      if (resizeData.tracking) {
-        resizeData.tracking = false;
-
-        console.log('tracking stopped');
-      }
-    });
+    function hideSyncStatus(){
+      $syncStatus.style.opacity=0;
+    }
   </script>
   <script src="../js/history.js"></script>
 
