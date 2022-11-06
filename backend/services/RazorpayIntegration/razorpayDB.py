@@ -1,5 +1,6 @@
 # DB Connector library
 import mysql.connector
+from datetime import timedelta
 
 # Function to insert the record in transactions table
 def insert_rec(**payment_details):
@@ -87,6 +88,25 @@ def insert_rec(**payment_details):
               payment_details['card_sub_type'],
               payment_details['card_token_iin']
               )
+    # Subscription details
+    if payment_details['amount'] == 199:
+        UID = payment_details['userId']
+        UType = 'M'
+        UTypeDesc = 'Monthly'
+        UStatus = '1'
+        UExpDate = payment_details['created_at'] + timedelta(days=30)
+    else:
+        UID = payment_details['userId']
+        UType = 'Y'
+        UTypeDesc = 'Yearly'
+        UStatus = '1'
+        UExpDate= payment_details['created_at'] + timedelta(days=365)
+    insert_stmt = (
+        "INSERT INTO UserSubscriptions (UserId,Type, TypeDesc,Status,ExpiryDate)"
+        "VALUES (%s, %s, %s, %s, %s)"
+    )
+    data = (UID, UType, UTypeDesc, UStatus,UExpDate)
+    mycursor.execute(insert_stmt, data)
 
     try:
         mycursor.execute(sql, values)
