@@ -81,8 +81,7 @@ def doregistration():
 # @login_required
 def latexEditor(id=0):
    args = request.args
-   doc = fetchDocument(id,args)
-   return render_template('latex-editor/editor.html',doc_id=id,params=args,document=doc)
+   return render_template('latex-editor/editor.html',doc_id=id,params=args)
 
 @app.route('/plans')
 def plans():
@@ -144,17 +143,3 @@ def user_plans():
 # @login_required
 def latexHistory():
    return render_template('latex-history/history.html')
-
-def fetchDocument(id,params):
-   document = {}
-   if id=='new-document' :
-      title=  'Untitled Resume' if params['template']=='resume' else 'Untitled Document'
-      document = {
-         "DocId": 0,
-         "DocName": title,
-         "DocText":"",
-         "IsUpload":0,
-         "RefDocId":0
-      }
-      
-   return document
