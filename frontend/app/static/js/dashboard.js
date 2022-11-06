@@ -12,7 +12,7 @@ window.onload = function getfilelist() {
               if(data){
                   var len = Object.keys(data).length;
                   var txt = "";
-                  getdocid();
+      
                   if(len > 0){
                       for(var i=0;i<len;i++){
                           if(data.Documents[i].DocName || data.Documents[i].Version || data.Documents[i].LastModifiedOn || data.Documents[i].LastModifiedBy){
