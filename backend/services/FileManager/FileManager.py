@@ -575,7 +575,7 @@ def file_view(user_id):
         try:
             if('R' in userperm[0]):
                 session = session_factory()
-                sql_stmt = (select(Document.FilePath, Document.Version).where(Document.DocId==docid))
+                sql_stmt = (select(Document.FilePath, Document.DocName, Document.Version).where(Document.DocId==docid))
                 result = session.execute(sql_stmt)
                 session.close()
 
@@ -583,11 +583,12 @@ def file_view(user_id):
                 for row in result:
                     file_path = row.FilePath
                     doc_ver = row.Version
+                    doc_name = row.DocName
                 
                 with open(file_path,'r') as f:
                     data = f.read()
                 
-                data_out = {"UserId":user_id, "DocId":docid, "Version":doc_ver, "DocText":data}
+                data_out = {"UserId":user_id, "DocId":docid, "DocName":doc_name, "Version":doc_ver, "DocText":data}
                 mess_out = 200
         except:
             data_out = {"message":"Unknown Exception caught. Check logs"}
