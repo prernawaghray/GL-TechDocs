@@ -74,7 +74,7 @@ In the appendix, the API as well as the format of custom macro definitions in Ja
     axios.post(getApiUrl('filecreate'),documentObject).then(function(response){
       documentObject.DocId=response.data.DocId;
     }).catch(function(error){
-      showSyncStatus('bug-fill','Error Creating File',false);
+      showSyncStatus('bug-fill','Error Creating File',false,true);
     });
 
 
