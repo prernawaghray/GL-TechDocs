@@ -1,7 +1,15 @@
-
+$(document).ready( function() {
+  $('table tr').click( function getdocid() {
+      index = $(this).index();
+      doc_id = data.Documents[index].DocId;
+      return doc_id;
+  }); 
+});
 
 $(document).ready(function () {
+  
 window.onload = function getfilelist() {
+  var documentURL = getFrontEndUrl('/latex-editor/'+data.Documents[i].DocId);
     try {
         $.ajax({
             headers: {'authToken': getUserToken()},
@@ -17,7 +25,7 @@ window.onload = function getfilelist() {
                       for(var i=0;i<len;i++){
                           if(data.Documents[i].DocName || data.Documents[i].Version || data.Documents[i].LastModifiedOn || data.Documents[i].LastModifiedBy){
                               txt += '<tr><td><input type="checkbox" class="case">'+"</td><td>"+
-                              '<a onclick="window.location.href='+"'{{url_for"+"('latexEditor',"+"id='doc_id')}}'"+'"'+ JSON.parse(JSON.stringify(data.Documents[i].DocName))+"</a>" +"</td><td>"+
+                              '<a onclick="window.location.href=\''+documentURL+' \'">'+data.Documents[i].DocName+'</a>'+"</td><td>"+
                               data.Documents[i].Version+ 
                               "</td><td>"+data.Documents[i].LastModifiedOn+"</td><td>"+data.Documents[i].LastModifiedBy + "</td>" +
                               '<td>' +
@@ -46,13 +54,7 @@ window.onload = function getfilelist() {
                       }
                       if(txt != ""){
                           $("#tbody").append(txt).removeClass("hidden");
-                          $(document).ready( function() {
-                            $('table tr').click( function getdocid() {
-                                index = $(this).index();
-                                doc_id = data.Documents[index].DocId;
-                                return doc_id;
-                            }); 
-                          });
+                          
                           // Add multiple select / deselect functionality
                           $("#selectall").click(function () {
                             $('.case').attr('checked', this.checked);
@@ -115,7 +117,7 @@ document.querySelector('#search').addEventListener('keyup', filterTable, false);
 
 // Rename file
 $("#renamefile").click(function renamefile() {
-  getdocid();
+  
   try {
       $.ajax({
           headers: {'authToken': getUserToken()},
@@ -142,7 +144,7 @@ $("#renamefile").click(function renamefile() {
 //Move to trash
 
 $("#delete").click(function trashfile() {
-  getdocid();
+ 
   try {
     $.ajax({
         headers: {'authToken': getUserToken()},
