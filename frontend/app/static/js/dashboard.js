@@ -115,7 +115,7 @@ document.querySelector('#search').addEventListener('keyup', filterTable, false);
 
 // Rename file
 $("#renamefile").click(function renamefile() {
-  getdocid();
+  
   try {
       $.ajax({
           headers: {'authToken': getUserToken()},
@@ -142,7 +142,7 @@ $("#renamefile").click(function renamefile() {
 //Move to trash
 
 $("#delete").click(function trashfile() {
-  getdocid();
+ 
   try {
     $.ajax({
         headers: {'authToken': getUserToken()},
