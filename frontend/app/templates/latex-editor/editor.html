@@ -52,7 +52,7 @@ In the appendix, the API as well as the format of custom macro definitions in Ja
 
     window.$editor=document.getElementById('editor-text');
     window.$htmlPreview=document.getElementById('html-preview');
-   
+    documentObject.DocText=$editor.textContent;
 
     $editor.addEventListener('keyup',_.debounce(function(event){
       generateHTMLContent('preview');
@@ -67,23 +67,30 @@ In the appendix, the API as well as the format of custom macro definitions in Ja
    
    
    if(documentObject.DocId==0 && documentObject.DocText!=''){
-    showSyncStatus('arrow-repeat','Creating New File ...',true);
-    // CREATE NEW FILE 
-    //http://techdocs-api.previewbox.in/api/filecreate
-    
-    axios.post(getApiUrl('filecreate'),documentObject).then(function(response){
-      documentObject.DocId=response.data.DocId;
-    }).catch(function(error){
-      showSyncStatus('bug-fill','Error Creating File',false,true);
-      
-    });
+        showSyncStatus('arrow-repeat','Creating New File ...',true);
+        // CREATE NEW FILE 
+        //http://techdocs-api.previewbox.in/api/filecreate
+
+        axios.post(getApiUrl('filecreate'),documentObject).then(function(response){
+          documentObject.DocId=response.data.DocId;
+        }).catch(function(error){
+          showSyncStatus('bug-fill','Error While Creating File',false,true);
+          
+        });
 
 
    }
    else if(documentObject.DocId!=0){
-    showSyncStatus('arrow-repeat','Updating ...',true);
-    // UPDATE FILE 
-    //http://techdocs-api.previewbox.in/api/filemodify
+        showSyncStatus('arrow-repeat','Updating File ...',true);
+        // UPDATE FILE 
+        //http://techdocs-api.previewbox.in/api/filemodify
+
+        axios.post(getApiUrl('filemodify'),documentObject).then(function(response){
+          documentObject.DocId=response.data.DocId;
+        }).catch(function(error){
+          showSyncStatus('bug-fill','Error While Updating File',false,true);
+          
+        });
    }
  
     
