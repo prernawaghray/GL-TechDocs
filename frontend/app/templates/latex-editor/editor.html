@@ -73,6 +73,7 @@ In the appendix, the API as well as the format of custom macro definitions in Ja
 
         axios.post(getApiUrl('filecreate'),documentObject).then(function(response){
           documentObject.DocId=response.data.DocId;
+          showSyncStatus('check','New Document Created',false,false);
         }).catch(function(error){
           showSyncStatus('bug-fill','Error While Creating File',false,true);
           
@@ -87,6 +88,7 @@ In the appendix, the API as well as the format of custom macro definitions in Ja
 
         axios.post(getApiUrl('filemodify'),documentObject).then(function(response){
           documentObject.DocId=response.data.DocId;
+          showSyncStatus('check','File Updated',false,false);
         }).catch(function(error){
           showSyncStatus('bug-fill','Error While Updating File',false,true);
           
