@@ -15,7 +15,7 @@ from sqlalchemy import create_engine, select, update, delete
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from DBConnect import session_factory
-from orm_Tables import Document, Permission, DocumentHistory, UserHistory
+from orm_Tables import Document, Permission, DocumentHistory, UserHistory, User
 from flask import Flask, render_template, url_for, redirect, session, flash, request, jsonify, json, make_response
 from flask import Blueprint
 from flask import current_app
@@ -115,6 +115,7 @@ def file_Create(user_id):
     reffilepath = ''
     data_out    = {}
     mess_out    = 0
+    username    = ''
     # data_path, log_path = before_request_func()
 
     current_app.logger.info("Service File Create initiated")
@@ -150,6 +151,13 @@ def file_Create(user_id):
             noofrecords = len(sql_result.all())
             if (noofrecords > 0):
                 raise Exception("Wrong service called. Document name already exists with the user. Try using /api/filemodify service instead")
+            
+            # dry run testing - request from front end people to send out username instead of userid
+            sql_stmt = (select(User.UserName).where(User.UserId == userid))
+            sql_result = session.execute(sql_stmt)
+            # there is always only 1 row
+            for row in sql_result:
+                username = row[0]
             
             # Method to create a new file path - object will store the values of filename, file path
             ver_obj.createNewVersionFile(userid, docname, ver, '')
@@ -201,7 +209,7 @@ def file_Create(user_id):
             
             session.close()
             # building output data
-            data_out = {"UserId":userid, "DocId":docid_out, "DocName":docname, "DocText":doctext, "Filepath": newfilepath}
+            data_out = {"UserId":username, "DocId":docid_out, "DocName":docname, "DocText":doctext, "Filepath": newfilepath}
             mess_out = 200
         except Exception as err:
             data_out = {"message":str(err)}
@@ -242,6 +250,7 @@ def file_Modify(user_id):
         sql_stmt    = ''
         newfilepath = ''
         ver         = 0
+        username    = ''
         
         # open db connection
         session  = session_factory()
@@ -296,12 +305,19 @@ def file_Modify(user_id):
                     newfilepath = ver_obj.v_file_path
                     docname     = ver_obj.v_file_name
                     
+                    # dry run testing - request from front end people to send out username instead of userid
+                    sql_stmt = (select(User.UserName).where(User.UserId == userid))
+                    sql_result = session.execute(sql_stmt)
+                    # there is always only 1 row
+                    for row in sql_result:
+                        username = row[0]
+                    
                     # UPDATES
                     mod_date = datetime.today()
                     # update Documents table with the latest version
                     sql_stmt = update(Document)\
                         .where(Document.DocId == docid)\
-                        .values({Document.FilePath:newfilepath, Document.Version:ver, Document.ModifiedDate:mod_date, Document.ModifiedBy:userid})
+                        .values({Document.FilePath:newfilepath, Document.Version:ver, Document.ModifiedDate:mod_date, Document.ModifiedBy:username})
                     session.execute(sql_stmt)
                     session.commit()
                 else:
@@ -323,7 +339,7 @@ def file_Modify(user_id):
             session.close()
 
             # building output data
-            data_out = {"UserId":userid, "DocId":docid, "DocName":docname, "DocText":doctext, "Filepath": newfilepath}
+            data_out = {"UserId":username, "DocId":docid, "DocName":docname, "DocText":doctext, "Filepath": newfilepath}
             mess_out = 200
         except Exception as err:
             data_out = {"message":str(err)}
@@ -363,6 +379,7 @@ def file_Rename(user_id):
         ver         = 0
         oldfilepath = ''
         newfilepath = ''
+        username    = ''
         
         # open db connection
         session  = session_factory()
@@ -397,6 +414,13 @@ def file_Rename(user_id):
                     file_obj.createNewVersion(ver_row)
                     ver = file_obj.v_version
                 
+                # dry run testing - request from front end people to send out username instead of userid
+                sql_stmt = (select(User.UserName).where(User.UserId == userid))
+                sql_result = session.execute(sql_stmt)
+                # there is always only 1 row
+                for row in sql_result:
+                    username = row[0]
+                
                 # create a new file with new version
                 ver_obj.createNewVersionFile(userid, docname, ver, '')
                 newfilepath = ver_obj.v_file_path
@@ -411,7 +435,7 @@ def file_Rename(user_id):
                 # update Documents table with the latest file name, document version and so on
                 sql_stmt = update(Document)\
                     .where(Document.DocId == docid)\
-                    .values({Document.DocName:docname, Document.Version:ver, Document.ModifiedDate:mod_date, Document.ModifiedBy:userid})
+                    .values({Document.DocName:docname, Document.Version:ver, Document.ModifiedDate:mod_date, Document.ModifiedBy:username})
                 session.execute(sql_stmt)
                 session.commit()
                 #entry into DocumentHistory table
@@ -449,7 +473,7 @@ def file_Rename(user_id):
                 #     docname = docname[:index]
             
                 # building output data
-                data_out = {"UserId":userid, "DocId":docid, "DocName":docname}
+                data_out = {"UserId":username, "DocId":docid, "DocName":docname}
                 mess_out = 200
         except Exception as err:
             data_out = {"message":str(err)}
@@ -578,6 +602,7 @@ def file_view(user_id):
     if(request.method == "POST"):
         content = request.get_json(silent=True)
         docid   = int(content['DocId'])
+        username = ''
 
         userperm = get_user_permissions(userid, docid)
         try:
@@ -593,10 +618,17 @@ def file_view(user_id):
                     doc_ver = row.Version
                     doc_name = row.DocName
                 
+                # dry run testing - request from front end people to send out username instead of userid
+                sql_stmt = (select(User.UserName).where(User.UserId == userid))
+                sql_result = session.execute(sql_stmt)
+                # there is always only 1 row
+                for row in sql_result:
+                    username = row[0]
+                
                 with open(file_path,'r') as f:
                     data = f.read()
                 
-                data_out = {"UserId":user_id, "DocId":docid, "DocName":doc_name, "Version":doc_ver, "DocText":data}
+                data_out = {"UserId":username, "DocId":docid, "DocName":doc_name, "Version":doc_ver, "DocText":data}
                 mess_out = 200
         except:
             data_out = {"message":"Unknown Exception caught. Check logs"}
