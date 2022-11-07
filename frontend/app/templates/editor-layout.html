@@ -25,6 +25,10 @@
     .nav-link{
       cursor: pointer;
     }
+    .assets-menu li a{
+      padding:12px;
+    }
+    .assets-menu li{margin-bottom:1px;}
   </style>
   {% block pageCss %}{% endblock%}
 {% endblock %}
@@ -98,11 +102,21 @@
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
   </div>
   <div class="offcanvas-body">
-    <div>
+    <button class="btn btn-outline-secondary btn-sm">Upload A File</button>
+    <div class="border-top mt-3">
       <ul class="assets-menu list-unstyled">
-        <li><a class="dropdown-item" href="#">Action</a></li>
-        <li><a class="dropdown-item" href="#">Another action</a></li>
-        <li><a class="dropdown-item" href="#">Something else here</a></li>
+        <li><a class="dropdown-item" href="#">
+          <div class="d-flex justify-content-between"><span>Flowchart.png</span><i class="bi bi-trash text-default"></i></div>
+        </a></li>
+
+        <li><a class="dropdown-item" href="#">
+          <div class="d-flex justify-content-between"><span>wireframes.jpg</span><i class="bi bi-trash text-default"></i></div>
+        </a></li>
+
+        <li><a class="dropdown-item" href="#">
+          <div class="d-flex justify-content-between"><span>Data-Flow.jpg</span><i class="bi bi-trash text-default"></i></div>
+        </a></li>
+
       </ul>
     </div>
   </div>
