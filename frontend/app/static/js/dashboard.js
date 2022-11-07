@@ -169,6 +169,7 @@ function permissions(DocId) {
       url: getApiUrl('set_permissions'),
       success: function(data){
         $('#shareModal_'+DocId).modal('hide');
+        alert('File shared with' + ' ' +$('#email-input_'+DocId).val());
         getfilelist();
       },
       error: function (data) {
@@ -199,6 +200,7 @@ function renamefile(DocId) {
           url: getApiUrl('filerename'),
           success: function (data) {
             $('#renameModal_'+DocId).modal('hide');
+            alert('File renamed successfully!');
             getfilelist();
           },
           error: function (data) {
