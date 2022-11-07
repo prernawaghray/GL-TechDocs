@@ -497,7 +497,7 @@ def file_Rename(user_id):
 # Input: {'UserId':''}
 # Processing: 
 # 1. Extract all input data 
-# 2. Process the request:
+# 2. Process the request
 # 3.a Get the list of active documents of the user
 # 4. Output: UserId, DocumentList
 '''
@@ -517,7 +517,7 @@ def file_GetList(user_id):
         session  = session_factory()
     
         try:
-            # check if the document exists
+            # get the documents of the user
             sql_stmt = select(Document.DocId, Document.DocName, Document.FilePath, Document.Version, Document.ModifiedDate, Document.ModifiedBy)\
                 .where(Document.UserId == userid ,Document.IsTrash == 0)
             sql_result = session.execute(sql_stmt) 
@@ -544,6 +544,62 @@ def file_GetList(user_id):
     current_app.logger.info("Service Get Document List ended")
     # return the message and data string as response
     return make_response(jsonify(data_out), mess_out)
+
+'''
+# API to get shared document list 
+## This can be to provide a list of documents shared to the user
+## This is the list of documents shared to the user by other users
+# Input: AuthToken of the user
+# Processing: 
+# 1. Extract all input data 
+# 2. Process the request
+# 3.a Get the list of active documents shared to the user
+# 4. Output: UserId, DocumentList
+'''
+@fileManagerBlueprint.route('/api/getsharedlist', methods = ['GET', 'POST'])
+@authentication
+def file_GetSharedList(user_id):
+    current_app.logger.info("Service Get Shared Document List initiated")
+    data_out = {}
+    mess_out = 0
+    docslist = []
+    
+    if(request.method == 'GET'):
+        userid = user_id
+        json_str = {}
+    
+        # open db connection
+        session  = session_factory()
+    
+        try:
+            # get the documents of the user
+            sql_result = session.query(Document.DocId, Document.DocName, Document.FilePath, Document.Version, Document.ModifiedDate, Document.ModifiedBy)\
+                .join(Permission, Document.DocId==Permission.DocId)\
+                .filter(Permission.UserId == userid, Permission.UserPermissions.isnot(None), Document.IsTrash == 0).all()
+            
+            for row in sql_result:
+                json_str = {"DocId": row.DocId, \
+                    "DocName":row.DocName , \
+                    "FilePath": row.FilePath, \
+                    "Version": row.Version, \
+                    "LastModifiedOn": row.ModifiedDate, \
+                    "LastModifiedBy": row.ModifiedBy}
+                
+                docslist.append(json_str)
+            
+            session.close()
+            # json object with array of json documents list 
+            data_out = {"Documents": docslist}
+            mess_out = 200
+        except Exception as err:
+            data_out = {"message":str(err)}
+            mess_out = 500
+            current_app.logger.exception("Failure getting the list of shared files! "+str(err))
+    
+    current_app.logger.info("Service Get Shared Document List ended")
+    # return the message and data string as response
+    return make_response(jsonify(data_out), mess_out)
+
 
 '''
 Api to delete a file
