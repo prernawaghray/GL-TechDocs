@@ -236,7 +236,7 @@ def file_Modify(user_id):
         # retrieve data inputs from the request
         content     = request.get_json(silent=True)
         userid      = user_id
-        docid       = int(content['DocId'])
+        docid       = content['DocId']
         docname     = content['DocName']
         doctext     = content['DocText']
         sql_stmt    = ''
