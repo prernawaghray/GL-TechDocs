@@ -75,8 +75,12 @@ In the appendix, the API as well as the format of custom macro definitions in Ja
         showSyncStatus('check','Document Retrived',false,false);
         if(documentObject.hasOwnProperty('DocText')){
           $($editor).text(documentObject.DocText).trigger('keyup');
+          $($('code')[0]).text(documentObject.DocText);
+          Prism.highlightAll();
+          generateHTMLContent('preview');
           //$($('pre')[0]).text(documentObject.DocText).trigger('keyup');
           $('#filename-input').val(documentObject.DocName);
+          $('#filename-input-label').text('Filename');
           $('#filename-input').prop('disabled',true);
         }
         else{
@@ -91,6 +95,7 @@ In the appendix, the API as well as the format of custom macro definitions in Ja
     }
     else if(documentObject.DocId==0){
       $('#filename-input').attr('placeholder',(template=='resume' ? 'Untitled Resume' : 'Untitled Document'));
+      $('#filename-input-label').text(template=='resume' ? 'Untitled Resume' : 'Untitled Document');
       generateHTMLContent('preview');
     }
       
