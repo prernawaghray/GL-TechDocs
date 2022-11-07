@@ -17,6 +17,8 @@ function getfilelist() {
     try {
         $.ajax({
             headers: {'authToken': getUserToken()},
+            contentType:"application/json; charset=utf-8",
+            dataType: "json",
             type: 'GET',
             url: getApiUrl('filegetlist'),
             success: function(data){
@@ -39,11 +41,11 @@ function getfilelist() {
                               "</td><td>"+data.Documents[i].LastModifiedOn+"</td><td>"+data.Documents[i].LastModifiedBy + "</td>" +
                               '<td><div class="btn-group" role="group" aria-label="ROW BTNS">' +
                               
-                              '<button type="button" id="rename" onclick="renamedata()" style="height: 25px; width: 25px; padding: 0px;" title="Rename"' +
+                              '<button type="button" id="rename" style="height: 25px; width: 25px; padding: 0px;" title="Rename"' +
                                 'data-bs-toggle="modal" data-bs-target="#renameModal_'+data.Documents[i].DocId+'" class="btn btn-outline-dark">' +
                                 '<i class="bi bi-input-cursor-text" style="font-size: 16px;"></i>' +
                               '</button>' +
-
+                            // Rename modal
                               '<div class="modal fade" id="renameModal_'+data.Documents[i].DocId+'" tabindex="1" aria-labelledby="exampleModalLabel" aria-hidden="true">'+
                               '<div class="modal-dialog">'+
                                 '<div class="modal-content">'+
@@ -67,9 +69,39 @@ function getfilelist() {
                             '</div>'+
 
                               '<button type="button" style="height: 25px; width: 25px; padding: 0px;" title="Share" data-docid="2" data-bs-toggle="modal"' + 
-                              'data-bs-target="#shareModal" title="Share" class="btn btn-outline-dark">' + 
+                              'data-bs-target="#shareModal_'+data.Documents[i].DocId+'" title="Share" class="btn btn-outline-dark">' + 
                               '<i class="bi bi-share" style="font-size: 16px;"></i>' +
                               '</button>' +
+
+                              // Share modal
+                              '<div class="modal fade" id="shareModal_'+data.Documents[i].DocId+'" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">'+
+                                '<div class="modal-dialog">'+
+                                  '<div class="modal-content">'+
+                                    '<div class="modal-header">'+
+                                      '<h1 class="modal-title fs-5" id="exampleModalLabel">Share Document</h1>'+
+                                      '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>'+
+                                    '</div>'+
+                                    '<div class="modal-body">'+
+                                      '<input type="hidden" name="docId" value="">'+
+                                      '<div class="form-floating">'+
+                                        '<input type="email" class="form-control" name="email" id="email-input_'+data.Documents[i].DocId+'" placeholder="email" required>'+
+                                        '<label for="email-input">Email address</label>'+
+                                      '</div>'+
+                                      '<select id="sel_permissions_'+data.Documents[i].DocId+'" class="form-select form-select-lg mt-3" aria-label="Default select example">'+
+                                        '<option value="read" selected="selected">Can View</option>'+
+                                        '<option value="edit">Can Edit</option>'+
+                                        '<option value="remove">Revoke Permissions</option>'+
+                                      '</select>'+
+                                    '</div>'+
+                                    '<div class="modal-footer">'+
+                                      '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>'+
+                                      '<button type="button" class="btn btn-primary" onclick="permissions('+data.Documents[i].DocId+')">Confirm</button>'+
+                                    '</div>'+
+                                  '</div>'+
+                                '</div>'+
+                              '</div>'+
+                            '</div>'+
+
 
                               '<button type="button" id="download" style="height: 25px; width: 25px; padding: 0px;" title="Download"' +
                                 'class="btn btn-outline-dark">' +
@@ -77,7 +109,7 @@ function getfilelist() {
                               '</button>' +
 
                               '<button type="button" id="archive" style="height: 25px; width: 25px; padding: 0px;" title="Archive"' +
-                                'class="btn btn-outline-dark">' +
+                                'class="btn disabled">' +
                                 '<i class="bi bi-file-earmark-zip" style="font-size: 16px;"></i>' +
                               '</button>' +
 
@@ -115,6 +147,43 @@ function getfilelist() {
 
 window.onload = getfilelist();
 
+
+// Share file
+function permissions(DocId) {
+  var e = document.getElementById("sel_permissions_"+DocId);
+  selected_perm = e.options[e.selectedIndex].value;
+  //alert(DocId);
+  //alert($('#email-input_'+DocId).val());
+  //alert(selected_perm);
+  try{
+    $.ajax({
+      //headers: {'authToken': getUserToken()},
+      contentType:"application/json; charset=utf-8",
+      dataType: "json",
+      data: JSON.stringify({
+        DocId: DocId,
+        share_email: $('#email-input_'+DocId).val(),
+        permission_type: selected_perm
+      }),
+      type: 'POST',
+      url: getApiUrl('set_permissions'),
+      success: function(data){
+        $('#shareModal_'+DocId).modal('hide');
+        getfilelist();
+      },
+      error: function (data) {
+        // in case of error we need to read response from data.responseJSON
+        showAlert('#filelist-error-message', 'alert-danger', "", getResponseMessage(data));
+        $('#shareModal_'+DocId).modal('hide');
+        getfilelist();
+      }
+    });
+}
+catch (err) {
+  console.log(err)
+}
+}
+
 // Rename file
 function renamefile(DocId) {
   try {
@@ -129,12 +198,14 @@ function renamefile(DocId) {
           type: 'POST',
           url: getApiUrl('filerename'),
           success: function (data) {
-            alert('File renamed successfully');
+            $('#renameModal_'+DocId).modal('hide');
             getfilelist();
           },
           error: function (data) {
               // in case of error we need to read response from data.responseJSON
               showAlert('#rename-error-message', 'alert-danger', "", getResponseMessage(data));
+              $('#renameModal_'+DocId).modal('hide');
+            getfilelist();
           }
       });
   }
