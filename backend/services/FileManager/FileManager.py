@@ -146,11 +146,11 @@ def file_Create(user_id):
                 raise Exception("Wrong service called. Create file is for new file only!")
             
             # validate if User and document combination exists. Error out if so
-            sql_stmt = select(Document.DocId).where(Document.DocName == docname_only and Document.UserId == userid)
+            sql_stmt = select(Document.DocId).where(Document.DocName == docname_only, Document.UserId == userid)
             sql_result = session.execute(sql_stmt)
             noofrecords = len(sql_result.all())
             if (noofrecords > 0):
-                raise Exception("Wrong service called. Document name already exists with the user. Try using /api/filemodify service instead")
+                raise Exception("filename already exists")
             
             # dry run testing - request from front end people to send out username instead of userid
             sql_stmt = (select(User.UserName).where(User.UserId == userid))
@@ -387,6 +387,13 @@ def file_Rename(user_id):
         ver_obj  = VersionManage()
         
         try:
+            sql_stmt = select(Document.DocId).where(Document.DocName == docname, Document.UserId == userid)
+            sql_result = session.execute(sql_stmt)
+            noofrecords = len(sql_result.all())
+            
+            if (noofrecords > 0):
+                raise Exception("file name already exists")
+            
             if ((docid == 0) or (docid == '')):
                 raise Exception('Document reference id not given. Cannot process!')
             
