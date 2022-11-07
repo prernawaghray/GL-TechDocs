@@ -33,7 +33,7 @@ Techdocs fronted uses a number of open source projects
 
 ## Installation
 
-### For Linux
+### For Linux [Frontend]
 ```bash
 git clone https://github.com/prernawaghray/GL-TechDocs.git
 cd GL-TechDocs/frontend
