@@ -47,6 +47,7 @@
     </button>
     <div class="input-group form-floating" id="filename-input-wrapper">
       <input type="text" class="form-control" name="filename" id="filename-input" placeholder="Filename" required>
+      <label for="filename-input" id="filename-input-label"></label>
       <span class="input-group-text" onclick="createFile()" id="save-file-name"><i class="bi bi-check"></i></span>
     </div>
     <div id="sync-status" style="font-size:11px; color:rgb(122, 122, 122);padding-left:8px;opacity:0;">
@@ -169,7 +170,7 @@
 
       $('#filename-input').on('keyup',_.debounce(function(event){
         documentObject.DocName=$('#filename-input').val();
-        saveFile();
+       // saveFile();
       },300));
 
     });
