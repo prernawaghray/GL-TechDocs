@@ -43,7 +43,8 @@ window.onload = function getfilelist() {
                               '<a class="input" onclick="window.location.href=\''+documentURL+' \'">'+data.Documents[i].DocName+'</a>'+"</td><td>"+
                               data.Documents[i].Version+ 
                               "</td><td>"+data.Documents[i].LastModifiedOn+"</td><td>"+data.Documents[i].LastModifiedBy + "</td>" +
-                              '<td>' +
+                              '<td><div class="btn-group" role="group" aria-label="ROW BTNS">' +
+                              
                               '<button type="button" id="rename" onclick="renamedata()" style="height: 25px; width: 25px; padding: 0px;" title="Rename"' +
                                 'data-bs-toggle="modal" data-bs-target="#renameModal" class="btn btn-outline-dark">' +
                                 '<i class="bi bi-input-cursor-text" style="font-size: 16px;"></i>' +
@@ -69,7 +70,7 @@ window.onload = function getfilelist() {
                                 '<i class="bi bi-trash3" style="font-size: 16px;"></i>' +
                               '</button>' +
                             
-                              "</td></tr>";
+                              "</div></td></tr>";
                           }
                       }
                       if(txt != ""){
