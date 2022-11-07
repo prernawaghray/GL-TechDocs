@@ -26,3 +26,4 @@ pyuwsgi==2.0.20
 mysql-connector-python==8.0.31
 python-dotenv==0.21.0
 timeago==1.0.16
+sentry-sdk[flask]==1.10.1

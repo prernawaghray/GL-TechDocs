@@ -6,6 +6,7 @@
 
 from distutils.log import debug
 from flask_bcrypt import Bcrypt
+import sentry_sdk
 from flask import Flask, jsonify, render_template
 import socket
 import yaml
@@ -27,7 +28,27 @@ from services.ForgotPassword.mail import mail_bp
 from services.DocumentVersionManager.DocumentVersionManager import documentVersionManagerBlueprint
 from services.UserHistoryManager.UserHistoryManager import userHistoryManagerBlueprint
 from services.RazorpayIntegration.razorPay import razorPayBlueprint
+from services.Permissions.permissions import permissions_bp
+# For logging 
+from sentry_sdk.integrations.flask import FlaskIntegration
 
+sentry_sdk.init(
+    dsn="https://4ed42bcd9de142069657a04b0db4c13a@o4504110696824832.ingest.sentry.io/4504110699118592",
+    integrations=[
+        FlaskIntegration(),
+    ],
+
+    # Set traces_sample_rate to 1.0 to capture 100%
+    # of transactions for performance monitoring.
+    # We recommend adjusting this value in production.
+    traces_sample_rate=1.0,
+
+    # By default the SDK will try to use the SENTRY_RELEASE
+    # environment variable, or infer a git commit
+    # SHA as release, however you may want to set
+    # something more human-readable.
+    # release="myapp@1.0.0",
+)
 
 app= Flask(__name__)
 CORS(app, resources={r"/*":{"origins":"*"}})
@@ -46,6 +67,7 @@ app.register_blueprint(forgotpassword_bp)
 app.register_blueprint(changepassword_bp)
 app.register_blueprint(mail_bp)
 app.register_blueprint(razorPayBlueprint)
+app.register_blueprint(permissions_bp)
 
 # This function get the hostname and IP deatils of server, required for microservices
 def fetchDetails():

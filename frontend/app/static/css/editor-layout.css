@@ -137,8 +137,18 @@ html {
     .re-flex .item:last-child{
       margin-left:0px;
     }
+    #filename-input-wrapper{
+      width: 100%;
+      margin-top: 5px;
+    }
+    #sync-status{
+      margin-top:5px;
+    }
   }
 
+  #filename-input-wrapper{
+    max-width:450px;
+  }
   .assets-menu li a{
     padding:5px;
     background-color: aliceblue;

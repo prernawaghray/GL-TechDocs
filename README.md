@@ -32,15 +32,21 @@ Techdocs fronted uses a number of open source projects
 - [LatexJS] - JS Library to preview latex document
 
 ## Installation
-```bash
-
-```
 
 ### For Linux
 ```bash
+git clone https://github.com/prernawaghray/GL-TechDocs.git
+cd GL-TechDocs/frontend
 
+# Check the code in start.sh and make sure if port is 56733 for dev purpose and 80/443 for production purpose
+sudo bash start.sh
+
+# Docker container[techdocs-frontend] will be built & it will run. Get into docker and install node packages
+docker exec -it techdocs-frontend bash
+npm install
+exit
 ```
-
+Check http://localhost:56733 in the browser.
 ### For Windows
 ```bash
 
