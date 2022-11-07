@@ -204,7 +204,7 @@ def file_Create(user_id):
             data_out = {"UserId":userid, "DocId":docid_out, "DocName":docname, "DocText":doctext, "Filepath": newfilepath}
             mess_out = 200
         except Exception as err:
-            data_out = {"message":"Unknown Exception caught. Check logs"}
+            data_out = {"message":str(err)}
             mess_out = 500
             current_app.logger.exception("Failure Creating File! "+str(err))
     
@@ -259,17 +259,25 @@ def file_Modify(user_id):
             
             # DocId not found so create a new file & save - mostly save operation
             if (noofrecords == 0):
-                ver = 1
-                ver_obj.createNewVersionFile(userid, docname, ver, '')
-                newfilepath = ver_obj.v_file_path
-                docname     = ver_obj.v_file_name
+                error_desc = 'Document cannot be retrieved with the given DocId: '+str(docid)+'. Cannot process!'
+                raise Exception(error_desc)
+                # ver = 1
+                # ver_obj.createNewVersionFile(userid, docname, ver, '')
+                # newfilepath = ver_obj.v_file_path
+                # docname     = ver_obj.v_file_name
                 
-                # entry into Documents table
-                doc_entry = Document(userid, docname, newfilepath, datetime.today(), ver, 'N')
-                session.add(doc_entry)
-                session.flush()
-                docid = doc_entry.DocId
-                session.commit()
+                # # entry into Documents table
+                # doc_entry = Document(userid, docname, newfilepath, datetime.today(), ver, 0, 0)
+                # session.add(doc_entry)
+                # session.flush()
+                # docid = doc_entry.DocId
+                # session.commit()
+                
+                # # entry into permissions table
+                # perm_entry = Permission(docid, userid, 'WRASD') #(W)rite/(R)ead/(A)nalytics/(S)hare/(D)elete
+                # session.add(perm_entry)
+                # session.flush()
+                # session.commit()
             # Continue either updating or saving the file
             else:
                 userperm = get_user_permissions(userid, docid)
@@ -318,7 +326,7 @@ def file_Modify(user_id):
             data_out = {"UserId":userid, "DocId":docid, "DocName":docname, "DocText":doctext, "Filepath": newfilepath}
             mess_out = 200
         except Exception as err:
-            data_out = {"message":"Unknown Exception caught. Check logs"}
+            data_out = {"message":str(err)}
             mess_out = 500
             current_app.logger.exception("Failure Modifying file! "+str(err))
     
@@ -444,7 +452,7 @@ def file_Rename(user_id):
                 data_out = {"UserId":userid, "DocId":docid, "DocName":docname}
                 mess_out = 200
         except Exception as err:
-            data_out = {"message":"Unknown Exception caught. Check logs"}
+            data_out = {"message":str(err)}
             mess_out = 500
             current_app.logger.exception("Failure Renaming file! "+str(err))
     
@@ -498,7 +506,7 @@ def file_GetList(user_id):
             data_out = {"Documents": docslist}
             mess_out = 200
         except Exception as err:
-            data_out = {"message":"Unknown Exception caught. Check logs"}
+            data_out = {"message":str(err)}
             mess_out = 500
             current_app.logger.exception("Failure getting the list of files! "+str(err))
     
@@ -550,8 +558,8 @@ def file_delete(user_id):
                 mess_out=200
             else:
                 raise Exception("Access to delete denied!")
-        except Exception:
-            data_out = {"message":"Unknown Exception caught. Check logs"}
+        except Exception as err:
+            data_out = {"message":str(err)}
             mess_out=500
             current_app.logger.exception("Failure deleting file!")
     current_app.logger.info("Service file/delete ended")
@@ -575,7 +583,7 @@ def file_view(user_id):
         try:
             if('R' in userperm[0]):
                 session = session_factory()
-                sql_stmt = (select(Document.FilePath, Document.Version).where(Document.DocId==docid))
+                sql_stmt = (select(Document.FilePath, Document.DocName, Document.Version).where(Document.DocId==docid))
                 result = session.execute(sql_stmt)
                 session.close()
 
@@ -583,11 +591,12 @@ def file_view(user_id):
                 for row in result:
                     file_path = row.FilePath
                     doc_ver = row.Version
+                    doc_name = row.DocName
                 
                 with open(file_path,'r') as f:
                     data = f.read()
                 
-                data_out = {"UserId":user_id, "DocId":docid, "Version":doc_ver, "DocText":data}
+                data_out = {"UserId":user_id, "DocId":docid, "DocName":doc_name, "Version":doc_ver, "DocText":data}
                 mess_out = 200
         except:
             data_out = {"message":"Unknown Exception caught. Check logs"}
@@ -625,8 +634,8 @@ def file_trash(user_id):
             else:
                 raise Exception("Permission to move to trash denied!")
             #return jsonify(message = "File moved to trash successfully")
-        except Exception:
-            data_out = {"message":"fail"}
+        except Exception as err:
+            data_out = {"message":str(err)}
             #return jsonify(message='Oops! Something went wrong')
             mess_out = 500
             current_app.logger.exception("Failure moving file to trash!")
@@ -663,9 +672,9 @@ def file_retrive(user_id):
             else:
                 raise Exception("Permission to retrieve from trash denied!")
             #return jsonify(message = "File moved to trash successfully")
-        except Exception:
+        except Exception as err:
             #return jsonify(message='Oops! Something went wrong')
-            data_out = {"message":"fail"}
+            data_out = {"message":str(err)}
             mess_out = 500
             current_app.logger.exception("Failure retrieving file from trash!")
 
@@ -697,7 +706,7 @@ def gettrashlist(user_id):
             data_out = {"Documents": trashlist}
             mess_out = 200
         except Exception as err:
-            data_out = {"message":"Unknown Exception caught. Check logs"}
+            data_out = {"message":str(err)}
             mess_out = 500
             current_app.logger.exception("Failure getting the list of files! "+str(err))
     else:

@@ -1,8 +1,28 @@
+const links = document.querySelectorAll('.nav-link');
+    
+if (links.length) {
+  links.forEach((link) => {
+    link.addEventListener('click', (e) => {
+      links.forEach((link) => {
+          link.classList.remove('active');
+      });
+      e.preventDefault();
+      link.classList.add('active');
+    });
+  });
+}
+$(document).ready( function() {
+  $('table tr').click( function getdocid() {
+      index = $(this).index();
+      doc_id = data.Documents[index].DocId;
+      return doc_id;
+  }); 
+});
 
-
-var doc_data = [];
 $(document).ready(function () {
+  
 window.onload = function getfilelist() {
+  
     try {
         $.ajax({
             headers: {'authToken': getUserToken()},
@@ -11,15 +31,20 @@ window.onload = function getfilelist() {
             success: function(data){
               doc_data = JSON.stringify(data); 
               if(data){
-                  var len = Object.keys(data).length;
+                  var len = Object.keys(data.Documents).length;
                   var txt = "";
+                  //getdocid();
                   if(len > 0){
                       for(var i=0;i<len;i++){
+                        var documentURL = getFrontEndUrl('latex-editor/'+data.Documents[i].DocId);
+                  
                           if(data.Documents[i].DocName || data.Documents[i].Version || data.Documents[i].LastModifiedOn || data.Documents[i].LastModifiedBy){
-                              txt += '<tr><td><input type="checkbox" class="case">'+"</td><td>"+JSON.parse(JSON.stringify(data.Documents[i].DocName))+"</td><td>"+data.Documents[i].Version+ 
+                              txt += '<tr><td><input type="checkbox" class="case">'+"</td><td>"+
+                              '<a class="input" onclick="window.location.href=\''+documentURL+' \'">'+data.Documents[i].DocName+'</a>'+"</td><td>"+
+                              data.Documents[i].Version+ 
                               "</td><td>"+data.Documents[i].LastModifiedOn+"</td><td>"+data.Documents[i].LastModifiedBy + "</td>" +
                               '<td>' +
-                              '<button type="button" id="rename" onclick="renamedata()" style="height: 25px; width: 25px; padding: 0px;" title="Rename" data-docid="2"' +
+                              '<button type="button" id="rename" onclick="renamedata()" style="height: 25px; width: 25px; padding: 0px;" title="Rename"' +
                                 'data-bs-toggle="modal" data-bs-target="#renameModal" class="btn btn-outline-dark">' +
                                 '<i class="bi bi-input-cursor-text" style="font-size: 16px;"></i>' +
                               '</button>' +
@@ -29,12 +54,17 @@ window.onload = function getfilelist() {
                               '<i class="bi bi-share" style="font-size: 16px;"></i>' +
                               '</button>' +
 
-                              '<button type="button" style="height: 25px; width: 25px; padding: 0px;" title="Download"' +
+                              '<button type="button" id="download" style="height: 25px; width: 25px; padding: 0px;" title="Download"' +
                                 'class="btn btn-outline-dark">' +
                                 '<i class="bi bi-download" style="font-size: 16px;"></i>' +
                               '</button>' +
 
-                              '<button type="button" id="delete" onclick="deletedata()" style="height: 25px; width: 25px; padding: 0px;" title="Move to Trash" data-docid="2"' +
+                              '<button type="button" id="archive" style="height: 25px; width: 25px; padding: 0px;" title="Archive"' +
+                                'class="btn btn-outline-dark">' +
+                                '<i class="bi bi-file-earmark-zip" style="font-size: 16px;"></i>' +
+                              '</button>' +
+
+                              '<button type="button" id="delete" onclick="deletedata()" style="height: 25px; width: 25px; padding: 0px;" title="Move to Trash"' +
                                 'data-bs-toggle="modal" data-bs-target="#delModal" class="btn btn-outline-dark">' +
                                 '<i class="bi bi-trash3" style="font-size: 16px;"></i>' +
                               '</button>' +
@@ -44,7 +74,7 @@ window.onload = function getfilelist() {
                       }
                       if(txt != ""){
                           $("#tbody").append(txt).removeClass("hidden");
-
+                          
                           // Add multiple select / deselect functionality
                           $("#selectall").click(function () {
                             $('.case').attr('checked', this.checked);
@@ -64,6 +94,8 @@ window.onload = function getfilelist() {
         console.log(err)
     }
 }
+
+// Search functionality
 function filterTable(event) {
   let filter = event.target.value.trim().toLowerCase();
   let rows = document.querySelector('#table tbody').rows;
@@ -105,12 +137,13 @@ document.querySelector('#search').addEventListener('keyup', filterTable, false);
 
 // Rename file
 $("#renamefile").click(function renamefile() {
+  
   try {
       $.ajax({
           headers: {'authToken': getUserToken()},
           data: {
-            DocId: doc_data.Documents[$("#tbody").$(this).index()].DocId,
-            DocName: $('#rename').val()
+            DocId: doc_id,
+            DocName: $('#name').val()
           },
           type: 'POST',
           url: getApiUrl('filerename'),
@@ -130,12 +163,13 @@ $("#renamefile").click(function renamefile() {
 
 //Move to trash
 
-$("#delete").click(function trashfile() {
+/* $("#delete").click(function trashfile() {
+ 
   try {
     $.ajax({
         headers: {'authToken': getUserToken()},
         data: {
-          DocId: doc_data.Documents[$("#tbody").$(this).index()].DocId,
+          DocId: doc_id
         },
         type: 'POST',
         url: getApiUrl('filetrash'),
@@ -151,5 +185,25 @@ $("#delete").click(function trashfile() {
 catch (err) {
     console.log(err)
 }
-})
+}) */
           
+//Get Trash List
+$('#trashed').click( function trashlist() {
+  try {
+    $.ajax({
+        headers: {'authToken': getUserToken()},
+        type: 'GET',
+        url: getApiUrl('getTrashList'),
+        success: function(data){
+
+        },
+        error: function (data) {
+            // in case of error we need to read response from data.responseJSON
+            showAlert('#filelist-error-message', 'alert-danger', "", getResponseMessage(data));
+        }
+    });
+}
+catch (err) {
+    console.log(err)
+}
+})

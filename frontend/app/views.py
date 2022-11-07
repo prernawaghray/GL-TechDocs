@@ -1,7 +1,6 @@
 from flask import render_template, request, url_for,session 
-from flask import make_response, redirect, abort
-from app import app, oauth
-from flask import jsonify
+from flask import make_response, redirect
+from app import app
 
 
 
@@ -39,29 +38,6 @@ def login():
    if request.method != 'POST':
       return render_template('login/login.html') 
 
-   if request.form['login_method'] == 'google':
-        redirect_uri = url_for('auth', _external=True)
-        return oauth.google.authorize_redirect(redirect_uri)
-
-   elif request.form['login_method'] == 'email' and \
-      request.form['email'] == 'admin@techdocs.com' and \
-      request.form['password'] == 'admin123':
-         # response = jsonify({"status": "false", "message":" User not registered "})
-         # if response.status:
-      session['user'] = {'email':request.form['email']}
-      return redirect('/dashboard')
-   else:
-      return make_response({'email_status':0}, 401)
-
-
-   
-'''Google Authorization URL'''
-@app.route('/auth')
-def auth():
-   token = oauth.google.authorize_access_token()
-   session['user'] = token['userinfo']
-   # session['user'] = {'email': token['userinfo']['email']}
-   return redirect('/dashboard')
 
 
 @app.route('/forgotpassword')
@@ -105,8 +81,7 @@ def doregistration():
 # @login_required
 def latexEditor(id=0):
    args = request.args
-   doc = fetchDocument(id,args)
-   return render_template('latex-editor/editor.html',doc_id=id,params=args,document=doc)
+   return render_template('latex-editor/editor.html',doc_id=id,params=args)
 
 @app.route('/plans')
 def plans():
@@ -160,7 +135,7 @@ def faq():
 def payments_summary():
    return render_template('payments/summary.html')
 
-@app.route('/user-plans')
+@app.route('/user_plans')
 def user_plans():
    return render_template('plans-and-subscriptions/user-plan.html')
 
@@ -168,17 +143,3 @@ def user_plans():
 # @login_required
 def latexHistory():
    return render_template('latex-history/history.html')
-
-def fetchDocument(id,params):
-   document = {}
-   if id=='new-document' :
-      title=  'Untitled Resume' if params['template']=='resume' else 'Untitled Document'
-      document = {
-         "DocId": 0,
-         "DocName": title,
-         "DocText":"",
-         "IsUpload":0,
-         "RefDocId":0
-      }
-      
-   return document
