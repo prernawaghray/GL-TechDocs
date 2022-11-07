@@ -104,7 +104,7 @@ function getfilelist() {
 
 
                               '<button type="button" id="download" style="height: 25px; width: 25px; padding: 0px;" title="Download"' +
-                                'class="btn btn-outline-dark">' +
+                                'class="btn disabled">' +
                                 '<i class="bi bi-download" style="font-size: 16px;"></i>' +
                               '</button>' +
 
