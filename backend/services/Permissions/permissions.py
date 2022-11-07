@@ -56,7 +56,7 @@ def set_permissions(user_id):
     else:
         return jsonify(message="User already has the (RWD) permission")
 
-    if 'S' in get_user_permissions(user_id, doc_id)[0]:
+    if 'S' in get_user_permissions(user_id, doc_id):
         if permission_type == "edit":
             edit_permissions(share_user_id, doc_id)
         elif permission_type is "read":
