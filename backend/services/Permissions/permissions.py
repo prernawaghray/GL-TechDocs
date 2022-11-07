@@ -13,6 +13,7 @@ from sqlalchemy import create_engine, select, update, delete
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from DBConnect import session_factory
+from orm_Tables import Permission
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 env = os.path.join(basedir,'../.env.local')
@@ -45,11 +46,11 @@ def set_permissions(user_id):
     doc_id = content['DocId']
     permission_type = content['permission_type']
     share_user_id = get_user_id(share_email)
+    share_user_id = share_user_id
     sql_query_1 = text("""SELECT PermissionId FROM Permissions WHERE UserId=:UID and DocId=:DID""")
     param_1 = {"UID": share_user_id, "DID": doc_id}
     permission_id = connect.execute(sql_query_1, **param_1).first()
     if permission_id is None:
-        #insert into tabler(asdf,daf) values (123, 123)
         sql_query_2 = text("""INSERT into Permissions(UserId,DocId) values (:UID,:DID)""")
         connect.execute(sql_query_2,**param_1)
     else:
@@ -458,18 +459,24 @@ def set_analytics_others_permission(user_id, doc_id):
 
 # functions to get the permissions
 def get_user_permissions(user_id, doc_id):
+    session = session_factory()
+    userid = user_id
     '''
         This function takes user_id and doc_id fields from the Permissions table as its input arguments
         and queries the PermissionId and UserPermissions details.
         This function returns the UserPermissions set to the user.
     '''
-    sql_query_1 = text("""SELECT PermissionId FROM Permissions WHERE UserId=:UID and DocId=:DID""")
-    param_1 = {"UID": user_id, "DID": doc_id}
-    permission_id = connect.execute(sql_query_1, **param_1).first()
-    sql_query_2 = text("""SELECT UserPermissions from Permissions WHERE PermissionId=:PID""")
-    param_2 = {"PID": permission_id[0]}
-    user_permission = connect.execute(sql_query_2, **param_2).first()
-    return list(user_permission)
+    # sql_query_1 = text("""SELECT PermissionId FROM Permissions WHERE UserId=:UID and DocId=:DID""")
+    # param_1 = {"UID": userid, "DID": doc_id}
+    # permission_id = connect.execute(sql_query_1, **param_1).first()
+    # sql_query_2 = text("""SELECT UserPermissions from Permissions WHERE PermissionId=:PID""")
+    # param_2 = {"PID": permission_id[0]}
+    # user_permission = connect.execute(sql_query_2, **param_2).first()
+    # return list(user_permission)
+    sql_stmt = (select (Permission.UserPermissions).where(Permission.UserId == userid and Permission.DocId == doc_id))
+    user_permissions = session.execute(sql_stmt).first()[0]
+    return list(user_permissions)
+
 
 
 def get_group_permissions(user_id, doc_id):
