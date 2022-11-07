@@ -55,16 +55,18 @@ def set_permissions(user_id):
         connect.execute(sql_query_2,**param_1)
     else:
         return jsonify(message="User already has the (RWD) permission")
-
-    if 'S' in get_user_permissions(user_id, doc_id)[0]:
-        if permission_type == "edit":
-            edit_permissions(share_user_id, doc_id)
-        elif permission_type is "read":
-            set_read_user_permission(share_user_id, doc_id)
-        elif permission_type is "remove":
-            remove_permissions(share_user_id, doc_id)
-    else:
-        return jsonify(message="Failed! Operation not allowed!")
+    try: 
+        if 'S' in get_user_permissions(user_id, doc_id):
+            if permission_type == "edit":
+                edit_permissions(share_user_id, doc_id)
+            elif permission_type is "read":
+                set_read_user_permission(share_user_id, doc_id)
+            elif permission_type is "remove":
+                remove_permissions(share_user_id, doc_id)
+    except Exception as err:
+            data_out = {"message":"no share permission"}
+            mess_out = 500
+            return jsonify(data_out, mess_out)
     return jsonify(message="Success, permission (RWD) added to the user")
 
 
