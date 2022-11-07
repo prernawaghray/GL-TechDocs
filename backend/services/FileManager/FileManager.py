@@ -282,7 +282,7 @@ def file_Modify(user_id):
             else:
                 userperm = get_user_permissions(userid, docid)
                 # User has write permission
-                if 'W' in userperm[0]:
+                if 'W' in userperm:
                     # get and create a new version for the document
                     sql_stmt = (select(Document.Version).where(Document.DocId == docid))
                     sql_result = session.execute(sql_stmt)
@@ -375,7 +375,7 @@ def file_Rename(user_id):
             
             userperm = get_user_permissions(userid, docid)
             # User has write permission
-            if 'W' not in userperm[0]:
+            if 'W' not in userperm:
                 raise Exception('Uesr does not have Write access. Cannot process to rename!')
             
             # check if the document exists
@@ -534,7 +534,7 @@ def file_delete(user_id):
         
         userperm = get_user_permissions(userid, docid)
         try:
-            if 'D' in userperm[0]:
+            if 'D' in userperm:
                 session = session_factory()
                 file_paths_stmt = (select(DocumentHistory.FilePath).where(DocumentHistory.DocId == docid))
                 file_paths = session.execute(file_paths_stmt).all()
@@ -581,7 +581,7 @@ def file_view(user_id):
 
         userperm = get_user_permissions(userid, docid)
         try:
-            if('R' in userperm[0]):
+            if('R' in userperm):
                 session = session_factory()
                 sql_stmt = (select(Document.FilePath, Document.DocName, Document.Version).where(Document.DocId==docid))
                 result = session.execute(sql_stmt)
@@ -619,7 +619,7 @@ def file_trash(user_id):
         
         try:
             userperm = get_user_permissions(userid, docid)
-            if ('W' in userperm[0]):
+            if ('W' in userperm):
                 session = session_factory()
                 sql_stmt=update(Document).where(Document.DocId == docid) .values(IsTrash=1)
                 sql_stmt_2 = update(DocumentHistory).where(DocumentHistory.DocId == docid).values(IsTrash = 1)
@@ -659,7 +659,7 @@ def file_retrive(user_id):
          
         try:
             userperm = get_user_permissions(userid, docid)
-            if ('W' in userperm[0]):
+            if ('W' in userperm):
                 session = session_factory()
                 sql_stmt=update(Document).where(Document.DocId == docid) .values(IsTrash=0)
                 sql_stmt_2 = update(DocumentHistory).where(DocumentHistory.DocId == docid).values(IsTrash = 0)
