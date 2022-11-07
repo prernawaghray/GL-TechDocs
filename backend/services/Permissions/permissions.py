@@ -54,14 +54,23 @@ def set_permissions(user_id):
         if permission_id is None:
             sql_query_2 = text("""INSERT into Permissions(UserId,DocId) values (:UID,:DID)""")
             connect.execute(sql_query_2,**param_1)
-        else:
-            return jsonify(message="User already has the (RWD) permission")
+        
     try: 
+        
         if 'S' in get_user_permissions(user_id, doc_id):
             if permission_type == "edit":
-                edit_permissions(share_user_id, doc_id)
+                # edit_permissions(share_user_id, doc_id)
+                sql_stmt = (update(Permission).where(Permission.UserId == share_user_id, Permission.DocId == doc_id).values({Permission.UserPermissions: "RWD"}))
+                session = session_factory()
+                session.execute(sql_stmt)
+                session.commit()
+                session.close()
             elif permission_type == "read":
-                set_read_user_permission(share_user_id, doc_id)
+                sql_stmt = (update(Permission).where(Permission.UserId == share_user_id, Permission.DocId == doc_id).values({Permission.UserPermissions: "R"}))
+                session = session_factory()
+                session.execute(sql_stmt)
+                session.commit()
+                session.close()
             elif permission_type == "remove":
                 remove_permissions(share_user_id, doc_id)
     except Exception as err:
@@ -480,7 +489,7 @@ def get_user_permissions(user_id, doc_id):
     # param_2 = {"PID": permission_id[0]}
     # user_permission = connect.execute(sql_query_2, **param_2).first()
     # return list(user_permission)
-    sql_stmt = (select (Permission.UserPermissions).where(Permission.UserId == userid and Permission.DocId == doc_id))
+    sql_stmt = (select (Permission.UserPermissions).where(Permission.UserId == userid ,Permission.DocId == doc_id))
     user_permissions = session.execute(sql_stmt).first()[0]
     return list(user_permissions)
 
