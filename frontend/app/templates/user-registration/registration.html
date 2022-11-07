@@ -10,6 +10,7 @@
     a{text-decoration: none;}
   </style>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+
 {% endblock %}
 
 
@@ -35,12 +36,12 @@
         </div>
         
         <div class="form-floating mt-2">
-          <input type="password" class="form-control" name="password" id="password-input" placeholder="password" required>
-          <label for="password-input">Password</label>
+          <input type="password" class="form-control" name="password_input" id="password_input" placeholder="password" required>
+          <label for="password_input">Password</label>
         </div>
         <div class="form-floating mt-2">
-          <input type="password" class="form-control" name="password_confirm" id="password_confirm-input" placeholder="Confirm password" required><br>
-          <label for="password-input">Confirm Password</label>
+          <input type="password" class="form-control" name="password_confirm" id="password_confirm" placeholder="Confirm password" required><br>
+          <label for="password_confirm">Confirm Password</label>
         </div>
           
         <div class="d-grid mt-1">
@@ -84,6 +85,8 @@
       
       
 </div>
-
+   <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"  crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/additional-methods.js"  crossorigin="anonymous"></script>
+  <script src="{{ url_for('static', filename='js/validators.js') }}"></script>
 
 {% endblock %}
