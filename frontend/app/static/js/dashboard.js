@@ -59,16 +59,17 @@ function getfilelist() {
                                 '<i class="bi bi-file-earmark-zip" style="font-size: 16px;"></i>' +
                               '</button>' +
 
-                              '<button type="button" id="delete" onclick="deletedata()" style="height: 25px; width: 25px; padding: 0px;" title="Move to Trash"' +
-                                'data-bs-toggle="modal" data-bs-target="#delModal" class="btn btn-outline-dark">' +
+                              '<button type="button" id="delete" onclick="openmodal('+data.Documents[i].DocId+')" style="height: 25px; width: 25px; padding: 0px;" title="Move to Trash"' +
+                              ' class="btn btn-outline-dark">' +
                                 '<i class="bi bi-trash3" style="font-size: 16px;"></i>' +
                               '</button>' +
+                              
                             
                               "</div></td></tr>";
                           }
                       }
                       if(txt != ""){
-                          $("#table1").append(txt).removeClass("hidden");
+                          $("#table1").html(txt).removeClass("hidden");
                           
                           // Add multiple select / deselect functionality
                           $("#selectall").click(function () {
@@ -119,18 +120,20 @@ function renamefile() {
 
 //Move to trash
 
-/* $("#delete").click(function trashfile() {
- 
+function deletedata(DocId) {
   try {
     $.ajax({
-        headers: {'authToken': getUserToken()},
-        data: {
-          DocId: doc_id
-        },
+       // headers: {'authToken': getUserToken(),},
+        contentType:"application/json; charset=utf-8",
+        dataType: "json",
+        data: JSON.stringify({
+            DocId: DocId
+        }),
         type: 'POST',
         url: getApiUrl('filetrash'),
         success: function (data) {
           alert("File moved to trash");
+          getfilelist();
         },
         error: function (data) {
             // in case of error we need to read response from data.responseJSON
@@ -141,7 +144,16 @@ function renamefile() {
 catch (err) {
     console.log(err)
 }
-}) */
+};
+
+function openmodal(DocId) {
+  let text;
+  if (confirm("Do you want to delete this file?") == true) {
+    deletedata(DocId);
+  } else {
+    
+  }
+}
           
 //Get Trash List
 function trashlist() {
@@ -163,6 +175,8 @@ function trashlist() {
           b2.style.display='none';
           b3.style.display='none';
           b4.style.display='none';
+          $("#multi-retrieve").removeClass("hidden");
+          $("#multi-delete").removeClass("hidden");
 
           if(data){
             var len = Object.keys(data.Documents).length;
@@ -192,7 +206,7 @@ function trashlist() {
                     }
                 }
                 if(txt != ""){
-                    $("#table2").append(txt).removeClass("hidden");
+                    $("#table2").html(txt).removeClass("hidden");
                     
                     // Add multiple select / deselect functionality
                     $("#selectalltrash").click(function () {
