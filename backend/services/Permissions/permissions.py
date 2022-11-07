@@ -50,21 +50,22 @@ def set_permissions(user_id):
     sql_query_1 = text("""SELECT PermissionId FROM Permissions WHERE UserId=:UID and DocId=:DID""")
     param_1 = {"UID": share_user_id, "DID": doc_id}
     permission_id = connect.execute(sql_query_1, **param_1).first()
-    if permission_id is None:
-        sql_query_2 = text("""INSERT into Permissions(UserId,DocId) values (:UID,:DID)""")
-        connect.execute(sql_query_2,**param_1)
-    else:
-        return jsonify(message="User already has the (RWD) permission")
+    if permission_type != "remove":
+        if permission_id is None:
+            sql_query_2 = text("""INSERT into Permissions(UserId,DocId) values (:UID,:DID)""")
+            connect.execute(sql_query_2,**param_1)
+        else:
+            return jsonify(message="User already has the (RWD) permission")
     try: 
         if 'S' in get_user_permissions(user_id, doc_id):
             if permission_type == "edit":
                 edit_permissions(share_user_id, doc_id)
-            elif permission_type is "read":
+            elif permission_type == "read":
                 set_read_user_permission(share_user_id, doc_id)
-            elif permission_type is "remove":
+            elif permission_type == "remove":
                 remove_permissions(share_user_id, doc_id)
     except Exception as err:
-            data_out = {"message":"no share permission"}
+            data_out = {"message":str(err)}
             mess_out = 500
             return jsonify(data_out, mess_out)
     return jsonify(message="Success, permission (RWD) added to the user")
@@ -112,12 +113,16 @@ def remove_permissions(user_id, doc_id):
         As remove permissions include removing all operations.Hence, we include the methods
         which unsets the all operations for the user.
     '''
-    unset_read_user_permission(user_id, doc_id)
-    unset_write_user_permission(user_id, doc_id)
-    unset_delete_user_permission(user_id, doc_id)
-    unset_share_user_permission(user_id, doc_id)
-    unset_analytics_user_permission(user_id, doc_id)
-
+    # unset_read_user_permission(user_id, doc_id)
+    # unset_write_user_permission(user_id, doc_id)
+    # unset_delete_user_permission(user_id, doc_id)
+    # unset_share_user_permission(user_id, doc_id)
+    # unset_analytics_user_permission(user_id, doc_id)
+    session = session_factory()
+    sql_stmt = (delete(Permission).where(Permission.DocId == doc_id, Permission.UserId==user_id))
+    session.execute(sql_stmt)
+    session.commit()
+    session.close()
 # functions to set the permissions
 
 # User/Owner level permissions
