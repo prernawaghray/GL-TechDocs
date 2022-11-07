@@ -25,10 +25,27 @@
       </div>
       <div class="offcanvas-body">
         <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-          <li class="nav-item"><a href="#" class="nav-link px-2 link-secondary">Home</a></li>
-          <li class="nav-item"><a href="#" class="nav-link px-2 link-dark">Features</a></li>
-          <li class="nav-item"><a href="{{url_for('user_plans')}}" class="nav-link px-2 link-dark">Pricing</a></li>
-          <li class="nav-item"><a href="#" class="nav-link px-2 link-dark">Help</a></li>
+          <li class="nav-item"><a href="{{url_for('dashboard')}}" class="nav-link px-2 link-secondary">Dashboard</a></li>
+          <!--Features Drop-down-->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle px-2 link-dark" href="#" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            Features
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item active" href="{{url_for('premium_features')}}">Premium Features</a></li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li><a class="dropdown-item" href="{{url_for('writing')}}">For Writing</a></li>
+            <li><a class="dropdown-item" href="{{url_for('teaching')}}">For Teaching</a></li>
+            <li><a class="dropdown-item" href="{{url_for('group')}}">For Group</a></li>
+            <li><a class="dropdown-item" href="{{url_for('university')}}">For Universities</a></li>
+            <li><a class="dropdown-item" href="{{url_for('publisher')}}">For Publishers</a></li>
+          </ul>
+        </li>
+          <li class="nav-item"><a href="{{url_for('plans')}}" class="nav-link px-2 link-dark">Pricing</a></li>
+          <li class="nav-item"><a href="{{url_for('faq')}}" class="nav-link px-2 link-dark">Help</a></li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               <i class="bi bi-person-circle"></i>   Account
@@ -41,7 +58,8 @@
               <li><a class="dropdown-item" href="#" onclick="logoutButtonClicked()">Logout</a></li>
             </ul>
           </li>
-        </ul>
+        </ul> 
+
       </div>
       <div class="offcanvas-footer text-center bg-light">
         <div>&copy; TechDocs</div>
