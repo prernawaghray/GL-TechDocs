@@ -1,17 +1,24 @@
 
 $(document).ready(function() {
-  console.log("ready")
+
+    console.log("ready")
+
+    validatePassFormsAndAddHandlers();
+
     $('#register-form').on('submit', function(event) {
         console.log("register");
-        $('#register').prop('disabled', true);
         event.preventDefault();
-        if ($('#password-input').val() != $('#password_confirm-input').val()) {
-           showAlert('#register-errorMessage', 'alert-danger', "Error:","Password and confirm password should match!!");
-           return;
+        if ($('#register-form').valid()) {
+            if ($('#password-input').val() != $('#password_confirm-input').val()) {
+              showAlert('#register-errorMessage', 'alert-danger', "Error:","Password and confirm password should match!!");
+              $('#register').prop('disabled', false);
+              return;
+           }
+           $('#register').prop('disabled', true);
+           registerButtonClicked(); 
+        } else {
+            return;
         }
-       registerButtonClicked();
-// keeping this commented for now as Sreenivas sir is writing request response based implementation        
-     
      });
 });
 
@@ -22,8 +29,7 @@ function registerButtonClicked() {
         "FirstName" : $('#firstname-input').val(),
         "LastName" : $('#lastname-input').val(),
         "email" : $('#email-input').val(),
-        "password" : $('#password-input').val()
-//        confirmPassword: $('#password_confirm-input').val()
+        "password" : $('#password_input').val()
     };
     console.log(JSON.stringify(registerFormData))
     callLoginApi(registerFormData);
@@ -87,3 +93,47 @@ function handleGoogleAuthResponse(token) {
     google.accounts.id.renderButton($('#googleLogin')[0],googleLoginButtonOptions);
     
   };
+
+
+
+var passwordFormRules =
+{
+    'password_input': {
+        required: true,
+        strong_password: true,
+        minlength: 6
+    },
+    'password_confirm': {
+        required: true,
+        equalTo: "#password_input"
+    }
+};
+
+var passwordFormMessages =
+{
+    'password-input': {
+        required: "Cannot be blank",
+        minlength: "Need at least 6 characters"
+    },
+    'password_confirm-input': {
+        required: "Confirm your password",
+        equalTo: "Should be same as above"
+    },
+
+};
+
+function validatePassFormsAndAddHandlers() {
+
+    $("#register-form").validate({
+        rules: passwordFormRules,
+        errorClass: "inputValidationError",
+        errorPlacement: function (error, element) {
+            element.next("label").after(error);
+        },
+        submitHandler: function (form) {
+           
+        },
+        messages: passwordFormMessages
+    });
+
+}
