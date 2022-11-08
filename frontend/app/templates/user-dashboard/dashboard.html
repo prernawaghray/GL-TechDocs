@@ -46,7 +46,7 @@
       <form>
         <div class="input-group">
           
-          <input type="text" id="searchfile" onkeyup="filesearch()" placeholder="Search file" class="form-control" aria-label="Search Files" style="display:inline-block ;">
+          <input type="text" id="searchfile" onkeyup="filesearch()" placeholder="Search files" class="form-control" aria-label="Search Files">
           <input type="text" id="searchtrash" onkeyup="trashsearch()" placeholder="Search trash" class="form-control" aria-label="Search Trash" style="display:none ;">
           <div class="input-group-text"> <i class="bi bi-search"></i></div>
         </div>
@@ -59,14 +59,14 @@
     
     <!-- END OF BUTTON MENU -->
 
-    <!-- USER TABLE -->
+    <!-- USER TABLES -->
     <div class="table-responsive border-top">
-      <table id="table1" class="table table-striped table-sm hidden"></table>
+      <table id="table1" class="table table-striped table-sm"></table>
     </div>
     <div>
-      <table id="table2" class="table table-striped table-sm hidden"></table>
+      <table id="table2" class="table table-striped table-sm"></table>
     </div>
-    <!-- END OF USER TABLE -->
+    <!-- END OF USER TABLES -->
   </main>
 
 {% endblock %}
