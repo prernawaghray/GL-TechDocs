@@ -3,7 +3,7 @@ var rootApiUrl = "http://techdocs-api.previewbox.in/api/";
 var testing=false;
 //56733
 //6622
-var rootFrontEndUrl = "http://techdocs.previewbox.in/";
+var rootFrontEndUrl = "/";
 function getApiUrl(api)
 {
     if (testing)
