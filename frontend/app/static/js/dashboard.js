@@ -22,6 +22,7 @@ function getfilelist() {
             type: 'GET',
             url: getApiUrl('filegetlist'),
             success: function(data){
+              //alert(JSON.stringify(data));
               b1 = document.getElementById('new-doc');
               b2 = document.getElementById('share-doc');
               b3 = document.getElementById('archive-doc');
@@ -113,7 +114,7 @@ function getfilelist() {
                                     '</div>'+
                                     '<div class="modal-footer">'+
                                       '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>'+
-                                      '<button type="button" class="btn btn-primary" onclick="permissions('+data.Documents[i].DocId+')">Confirm</button>'+
+                                      '<button type="button" class="btn btn-primary" onclick="setpermissions('+data.Documents[i].DocId+')">Confirm</button>'+
                                     '</div>'+
                                   '</div>'+
                                 '</div>'+
@@ -212,7 +213,7 @@ function trashsearch() {
 
 
 // Share file
-function permissions(DocId) {
+function setpermissions(DocId) {
   var e = document.getElementById("sel_permissions_"+DocId);
   selected_perm = e.options[e.selectedIndex].value;
   //alert(DocId);
@@ -237,7 +238,7 @@ function permissions(DocId) {
       },
       error: function (data) {
         // in case of error we need to read response from data.responseJSON
-        showAlert('#filelist-error-message', 'alert-danger', "", getResponseMessage(data));
+        alert(getResponseMessage(data));
         $('#shareModal_'+DocId).modal('hide');
         getfilelist();
       }
@@ -268,7 +269,7 @@ function renamefile(DocId) {
           },
           error: function (data) {
               // in case of error we need to read response from data.responseJSON
-              showAlert('#rename-error-message', 'alert-danger', "", getResponseMessage(data));
+              alert(getResponseMessage(data));
               $('#renameModal_'+DocId).modal('hide');
             getfilelist();
           }
@@ -298,7 +299,7 @@ function trashfile(DocId) {
         },
         error: function (data) {
             // in case of error we need to read response from data.responseJSON
-            showAlert('#delete-error-message', 'alert-danger', "", getResponseMessage(data));
+           alert(getResponseMessage(data));
         }
     });
 }
@@ -478,6 +479,7 @@ function sharedlist() {
         type: 'GET',
         url: getApiUrl('getsharedlist'),
         success: function(data){
+          //alert(JSON.stringify(data));
 
           b1 = document.getElementById('new-doc');
           b2 = document.getElementById('share-doc');
