@@ -22,6 +22,10 @@ function getfilelist() {
             type: 'GET',
             url: getApiUrl('filegetlist'),
             success: function(data){
+              s1 = document.getElementById('searchfile');
+              s2 = document.getElementById('searchtrash');
+              s1.style.display='block';
+              s2.style.display='none';
               doc_data = JSON.stringify(data); 
               if(data){
                   var len = Object.keys(data.Documents).length;
@@ -147,6 +151,48 @@ function getfilelist() {
 
 window.onload = getfilelist();
 
+//Search document
+function filesearch() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("searchfile");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("table1");
+  tr = table.getElementsByTagName("tr");
+
+  for (i = 1; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[1];
+
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }       
+  }}
+
+  //Search trash
+function trashsearch() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("searchtrash");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("table2");
+  tr = table.getElementsByTagName("tr");
+
+  for (i = 1; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[1];
+
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }       
+  }}
+
 
 // Share file
 function permissions(DocId) {
@@ -267,14 +313,19 @@ function trashlist() {
           b2 = document.getElementById('share-doc');
           b3 = document.getElementById('archive-doc');
           b4 = document.getElementById('trash-doc');
+          s1 = document.getElementById('searchfile');
+          s2 = document.getElementById('searchtrash');
           
           t1.style.display='none';
           b1.style.display='none';
           b2.style.display='none';
           b3.style.display='none';
           b4.style.display='none';
-          $("#multi-retrieve").removeClass("hidden");
-          $("#multi-delete").removeClass("hidden");
+          s1.style.display='none';
+          s2.style.display='inline-block';
+
+          //$("#multi-retrieve").removeClass("hidden");
+          //$("#multi-delete").removeClass("hidden");
 
           if(data){
             var len = Object.keys(data.Documents).length;

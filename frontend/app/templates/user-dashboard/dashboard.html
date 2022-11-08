@@ -46,8 +46,9 @@
       <form>
         <div class="input-group">
           
-          <input type="text" id="search"  placeholder="Search file" class="form-control" aria-label="Search Files">
-          <div class="input-group-text" id="btnGroupAddon"> <i class="bi bi-search"></i></div>
+          <input type="text" id="searchfile" onkeyup="filesearch()" placeholder="Search file" class="form-control" aria-label="Search Files" style="display:inline-block ;">
+          <input type="text" id="searchtrash" onkeyup="trashsearch()" placeholder="Search trash" class="form-control" aria-label="Search Trash" style="display:none ;">
+          <div class="input-group-text"> <i class="bi bi-search"></i></div>
         </div>
       </form>
     </div>
@@ -57,31 +58,6 @@
     <!-- New Button -->
     
     <!-- END OF BUTTON MENU -->
-
-    <!-- ALL MODALS FOR BUTTON MENU -->
-    <!-- Upload window -->
-    <div class="modal fade" id="UploadButton" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-      aria-labelledby="UploadButtonLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="UploadButtonLabel">Document Location</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <div class="mb-3">
-              <input class="form-control" type="file" id="formFile">
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            <button type="button" id="fileUpload" class="btn btn-primary">Upload</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- END OF MODALS -->
 
     <!-- USER TABLE -->
     <div class="table-responsive border-top">
