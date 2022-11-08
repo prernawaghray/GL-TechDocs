@@ -575,7 +575,7 @@ def file_GetSharedList(user_id):
             # get the documents of the user
             sql_result = session.query(Document.DocId, Document.DocName, Document.FilePath, Document.Version, Document.ModifiedDate, Document.ModifiedBy)\
                 .join(Permission, Document.DocId==Permission.DocId)\
-                .filter(Permission.UserId == userid, Permission.UserPermissions.isnot(None), Document.IsTrash == 0).all()
+                .filter(Document.IsTrash == 0, Document.UserId != userid, Permission.UserId == userid, Permission.UserPermissions.isnot(None)).all()
             
             for row in sql_result:
                 json_str = {"DocId": row.DocId, \
