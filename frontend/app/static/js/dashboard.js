@@ -542,7 +542,7 @@ function sharedlist() {
                   '<div style="height: 100px; width: 100px; position: fixed;" id="rename-error-message" class="errorMessage"></div>'+
                   '<div class="modal-footer">'+
                     '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>'+
-                    '<button type="button" class="btn btn-primary" onclick="renamefile('+data.Documents[i].DocId+')">Change</button>'+
+                    '<button type="button" class="btn btn-primary" onclick="renamefilesh('+data.Documents[i].DocId+')">Change</button>'+
                   '</div>'+
                 '</div>'+
               '</div>'+
@@ -593,7 +593,7 @@ function sharedlist() {
                 '<i class="bi bi-file-earmark-zip" style="font-size: 16px;"></i>' +
               '</button>' +
 
-              '<button type="button" id="delete" onclick="trashalert('+data.Documents[i].DocId+')" style="height: 25px; width: 25px; padding: 0px;" title="Move to Trash"' +
+              '<button type="button" id="delete" onclick="trashalertsh('+data.Documents[i].DocId+')" style="height: 25px; width: 25px; padding: 0px;" title="Move to Trash"' +
               ' class="btn btn-outline-dark">' +
                 '<i class="bi bi-trash3" style="font-size: 16px;"></i>' +
               '</button>' +
@@ -620,4 +620,71 @@ function sharedlist() {
 catch (err) {
     console.log(err)
 }
+}
+
+function renamefilesh(DocId) {
+  try {
+      $.ajax({
+          //headers: {'authToken': getUserToken()},
+          contentType:"application/json; charset=utf-8",
+          dataType: "json",
+          data: JSON.stringify({
+            DocId: DocId,
+            DocName: $('#rename_'+DocId).val()
+          }),
+          type: 'POST',
+          url: getApiUrl('filerename'),
+          success: function (data) {
+            $('#renameModal_'+DocId).modal('hide');
+            alert('File renamed successfully!');
+            sharedlist();
+          },
+          error: function (data) {
+              // in case of error we need to read response from data.responseJSON
+              alert(getResponseMessage(data));
+              $('#renameModal_'+DocId).modal('hide');
+            sharedlist();
+          }
+      });
+  }
+  catch (err) {
+      console.log(err)
+  }
+}
+
+//Move to trash
+
+function trashfilesh(DocId) {
+  try {
+    $.ajax({
+       // headers: {'authToken': getUserToken(),},
+        contentType:"application/json; charset=utf-8",
+        dataType: "json",
+        data: JSON.stringify({
+            DocId: DocId
+        }),
+        type: 'POST',
+        url: getApiUrl('filetrash'),
+        success: function (data) {
+          alert("File moved to trash");
+          sharedlist();
+        },
+        error: function (data) {
+            // in case of error we need to read response from data.responseJSON
+           alert(getResponseMessage(data));
+        }
+    });
+}
+catch (err) {
+    console.log(err)
+}
+};
+
+function trashalertsh(DocId) {
+  let text;
+  if (confirm("Do you want to delete this file?") == true) {
+    trashfilesh(DocId);
+  } else {
+    
+  }
 }
