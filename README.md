@@ -54,13 +54,21 @@ exit
 Check http://localhost:56733 in the browser.
 ### [Backend]
 ```bash
+#On your AWS EC2 instance, run the following commands:
+
 cd /home/ec2-user
+
 mkdir -p /techdocs_filesystem/log
+
 touch /techdocs_filesystem/log/filemanager.log
+
 git clone https://github.com/prernawaghray/GL-TechDocs.git
+
 cd GL-TechDocs/backend
+
 #Update the docker-compose.yml file line#11 with below:
 /home/ec2-user/techdocs_filesystem:/tmp
+
 docker-compose up --build --scale app=3 -d
 ```
 ## License
