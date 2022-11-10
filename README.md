@@ -25,7 +25,7 @@ It is a dockerized, mobile-ready, offline-storage compatible, JS-powered Latex e
 TechDocs backend is built on these open source softwares:
 - [Python] : General purpose coding
 - [Python Flask] : For API endpoint handling
-- [Python SQLAlchemy ORM] : SQL Operations
+- [SQLAlchemy] : SQL Operations
 - [MySQL] : Database
 - [Mailjet] : SMTP server
 
