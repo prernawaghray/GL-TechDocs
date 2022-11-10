@@ -15,7 +15,6 @@ It is a dockerized, mobile-ready, offline-storage compatible, JS-powered Latex e
 - Share with specific permissions
 - Manage Trash
 - Download PWA Application into Mobile/Desktop 
-- Edit in offline mode
 
 
 ## Tech
@@ -23,9 +22,15 @@ It is a dockerized, mobile-ready, offline-storage compatible, JS-powered Latex e
 
 
 ### Backend
+TechDocs backend is built on these open source softwares:
+- [Python] : General purpose coding
+- [Python Flask] : For API endpoint handling
+- [Python SQLAlchemy ORM] : SQL Operations
+- [MySQL] : Database
+- [Mailjet] : SMTP server
 
 ### Frontend
-Techdocs fronted uses a number of open source projects
+TechDocs fronted uses a number of open source projects
 - [Bootstrap] : great UI boilerplate for modern web apps
 - [Python Flask]  : For URL Based Routing & Rendering HTML Templates
 - [jQuery] - UI/UX Actions/Events on HTML Documents
