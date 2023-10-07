@@ -1,1 +1,67 @@
 {% extends "marketing-layout.html" %}
+
+{% block pageCss%}
+<style>
+  #login-container {
+    max-width: 380px;
+    margin: auto;
+    text-align: center;
+  }
+
+  a {
+    text-decoration: none;
+  }
+</style>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+{% endblock %}
+
+
+{% block body %}
+<script src="js/register.js"></script>
+
+<div id="register-container" class="mt-3">
+    <h2 style="margin-bottom: 0px;">User Registration</h2>
+    <br>
+  
+    <form action="" method="post" name="email-login" id="email-login" enctype="multipart/form-data">
+      <div class="form-floating">
+        <input type="email" class="form-control" name="email" id="email-input" placeholder="email" required>
+        <label for="email-input">Email address</label>
+      </div>
+
+      <div class="form-floating">
+        <input type="text" class="form-control" name="fname" id="fname" placeholder="First Name" required>
+        <label for="fname">First Name</label>
+      </div>
+
+      <div class="form-floating">
+        <input type="text" class="form-control" name="lname" id="lname" placeholder="Last Name" required>
+        <label for="lname">Last Name</label>
+      </div>
+  
+      <div class="form-floating mt-2">
+        <input type="password" class="form-control" name="password" id="password-input" placeholder="password"
+          required><br>
+        <label for="password-input">Password</label>
+      </div>  
+  
+      
+      <div class="d-grid mt-1">
+        
+        <button type="submit" class="btn btn-primary" name="register_method" value="email" id="register-btn">Register</button>
+      </div>
+  
+    </form>
+
+</div>
+
+<div class=" mt-2">
+  
+    <span id="google-login-errorMessage" class="errorMessage"></span>
+    <div id="googleLogin"></div>
+
+  </div>
+  <p class="mt-3">Already registered <a href="{{url_for('login')}}">Login</a></p>
+</div>
+
+{% endblock %}
